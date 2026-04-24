@@ -694,8 +694,17 @@ const FAQ = () => {
                   <span className="font-display font-semibold text-[20px] lg:text-[22px] display-tight pr-4">
                     {it.q}
                   </span>
-                  <span className={`plus shrink-0 w-9 h-9 rounded-full border border-rule bg-white flex items-center justify-center text-ink ${isOpen ? "bg-amber text-white border-amber" : ""}`}>
-                    <Plus className="w-4 h-4" />
+                  <span
+                    className={`shrink-0 w-9 h-9 rounded-full border flex items-center justify-center transition-colors duration-200 ${
+                      isOpen ? "border-amber bg-amber" : "border-rule bg-white"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <Plus
+                      className={`w-4 h-4 shrink-0 block transition-transform duration-300 ease-out ${
+                        isOpen ? "rotate-45 text-white" : "rotate-0 text-ink"
+                      }`}
+                    />
                   </span>
                 </button>
                 <div className={`acc-body ${isOpen ? "open" : ""}`}>
