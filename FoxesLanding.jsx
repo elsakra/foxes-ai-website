@@ -416,7 +416,7 @@ const Testimonials = () => (
 // Portfolio (fixed set of live sites — live iframe preview + full-card link)
 // ————————————————————————————————————————————————————
 const PORTFOLIO_SITES = [
-  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace", previewScale: 1.2 },
+  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace" },
   { url: "https://margaritas.ai", label: "Margaritas.ai", tag: "Hospitality & AI" },
   { url: "https://may.construction", label: "May Construction", tag: "Construction" },
   { url: "https://animatedmedical.com", label: "Animated Medical", tag: "Healthcare" },

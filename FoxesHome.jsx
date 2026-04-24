@@ -7,8 +7,7 @@ const DIY_URL = "/diy.html";
 const PATRIZIO_PHOTO = "patrizio-20bio.avif";
 
 const PORTFOLIO_SITES = [
-  /** Slight zoom — only after iframe is a true 1280px viewport (see preview shell). Crops Pool Bidder’s outer gutters without the broken narrow-iframe layout. */
-  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace", previewScale: 1.2 },
+  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace" },
   { url: "https://margaritas.ai", label: "Margaritas.ai", tag: "Hospitality & AI" },
   { url: "https://may.construction", label: "May Construction", tag: "Construction" },
   { url: "https://animatedmedical.com", label: "Animated Medical", tag: "Healthcare" },
