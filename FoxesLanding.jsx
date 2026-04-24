@@ -783,7 +783,8 @@ const Footer = () => (
         <span className="font-display font-semibold text-ink">Foxes<span className="text-amber">.</span>ai</span>
         <span className="ml-2">© 2026</span>
       </div>
-      <div className="flex items-center gap-6 text-[14px] text-muted">
+      <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-6 gap-y-2 text-[14px] text-muted">
+        <a href="/diy.html" className="hover:text-ink link-u">DIY setup guide</a>
         <a href="#" className="hover:text-ink link-u">Privacy</a>
         <a href="#" className="hover:text-ink link-u">Terms</a>
       </div>

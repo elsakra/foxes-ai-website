@@ -2,6 +2,7 @@ const { useState, useEffect, useRef } = React;
 
 const BUILD_URL = "/build"; // production CTA target
 const LANDER_URL = "/lander.html";
+const DIY_URL = "/diy.html";
 
 const PORTFOLIO_SITES = [
   { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace" },
@@ -545,7 +546,7 @@ const Footer = () => (
         <div>
           <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-amber mb-5">Explore</div>
           <ul className="space-y-3">
-            {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"],["Our pitch",LANDER_URL]].map(([l,h]) => (
+            {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"],["Our pitch",LANDER_URL],["DIY setup guide",DIY_URL]].map(([l,h]) => (
               <li key={l}><a href={h} className="text-[15px] text-cream hover:text-amber transition-colors link-u">{l}</a></li>
             ))}
           </ul>
