@@ -671,7 +671,7 @@ const Footer = () => (
           <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-amber mb-5">Get in touch</div>
           <ul className="space-y-3">
             <li><a href={BOOKING_URL} className="text-[15px] text-cream hover:text-amber transition-colors link-u">Book a call</a></li>
-            <li><a href="mailto:hi@foxes.ai" className="text-[15px] text-cream hover:text-amber transition-colors link-u">Email us</a></li>
+            <li><a href="mailto:patrizio@foxes.ai" className="text-[15px] text-cream hover:text-amber transition-colors link-u">Email us</a></li>
             <li><a href="sms:+16155550142" className="text-[15px] text-cream hover:text-amber transition-colors link-u">Text (615) 555‑0142</a></li>
           </ul>
         </div>

@@ -56,7 +56,7 @@ const Hero = () => (
       <div className="mt-8 inline-flex items-start gap-3 p-4 rounded-xl bg-white border border-rule max-w-[520px] no-print">
         <I.Info className="w-5 h-5 text-forest shrink-0 mt-0.5" />
         <div className="text-[14px] leading-[1.5] text-ink/80">
-          <strong className="font-semibold text-ink">Check your inbox.</strong> Your code was sent right after our call. Didn't get it? <a href="mailto:hi@foxes.ai" className="text-amber link-u font-medium">Email us</a> and we'll resend.
+          <strong className="font-semibold text-ink">Check your inbox.</strong> Your code was sent right after our call. Didn't get it? <a href="mailto:patrizio@foxes.ai" className="text-amber link-u font-medium">Email us</a> and we'll resend.
         </div>
       </div>
     </div>
