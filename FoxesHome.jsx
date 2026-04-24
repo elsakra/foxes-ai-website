@@ -133,102 +133,33 @@ const Header = () => {
 // ———————————————————————————————————————————————
 // Hero
 // ———————————————————————————————————————————————
-const Hero = () => {
-  const featured = PORTFOLIO_SITES[0];
-  const [pvClipRef, pvScale] = useLivePreviewCover(0.4);
-  const href = featured.url.replace(/\/$/, "");
-  let host = "";
-  try {
-    host = new URL(href).hostname.replace(/^www\./, "");
-  } catch {
-    host = href;
-  }
-  return (
-    <section className="relative grain pt-40 lg:pt-[180px] pb-28 lg:pb-32">
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
-        <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-8">
-          Websites for local businesses
-        </div>
-        <h1 className="font-display font-semibold display-tight balance text-ink text-[52px] sm:text-[72px] lg:text-[92px] xl:text-[104px] max-w-[1050px]">
-          Stunning websites. Built <span className="italic-fraunces text-amber">free</span>. Delivered before we even meet.
-        </h1>
-        <p className="mt-8 text-[20px] sm:text-[24px] leading-[1.5] text-ink/70 pretty max-w-[720px]">
-          Then we keep them running — hosting, domain, email, booking, reviews, the whole stack — for $99/mo, all‑in. Or take the code and run it yourself. Your call.
-        </p>
-        <p className="mt-6 text-[12px] sm:text-[13px] font-semibold text-muted eyebrow uppercase tracking-[0.14em] max-w-[720px] leading-relaxed">
-          No credit card. No sales call pressure. 20 minutes, then your site.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-5">
-          <a href={BOOKING_URL} className="group inline-flex items-center gap-2 h-12 px-7 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
-            Get my free website
-            <I.ArrowR className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-          </a>
-          <a href="#work" className="inline-flex items-center gap-2 text-[16px] font-medium text-ink link-u">
-            See our work <I.ArrowD className="w-4 h-4" />
-          </a>
-        </div>
-
-        <figure className="mt-20 lg:mt-24">
-          <div className="rounded-2xl overflow-hidden border border-rule card-shadow bg-white">
-            <div className="h-10 bg-cream-2 border-b border-rule flex items-center gap-2 px-3 sm:px-4">
-              <span className="flex gap-1.5 shrink-0" aria-hidden="true">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#E8A09A]" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#E6C04A]" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#61C454]" />
-              </span>
-              <div className="flex-1 min-w-0 flex justify-center">
-                <div className="flex items-center gap-2 max-w-full rounded-md bg-white border border-rule/80 px-3 py-1 text-[11px] sm:text-[12px] font-mono text-ink/65 truncate tabular-nums">
-                  <span className="text-muted shrink-0" aria-hidden="true">🔒</span>
-                  {host}
-                </div>
-              </div>
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 text-[12px] font-semibold text-amber hover:text-[#B4471A] transition-colors relative z-20"
-              >
-                Open site
-              </a>
-            </div>
-            <div ref={pvClipRef} className="relative h-[240px] sm:h-[280px] lg:h-[300px] overflow-hidden bg-[#ECEAE6]">
-              <div
-                className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
-                style={{ height: LIVE_PREVIEW_H, transform: `translateX(-50%) scale(${pvScale})` }}
-              >
-                <iframe
-                  src={href}
-                  title={`${featured.label} live preview`}
-                  loading="eager"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  tabIndex={-1}
-                  className="w-full h-full border-0 bg-white pointer-events-none"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {PORTFOLIO_SITES.map((s) => (
-              <a
-                key={s.url}
-                href={s.url.replace(/\/$/, "")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center rounded-full border border-rule bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink hover:border-amber hover:text-amber transition-colors"
-              >
-                {s.label}
-              </a>
-            ))}
-          </div>
-          <figcaption className="mt-4 text-[15px] text-muted">
-            <span className="italic">{featured.label}</span>
-            {" "}— live site in the frame above. Five more below with full previews.
-          </figcaption>
-        </figure>
+const Hero = () => (
+  <section className="relative grain pt-40 lg:pt-[180px] pb-28 lg:pb-32">
+    <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+      <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-8">
+        Websites for local businesses
       </div>
-    </section>
-  );
-};
+      <h1 className="font-display font-semibold display-tight balance text-ink text-[52px] sm:text-[72px] lg:text-[92px] xl:text-[104px] max-w-[1050px]">
+        Stunning websites. Built <span className="italic-fraunces text-amber">free</span>. Delivered before we even meet.
+      </h1>
+      <p className="mt-8 text-[20px] sm:text-[24px] leading-[1.5] text-ink/70 pretty max-w-[720px]">
+        Then we keep them running — hosting, domain, email, booking, reviews, the whole stack — for $99/mo, all‑in. Or take the code and run it yourself. Your call.
+      </p>
+      <p className="mt-6 text-[12px] sm:text-[13px] font-semibold text-muted eyebrow uppercase tracking-[0.14em] max-w-[720px] leading-relaxed">
+        No credit card. No sales call pressure. 20 minutes, then your site.
+      </p>
+      <div className="mt-8 flex flex-wrap items-center gap-5">
+        <a href={BOOKING_URL} className="group inline-flex items-center gap-2 h-12 px-7 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
+          Get my free website
+          <I.ArrowR className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+        </a>
+        <a href="#work" className="inline-flex items-center gap-2 text-[16px] font-medium text-ink link-u">
+          See our work <I.ArrowD className="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  </section>
+);
 
 // ———————————————————————————————————————————————
 // What we do
