@@ -104,8 +104,8 @@ const Header = () => (
       </a>
       <div className="hidden sm:flex items-center gap-5">
         <a href="/" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">Home</a>
-        <a href="#" className="inline-flex items-center gap-2 text-[14px] text-muted hover:text-ink transition-colors">
-          Text <span className="text-ink font-medium">(615) 555‑0142</span>
+        <a href="mailto:patrizio@foxes.ai" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">
+          Email
         </a>
         <a href="#book" className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-cream text-[13px] font-semibold hover:bg-amber transition-colors">
           Book free call
@@ -711,10 +711,10 @@ const FAQ = () => {
         <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-white border border-rule flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <div>
             <div className="font-display font-semibold text-[22px]">Still have questions?</div>
-            <div className="text-[15px] text-muted mt-1">Text Patrizio directly. Real phone. Real human.</div>
+            <div className="text-[15px] text-muted mt-1">Email works best — we read everything.</div>
           </div>
-          <a href="sms:+16155550142" className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-ink text-cream text-[14px] font-semibold hover:bg-amber transition-colors">
-            Text (615) 555‑0142
+          <a href="mailto:patrizio@foxes.ai" className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-ink text-cream text-[14px] font-semibold hover:bg-amber transition-colors">
+            patrizio@foxes.ai
           </a>
         </div>
       </div>
@@ -748,8 +748,8 @@ const FinalCTA = () => {
             Get my free website
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
           </button>
-          <a href="sms:+16155550142" className="inline-flex items-center gap-2 h-16 px-8 rounded-full border border-cream/25 text-cream text-[16px] font-medium hover:bg-cream/5 transition-colors">
-            Or text us first
+          <a href="mailto:patrizio@foxes.ai" className="inline-flex items-center gap-2 h-16 px-8 rounded-full border border-cream/25 text-cream text-[16px] font-medium hover:bg-cream/5 transition-colors">
+            Email us first
           </a>
         </div>
 

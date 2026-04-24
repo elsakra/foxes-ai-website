@@ -542,10 +542,10 @@ const FAQ = () => {
         <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-white border border-rule flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <div>
             <div className="font-display font-semibold text-[22px]">Still have questions?</div>
-            <div className="text-[15px] text-muted mt-1">Text Patrizio directly. Real phone. Real human.</div>
+            <div className="text-[15px] text-muted mt-1">Email works best — we read everything.</div>
           </div>
-          <a href="sms:+16155550142" className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-ink text-cream text-[14px] font-semibold hover:bg-amber transition-colors">
-            Text (615) 555‑0142
+          <a href="mailto:patrizio@foxes.ai" className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-ink text-cream text-[14px] font-semibold hover:bg-amber transition-colors">
+            patrizio@foxes.ai
           </a>
         </div>
       </div>
@@ -672,7 +672,6 @@ const Footer = () => (
           <ul className="space-y-3">
             <li><a href={BOOKING_URL} className="text-[15px] text-cream hover:text-amber transition-colors link-u">Book a call</a></li>
             <li><a href="mailto:patrizio@foxes.ai" className="text-[15px] text-cream hover:text-amber transition-colors link-u">Email us</a></li>
-            <li><a href="sms:+16155550142" className="text-[15px] text-cream hover:text-amber transition-colors link-u">Text (615) 555‑0142</a></li>
           </ul>
         </div>
       </div>
