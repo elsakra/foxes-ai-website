@@ -3,6 +3,7 @@ const { useState, useEffect, useRef } = React;
 const BUILD_URL = "/build"; // production CTA target
 const LANDER_URL = "/lander.html";
 const DIY_URL = "/diy.html";
+const PATRIZIO_PHOTO = "patrizio-20bio.avif";
 
 const PORTFOLIO_SITES = [
   { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace" },
@@ -239,14 +240,17 @@ const Founder = () => (
   <section id="about" className="bg-cream-2 py-24 lg:py-32">
     <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
       <div className="grid lg:grid-cols-[2fr_3fr] gap-14 lg:gap-20 items-center">
-        {/* Portrait placeholder */}
         <figure>
-          <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-rule relative bg-gradient-to-br from-[#B9A98A] to-[#8a7a5c]">
-            <div className="absolute inset-0 ph-dark" />
-            <div className="absolute inset-x-6 bottom-6 text-cream/90">
-              <div className="text-[11px] uppercase tracking-[0.18em] text-cream/70">Portrait</div>
-              <div className="font-display font-semibold text-[22px] display-tight mt-1">Patrizio Murdocca</div>
-            </div>
+          <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-rule relative bg-cream-2">
+            <img
+              src={PATRIZIO_PHOTO}
+              alt="Patrizio Murdocca, founder of Foxes.ai"
+              width={640}
+              height={800}
+              className="absolute inset-0 w-full h-full object-cover object-top"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
           <figcaption className="mt-3 italic text-[14px] text-muted">Patrizio Murdocca, founder</figcaption>
         </figure>

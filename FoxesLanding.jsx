@@ -1,5 +1,7 @@
 const { useState, useEffect, useRef } = React;
 
+const PATRIZIO_PHOTO = "patrizio-20bio.avif";
+
 // ————————————————————————————————————————————————————
 // Icons
 // ————————————————————————————————————————————————————
@@ -251,10 +253,19 @@ const Hero = () => {
               <span className="px-3 h-8 inline-flex items-center rounded-full bg-forest text-cream font-semibold tnum">$0 to see yours</span>
             </div>
 
-            {/* Video placeholder */}
+            {/* Video placeholder — Patrizio photo under forest wash */}
             <div className="mt-10 relative rounded-2xl overflow-hidden border border-rule card-shadow">
               <div className="aspect-video relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-forest/95 via-forest/85 to-[#15301f]" />
+                <img
+                  src={PATRIZIO_PHOTO}
+                  alt="Patrizio Murdocca"
+                  width={1280}
+                  height={720}
+                  className="absolute inset-0 w-full h-full object-cover object-[center_15%]"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-forest/92 via-forest/82 to-[#15301f]/92" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <button className="group w-20 h-20 rounded-full bg-cream text-forest flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
                     <Play className="w-7 h-7 translate-x-0.5" />
