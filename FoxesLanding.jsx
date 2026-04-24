@@ -52,24 +52,23 @@ const AmberCheck = () => (
 // ————————————————————————————————————————————————————
 // Top announcement bar (urgency)
 // ————————————————————————————————————————————————————
-const AnnouncementBar = () => {
-  const [slots, setSlots] = useState(3);
-  return (
-    <div className="bg-forest text-cream">
-      <div className="max-w-[1280px] mx-auto px-6 lg:px-10 h-10 flex items-center justify-center gap-3 text-[13px]">
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full rounded-full bg-amber opacity-75 animate-ping" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-amber" />
-        </span>
-        <span className="text-cream/90">
-          <span className="font-medium text-cream">Booking for April</span>
-          <span className="hidden sm:inline text-cream/60"> · </span>
-          <span className="hidden sm:inline">Only <span className="font-semibold text-amber">{slots} design slots</span> left this week</span>
-        </span>
-      </div>
+const AnnouncementBar = () => (
+  <div className="bg-forest text-cream">
+    <div className="max-w-[1280px] mx-auto px-6 lg:px-10 min-h-10 py-2 flex items-center justify-center gap-3 text-[13px] text-center">
+      <span className="relative flex h-2 w-2 shrink-0">
+        <span className="absolute inline-flex h-full w-full rounded-full bg-amber opacity-75 animate-ping" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber" />
+      </span>
+      <span className="text-cream/90 leading-snug max-w-[920px]">
+        <span className="font-medium text-cream">We build your site before the call</span>
+        <span className="text-cream/60"> · </span>
+        <span className="font-semibold text-amber">No credit card</span>
+        <span className="text-cream/60"> · </span>
+        <span>Keep the code free or host with us from $99/mo</span>
+      </span>
     </div>
-  );
-};
+  </div>
+);
 
 // ————————————————————————————————————————————————————
 // Scroll progress bar
