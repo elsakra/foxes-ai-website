@@ -132,7 +132,10 @@ const Hero = () => {
         <p className="mt-8 text-[20px] sm:text-[24px] leading-[1.5] text-ink/70 pretty max-w-[720px]">
           Then we keep them running — hosting, domain, email, booking, reviews, the whole stack — for $99/mo, all‑in. Or take the code and run it yourself. Your call.
         </p>
-        <div className="mt-10 flex flex-wrap items-center gap-5">
+        <p className="mt-6 text-[12px] sm:text-[13px] font-semibold text-muted eyebrow uppercase tracking-[0.14em] max-w-[720px] leading-relaxed">
+          No credit card. No sales call pressure. 20 minutes, then your site.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center gap-5">
           <a href={BOOKING_URL} className="group inline-flex items-center gap-2 h-12 px-7 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
             Get my free website
             <I.ArrowR className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
