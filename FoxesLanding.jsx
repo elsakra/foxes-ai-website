@@ -283,9 +283,8 @@ const Hero = () => (
             </figcaption>
           </figure>
 
-          <div className="mt-12 grid grid-cols-3 divide-x divide-rule border-y border-rule py-8">
+          <div className="mt-12 grid grid-cols-2 divide-x divide-rule border-y border-rule py-8">
             <Stat big="250+" label="sites delivered" />
-            <Stat big="47 min" label="avg. build time" />
             <Stat big="$0" label="to see yours" />
           </div>
 
@@ -325,7 +324,7 @@ const Hero = () => (
 );
 
 const Stat = ({ big, label }) => (
-  <div className="px-4 first:pl-0 last:pr-0 text-center first:text-left last:text-right">
+  <div className="px-4 sm:px-8 first:pl-0 last:pr-0 text-center first:text-left last:text-right">
     <div className="font-display font-semibold display-tight text-ink text-[36px] sm:text-[42px] lg:text-[48px] tnum">
       {big}
     </div>
@@ -339,14 +338,14 @@ const Stat = ({ big, label }) => (
 // Trust bar
 // ————————————————————————————————————————————————————
 const TrustBar = () => {
-  const clients = ["Pool Bidder", "Margaritas.ai", "May Construction", "Animated Medical", "SC Law Center"];
+  const clients = ["Pool Bidder", "Margaritas.ai", "Animated Medical", "SC Law Center"];
   return (
     <section className="bg-cream-2 border-y border-rule">
       <div className="max-w-[1280px] mx-auto px-6 lg:px-10 py-10 lg:py-12">
         <p className="text-center text-[12px] font-medium text-muted uppercase tracking-[0.18em] mb-7">
           Trusted by 250+ local businesses — from Nashville to Denver
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
           {clients.map((c) => (
             <div key={c} className="flex items-center justify-center h-10">
               <span className="font-display font-semibold text-[17px] text-ink/55 hover:text-ink/80 transition-colors whitespace-nowrap">
@@ -405,10 +404,10 @@ const CLIENT_TESTIMONIALS = [
   },
   {
     quote:
-      "Referrals and bids land better because the site finally looks like the company we run. Straight talk, fast execution, no fluff.",
-    name: "May Construction",
-    role: "may.construction",
-    result: "Credibility win",
+      "Patients tell us the site finally matches how we show up in person — clear services, easy booking, and none of the clutter we had before.",
+    name: "Animated Medical",
+    role: "animatedmedical.com",
+    result: "Clearer intake",
   },
 ];
 
@@ -439,7 +438,6 @@ const Testimonials = () => (
 const PORTFOLIO_SITES = [
   { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace" },
   { url: "https://margaritas.ai", label: "Margaritas.ai", tag: "Hospitality & AI" },
-  { url: "https://may.construction", label: "May Construction", tag: "Construction" },
   { url: "https://animatedmedical.com", label: "Animated Medical", tag: "Healthcare" },
   { url: "https://sclawcenter.com", label: "SC Law Center", tag: "Legal" },
 ];
@@ -532,11 +530,8 @@ const Portfolio = () => (
       </div>
 
       <div className="mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-8 lg:gap-10">
-        {PORTFOLIO_SITES.map((site, i) => (
-          <div
-            key={site.url}
-            className={i < 3 ? "xl:col-span-2" : "xl:col-span-3"}
-          >
+        {PORTFOLIO_SITES.map((site) => (
+          <div key={site.url} className="xl:col-span-3">
             <PortfolioPreviewCard {...site} />
           </div>
         ))}
@@ -558,7 +553,7 @@ const Portfolio = () => (
 const Comparison = () => {
   const rows = [
     ["See the actual website before you pay",  true,  false, false],
-    ["Built in under an hour",                   true,  false, false],
+    ["Built before your call",                   true,  false, false],
     ["No credit card to start",                  true,  false, true],
     ["Walk away with the code",                  true,  false, false],
     ["$99/mo all-in — or $0, your call",         true,  false, false],
@@ -674,10 +669,10 @@ const FAQ = () => {
   const items = [
     { q: "Is it really free?", a: "Yes. The design and build of your website costs you nothing. If you want us to host it, run your domain, email, booking, and everything else, it's $99–$199/month. If not, we hand you the code. Your choice, on the call." },
     { q: "What's the catch?", a: "There isn't one. We can build sites fast, and our bet is that once you see yours, you'll want us to keep running it. But if you don't — we'll hand over the code and wish you luck." },
-    { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the two answers you gave us in the form. Our designers plus modern AI tools compress what used to take two weeks into under an hour." },
+    { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the short answers you give when you book. Our designers pair that with modern tools so you get a real, reviewable site before the call — not a weeks-long wireframe phase." },
     { q: "What's included in the $99/mo?", a: "Hosting, SSL, your .com domain, branded business email, booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, daily backups, and a lead inbox. Zero labor fees. Ever." },
     { q: "When does the $199/mo apply?", a: "If your business needs bookings, light e‑commerce, or multi‑location support. We'll tell you on the call — no surprises, no upsells buried later." },
-    { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, May Construction, Animated Medical, SC Law Center, and more." },
+    { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, Animated Medical, SC Law Center, and more." },
     { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We don't include a free deploy hand-holding call for self‑hosting — that's the tradeoff for $0. No clawback, no drama." },
   ];
   return (

@@ -9,7 +9,6 @@ const PATRIZIO_PHOTO = "patrizio-20bio.avif";
 const PORTFOLIO_SITES = [
   { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace" },
   { url: "https://margaritas.ai", label: "Margaritas.ai", tag: "Hospitality & AI" },
-  { url: "https://may.construction", label: "May Construction", tag: "Construction" },
   { url: "https://animatedmedical.com", label: "Animated Medical", tag: "Healthcare" },
   { url: "https://sclawcenter.com", label: "SC Law Center", tag: "Legal" },
 ];
@@ -326,8 +325,8 @@ const Work = () => (
         </div>
       </div>
       <div className="mt-14 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-8 lg:gap-10">
-        {PORTFOLIO_SITES.map((site, i) => (
-          <div key={site.url} className={i < 3 ? "xl:col-span-2" : "xl:col-span-3"}>
+        {PORTFOLIO_SITES.map((site) => (
+          <div key={site.url} className="xl:col-span-3">
             <WorkPreviewCard {...site} />
           </div>
         ))}
@@ -393,7 +392,7 @@ const Included = () => {
 const HowItWorks = () => {
   const steps = [
     { n: "01", h: "Book the call",               b: "20 minutes on Zoom. Tell us about your business. No credit card." },
-    { n: "02", h: "We build your site",          b: "Our team + AI tools design it before we hop on. Usually under an hour." },
+    { n: "02", h: "We build your site",          b: "Our team and AI-assisted tools design it before we hop on — your first look is a real build, not a napkin sketch." },
     { n: "03", h: "See it live",                 b: "Patrizio screen‑shares the finished site. React honestly. Ask for changes." },
     { n: "04", h: "Launch or take the code",     b: "Love it? We host it for $99/mo. Don't? We hand you the code free." },
   ];
@@ -440,10 +439,10 @@ const FAQ = () => {
   const items = [
     { q: "Is it really free?", a: "Yes. The design and build of your website costs you nothing. If you want us to host it, run your domain, email, booking, and everything else, it's $99–$199/month. If not, we hand you the code. Your choice, on the call." },
     { q: "What's the catch?", a: "There isn't one. We can build sites fast, and our bet is that once you see yours, you'll want us to keep running it. But if you don't — we'll hand over the code and wish you luck." },
-    { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the two answers you gave us in the form. Our designers plus modern AI tools compress what used to take two weeks into under an hour." },
+    { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the short answers you give when you book. Our designers pair that with modern tools so you get a real, reviewable site before the call — not a weeks-long wireframe phase." },
     { q: "What's included in the $99/mo?", a: "Hosting, SSL, your .com domain, branded business email, booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, daily backups, and a lead inbox. Zero labor fees. Ever." },
     { q: "When does the $199/mo apply?", a: "If your business needs bookings, light e‑commerce, or multi‑location support. We'll tell you on the call — no surprises, no upsells buried later." },
-    { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, May Construction, Animated Medical, SC Law Center, and more." },
+    { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, Animated Medical, SC Law Center, and more." },
     { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We don't include a free deploy hand-holding call for self‑hosting — that's the tradeoff for $0. No clawback, no drama." },
   ];
   return (
@@ -525,9 +524,9 @@ const CLIENT_TESTIMONIALS = [
   },
   {
     quote:
-      "Referrals and bids land better because the site finally looks like the company we run. Straight talk, fast execution, no fluff.",
-    business: "May Construction",
-    url: "may.construction",
+      "Patients tell us the site finally matches how we show up in person — clear services, easy booking, and none of the clutter we had before.",
+    business: "Animated Medical",
+    url: "animatedmedical.com",
   },
 ];
 
