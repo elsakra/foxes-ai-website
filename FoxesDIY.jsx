@@ -86,7 +86,7 @@ const Honesty = () => (
       <div className="mt-8 bg-white border border-rule rounded-xl p-6">
         <div className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">Worth noting</div>
         <p className="mt-3 text-[16px] leading-[1.65] text-ink/90">
-          The $99/mo hosted option covers every item on this page — plus your .com domain, business email, security monitoring, daily backups, and ongoing updates. If at any point the setup below feels like more than you want to take on, just email us. Your setup fee stays waived.
+          The $99/mo hosted option covers every item on this page — plus your .com domain, business email, security monitoring, mobile optimization, and ongoing updates. If at any point the setup below feels like more than you want to take on, just email us. Your setup fee stays waived.
         </p>
         <a href={SWITCH_URL} className="inline-block mt-4 text-[14px] font-medium text-amber link-u no-print">
           Switch to hosted instead →
@@ -112,7 +112,7 @@ const Comparison = () => {
     ["Wire up contact forms + email routing",          "~2 hours",                                     "Pre‑wired"],
     ["Set up Google Analytics or similar",             "~1 hour",                                      "Included + monthly report emailed to you"],
     ["Configure review request automation",            "~4 hours + Twilio/SMS service fees",           "Included"],
-    ["Run daily backups",                              "Your responsibility (tool + storage)",         "Automatic, daily, off‑site"],
+    ["Mobile optimization (responsive layout, tap targets)", "~2–4 hours tuning + testing",          "Included"],
     ["Monitor security + patch vulnerabilities",       "Ongoing, ~2 hours/mo",                         "Automatic, 24/7"],
     ["Handle downtime alerts + fixes",                 "Your responsibility",                          "We get paged, we fix it"],
     ["Make content updates (new photos, hours, menu)", "You do it, or hire someone",                   "We do it for you"],
