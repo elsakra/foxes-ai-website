@@ -107,11 +107,12 @@ const ScrollProgress = () => {
 const Header = () => (
   <header className="relative z-40 border-b border-rule bg-cream/80 backdrop-blur-sm sticky top-0">
     <div className="max-w-[1280px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
-      <a href="#top" className="flex items-center gap-2 group">
+      <a href="/" className="flex items-center gap-2 group">
         <span className="text-xl leading-none">🦊</span>
         <span className="font-display font-semibold text-[20px] tracking-tight">Foxes<span className="text-amber">.</span>ai</span>
       </a>
       <div className="hidden sm:flex items-center gap-5">
+        <a href="/" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">Home</a>
         <a href="#" className="inline-flex items-center gap-2 text-[14px] text-muted hover:text-ink transition-colors">
           Text <span className="text-ink font-medium">(615) 555‑0142</span>
         </a>
@@ -338,14 +339,14 @@ const Stat = ({ big, label }) => (
 // Trust bar
 // ————————————————————————————————————————————————————
 const TrustBar = () => {
-  const clients = ["WH Properties", "Parasol Management", "The Cauble Group", "Napule", "Living Waters Yoga", "HV Urban"];
+  const clients = ["Pool Bidder", "Margaritas.ai", "May Construction", "Animated Medical", "SC Law Center"];
   return (
     <section className="bg-cream-2 border-y border-rule">
       <div className="max-w-[1280px] mx-auto px-6 lg:px-10 py-10 lg:py-12">
         <p className="text-center text-[12px] font-medium text-muted uppercase tracking-[0.18em] mb-7">
           Trusted by 250+ local businesses — from Nashville to Denver
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-4">
           {clients.map((c) => (
             <div key={c} className="flex items-center justify-center h-10">
               <span className="font-display font-semibold text-[17px] text-ink/55 hover:text-ink/80 transition-colors whitespace-nowrap">

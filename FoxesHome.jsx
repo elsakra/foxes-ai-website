@@ -1,6 +1,15 @@
 const { useState, useEffect, useRef } = React;
 
 const BUILD_URL = "/build"; // production CTA target
+const LANDER_URL = "/lander.html";
+
+const PORTFOLIO_SITES = [
+  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace" },
+  { url: "https://margaritas.ai", label: "Margaritas.ai", tag: "Hospitality & AI" },
+  { url: "https://may.construction", label: "May Construction", tag: "Construction" },
+  { url: "https://animatedmedical.com", label: "Animated Medical", tag: "Healthcare" },
+  { url: "https://sclawcenter.com", label: "SC Law Center", tag: "Legal" },
+];
 
 // ———————————————————————————————————————————————
 // Icons (minimal, brand-consistent — no starter-pack look)
@@ -53,7 +62,7 @@ const Header = () => {
           <span className="font-display font-semibold text-[20px] tracking-tight">Foxes<span className="text-amber">.</span>ai</span>
         </a>
         <nav className="hidden lg:flex items-center gap-8">
-          {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"]].map(([l,h]) => (
+          {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"],["Our pitch",LANDER_URL]].map(([l,h]) => (
             <a key={l} href={h} className="text-[15px] font-medium text-ink hover:text-amber transition-colors">{l}</a>
           ))}
         </nav>
@@ -77,7 +86,7 @@ const Header = () => {
             <button onClick={() => setOpen(false)} className="w-10 h-10 rounded-full border border-rule flex items-center justify-center"><I.X className="w-5 h-5"/></button>
           </div>
           <nav className="mt-10 flex flex-col gap-1">
-            {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"]].map(([l,h]) => (
+            {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"],["Our pitch",LANDER_URL]].map(([l,h]) => (
               <a key={l} href={h} onClick={() => setOpen(false)} className="font-display font-semibold text-[36px] display-tight py-3">{l}</a>
             ))}
           </nav>
@@ -93,71 +102,98 @@ const Header = () => {
 // ———————————————————————————————————————————————
 // Hero
 // ———————————————————————————————————————————————
-const Hero = () => (
-  <section className="relative grain pt-40 lg:pt-[180px] pb-28 lg:pb-32">
-    <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
-      <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-8">
-        Websites for local businesses
-      </div>
-      <h1 className="font-display font-semibold display-tight balance text-ink text-[52px] sm:text-[72px] lg:text-[92px] xl:text-[104px] max-w-[1050px]">
-        Stunning websites. Built <span className="italic-fraunces text-amber">free</span>. Delivered before we even meet.
-      </h1>
-      <p className="mt-8 text-[20px] sm:text-[24px] leading-[1.5] text-ink/70 pretty max-w-[720px]">
-        Then we keep them running — hosting, domain, email, booking, reviews, the whole stack — for $99/mo, all‑in. Or take the code and run it yourself. Your call.
-      </p>
-      <div className="mt-10 flex flex-wrap items-center gap-5">
-        <a href={BUILD_URL} className="group inline-flex items-center gap-2 h-12 px-7 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
-          Get my free website
-          <I.ArrowR className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-        </a>
-        <a href="#work" className="inline-flex items-center gap-2 text-[16px] font-medium text-ink link-u">
-          See our work <I.ArrowD className="w-4 h-4" />
-        </a>
-      </div>
+const Hero = () => {
+  const featured = PORTFOLIO_SITES[0];
+  const href = featured.url.replace(/\/$/, "");
+  let host = "";
+  try {
+    host = new URL(href).hostname.replace(/^www\./, "");
+  } catch {
+    host = href;
+  }
+  return (
+    <section className="relative grain pt-40 lg:pt-[180px] pb-28 lg:pb-32">
+      <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+        <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-8">
+          Websites for local businesses
+        </div>
+        <h1 className="font-display font-semibold display-tight balance text-ink text-[52px] sm:text-[72px] lg:text-[92px] xl:text-[104px] max-w-[1050px]">
+          Stunning websites. Built <span className="italic-fraunces text-amber">free</span>. Delivered before we even meet.
+        </h1>
+        <p className="mt-8 text-[20px] sm:text-[24px] leading-[1.5] text-ink/70 pretty max-w-[720px]">
+          Then we keep them running — hosting, domain, email, booking, reviews, the whole stack — for $99/mo, all‑in. Or take the code and run it yourself. Your call.
+        </p>
+        <div className="mt-10 flex flex-wrap items-center gap-5">
+          <a href={BUILD_URL} className="group inline-flex items-center gap-2 h-12 px-7 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
+            Get my free website
+            <I.ArrowR className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+          </a>
+          <a href="#work" className="inline-flex items-center gap-2 text-[16px] font-medium text-ink link-u">
+            See our work <I.ArrowD className="w-4 h-4" />
+          </a>
+        </div>
 
-      {/* Hero visual: browser frame */}
-      <figure className="mt-20 lg:mt-24">
-        <div className="rounded-2xl overflow-hidden border border-rule card-shadow bg-white">
-          {/* chrome */}
-          <div className="h-10 bg-cream-2 border-b border-rule flex items-center gap-2 px-4">
-            <span className="w-3 h-3 rounded-full bg-[#E8E2D5]" />
-            <span className="w-3 h-3 rounded-full bg-[#E8E2D5]" />
-            <span className="w-3 h-3 rounded-full bg-[#E8E2D5]" />
-            <div className="ml-4 h-6 px-3 inline-flex items-center rounded bg-white border border-rule text-[12px] text-muted tnum">livingwatersyoga.com</div>
-          </div>
-          {/* mock page — editorial, no fake screenshots */}
-          <div className="relative aspect-[16/8.2] bg-gradient-to-br from-[#93A58B] to-[#5F7C69] overflow-hidden">
-            <div className="absolute inset-0 ph-dark opacity-40" />
-            <div className="absolute inset-0 p-10 lg:p-16 flex flex-col justify-between text-cream">
-              <div className="flex items-center justify-between">
-                <div className="font-display font-semibold text-[20px]">Living Waters</div>
-                <div className="hidden sm:flex gap-6 text-[13px] uppercase tracking-[0.14em] text-cream/80">
-                  <span>Classes</span><span>Teachers</span><span>Visit</span><span>Book</span>
+        <figure className="mt-20 lg:mt-24">
+          <div className="rounded-2xl overflow-hidden border border-rule card-shadow bg-white">
+            <div className="h-10 bg-cream-2 border-b border-rule flex items-center gap-2 px-3 sm:px-4">
+              <span className="flex gap-1.5 shrink-0" aria-hidden="true">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E8A09A]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E6C04A]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#61C454]" />
+              </span>
+              <div className="flex-1 min-w-0 flex justify-center">
+                <div className="flex items-center gap-2 max-w-full rounded-md bg-white border border-rule/80 px-3 py-1 text-[11px] sm:text-[12px] font-mono text-ink/65 truncate tabular-nums">
+                  <span className="text-muted shrink-0" aria-hidden="true">🔒</span>
+                  {host}
                 </div>
               </div>
-              <div className="max-w-[620px]">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-cream/70 mb-4">Nashville · since 2012</div>
-                <div className="font-display font-semibold text-[40px] sm:text-[56px] lg:text-[72px] display-tight balance">
-                  Slow mornings. Warm light. <span className="italic-fraunces">Breathe.</span>
-                </div>
-                <div className="mt-6 inline-flex items-center gap-2 h-10 px-5 rounded-full bg-cream text-forest text-[13px] font-semibold">
-                  Book a class <I.ArrowR className="w-3.5 h-3.5"/>
-                </div>
-              </div>
-              <div className="flex items-end justify-between">
-                <div className="text-[12px] text-cream/70">★★★★★ · 412 reviews</div>
-                <div className="text-[11px] uppercase tracking-[0.18em] text-cream/60">Foxes.ai · 2026</div>
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 text-[12px] font-semibold text-amber hover:text-[#B4471A] transition-colors relative z-20"
+              >
+                Open site
+              </a>
+            </div>
+            <div className="relative h-[240px] sm:h-[280px] lg:h-[300px] overflow-hidden bg-[#ECEAE6]">
+              <div
+                className="absolute left-1/2 top-0 w-[1280px] max-w-[220%] origin-top"
+                style={{ height: 820, transform: "translateX(-50%) scale(0.4)" }}
+              >
+                <iframe
+                  src={href}
+                  title={`${featured.label} live preview`}
+                  loading="eager"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  tabIndex={-1}
+                  className="w-full h-full border-0 bg-white pointer-events-none"
+                />
               </div>
             </div>
           </div>
-        </div>
-        <figcaption className="mt-4 italic text-[15px] text-muted">
-          Living Waters Yoga — built in 47 minutes.
-        </figcaption>
-      </figure>
-    </div>
-  </section>
-);
+          <div className="mt-4 flex flex-wrap gap-2">
+            {PORTFOLIO_SITES.map((s) => (
+              <a
+                key={s.url}
+                href={s.url.replace(/\/$/, "")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-full border border-rule bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink hover:border-amber hover:text-amber transition-colors"
+              >
+                {s.label}
+              </a>
+            ))}
+          </div>
+          <figcaption className="mt-4 text-[15px] text-muted">
+            <span className="italic">{featured.label}</span>
+            {" "}— live site in the frame above. Five more below with full previews.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  );
+};
 
 // ———————————————————————————————————————————————
 // What we do
@@ -235,14 +271,6 @@ const Founder = () => (
 // ———————————————————————————————————————————————
 // Work — five live portfolio sites (preview + link)
 // ———————————————————————————————————————————————
-const PORTFOLIO_SITES = [
-  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace" },
-  { url: "https://margaritas.ai", label: "Margaritas.ai", tag: "Hospitality & AI" },
-  { url: "https://may.construction", label: "May Construction", tag: "Construction" },
-  { url: "https://animatedmedical.com", label: "Animated Medical", tag: "Healthcare" },
-  { url: "https://sclawcenter.com", label: "SC Law Center", tag: "Legal" },
-];
-
 const WorkPreviewCard = ({ url, label, tag }) => {
   const href = url.replace(/\/$/, "");
   let host = "";
@@ -517,7 +545,7 @@ const Footer = () => (
         <div>
           <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-amber mb-5">Explore</div>
           <ul className="space-y-3">
-            {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"]].map(([l,h]) => (
+            {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"],["Our pitch",LANDER_URL]].map(([l,h]) => (
               <li key={l}><a href={h} className="text-[15px] text-cream hover:text-amber transition-colors link-u">{l}</a></li>
             ))}
           </ul>
