@@ -233,54 +233,87 @@ const Founder = () => (
 );
 
 // ———————————————————————————————————————————————
-// Work grid — asymmetric
+// Work — five live portfolio sites (preview + link)
 // ———————————————————————————————————————————————
-const WORK = [
-  { name: "Napule",             cat: "Restaurant",              tone: "amber",  span: "lg:col-span-2", ratio: "aspect-[16/9]" },
-  { name: "WH Properties",      cat: "Real Estate",             tone: "paper",  span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
-  { name: "HV Urban",           cat: "Urban Development",       tone: "forest", span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
-  { name: "The Cauble Group",   cat: "Commercial Real Estate",  tone: "ink",    span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
-  { name: "Living Waters Yoga", cat: "Wellness",                tone: "sage",   span: "lg:col-span-2", ratio: "aspect-[16/9]" },
-  { name: "Parasol Management", cat: "Property Management",     tone: "sand",   span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
-  { name: "Kevin Sully TV",     cat: "Media",                   tone: "ink",    span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
-  { name: "5th Factory Archive",cat: "Agency Portfolio",        tone: "amber",  span: "lg:col-span-2", ratio: "aspect-[16/9]" },
+const PORTFOLIO_SITES = [
+  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace" },
+  { url: "https://margaritas.ai", label: "Margaritas.ai", tag: "Hospitality & AI" },
+  { url: "https://may.construction", label: "May Construction", tag: "Construction" },
+  { url: "https://animatedmedical.com", label: "Animated Medical", tag: "Healthcare" },
+  { url: "https://sclawcenter.com", label: "SC Law Center", tag: "Legal" },
 ];
 
-const WorkTile = ({ name, cat, tone, span, ratio }) => {
-  const palettes = {
-    forest: "from-forest to-[#15301f]",
-    amber: "from-[#8a3812] to-[#C9531E]",
-    sand:  "from-[#D9CFB8] to-[#B9A98A]",
-    ink:   "from-[#1a1a1a] to-[#0A0A0A]",
-    sage:  "from-[#93A58B] to-[#5F7C69]",
-    paper: "from-[#EDE6D3] to-[#D9CFB8]",
-  };
+const WorkPreviewCard = ({ url, label, tag }) => {
+  const href = url.replace(/\/$/, "");
+  let host = "";
+  try {
+    host = new URL(href).hostname.replace(/^www\./, "");
+  } catch {
+    host = href;
+  }
   return (
-    <a href="#" className={`group relative block rounded-xl overflow-hidden border border-rule ${span}`}>
-      <div className={`${ratio} bg-gradient-to-br ${palettes[tone]} relative`}>
-        <div className="absolute inset-0 ph-dark" />
-        {/* faux chrome */}
-        <div className="absolute inset-x-5 top-5 flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-white/40" />
-          <span className="w-2 h-2 rounded-full bg-white/40" />
-          <span className="w-2 h-2 rounded-full bg-white/40" />
+    <article className="group relative">
+      <div className="rounded-2xl overflow-hidden border border-rule bg-cream card-shadow transition-all duration-300 group-hover:-translate-y-1 group-hover:card-shadow-lg">
+        <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 border-b border-rule bg-gradient-to-b from-white to-cream">
+          <span className="flex gap-1.5 shrink-0" aria-hidden="true">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#E8A09A]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#E6C04A]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#61C454]" />
+          </span>
+          <div className="flex-1 min-w-0 flex justify-center">
+            <div className="flex items-center gap-2 max-w-full rounded-lg bg-white border border-rule/80 px-3 py-1 shadow-[0_1px_0_rgba(10,10,10,0.04)]">
+              <span className="text-muted/80" aria-hidden="true">
+                <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 shrink-0" fill="none">
+                  <path d="M8 2.5l5.5 3v5L8 13.5 2.5 10.5v-5L8 2.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+                </svg>
+              </span>
+              <span className="text-[11px] sm:text-[12px] font-mono text-ink/65 truncate tabular-nums">{host}</span>
+            </div>
+          </div>
+          <span className="w-8 shrink-0" aria-hidden="true" />
         </div>
-        {/* wordmark baseline */}
-        <div className="absolute inset-x-6 bottom-6 text-cream/90">
-          <div className="font-display font-semibold text-[26px] lg:text-[32px] display-tight">{name}</div>
-          <div className="mt-1.5 h-px w-10 bg-cream/40" />
-          <div className="mt-2 text-[11px] uppercase tracking-[0.14em] text-cream/70">{cat}</div>
+
+        <div className="relative h-[220px] sm:h-[260px] lg:h-[240px] overflow-hidden bg-[#ECEAE6]">
+          <div
+            className="absolute left-1/2 top-0 w-[1280px] max-w-[220%] origin-top"
+            style={{ height: 820, transform: "translateX(-50%) scale(0.38)" }}
+          >
+            <iframe
+              src={href}
+              title={`${label} live preview`}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              tabIndex={-1}
+              className="w-full h-full border-0 bg-white pointer-events-none"
+            />
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/20" aria-hidden="true" />
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            aria-hidden="true"
+          />
         </div>
-        {/* hover overlay */}
-        <div className="absolute inset-0 bg-forest/85 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-7">
-          <div className="text-[11px] uppercase tracking-[0.16em] text-amber font-semibold">{cat}</div>
-          <div className="mt-2 font-display font-semibold text-[28px] lg:text-[32px] display-tight text-cream">{name}</div>
-          <div className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-cream">
-            View <I.ArrowR className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+
+        <div className="px-4 sm:px-5 py-4 border-t border-rule bg-white">
+          <div className="text-[11px] font-semibold text-amber uppercase tracking-[0.14em]">{tag}</div>
+          <div className="mt-1.5 flex items-end justify-between gap-3">
+            <h3 className="font-display font-semibold text-[20px] sm:text-[22px] display-tight text-ink">{label}</h3>
+            <span className="shrink-0 inline-flex items-center gap-1 text-[13px] font-semibold text-ink/80 group-hover:text-amber transition-colors">
+              Visit
+              <I.ArrowR className="w-4 h-4" />
+            </span>
           </div>
         </div>
       </div>
-    </a>
+
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        aria-label={`Open ${label} — ${host} (opens in a new tab)`}
+      />
+    </article>
   );
 };
 
@@ -293,13 +326,17 @@ const Work = () => (
           <h2 className="font-display font-semibold text-[44px] sm:text-[52px] lg:text-[60px] display-tight balance">
             Some of what we've built.
           </h2>
+          <p className="mt-4 text-[17px] text-ink/70 max-w-[560px] pretty">
+            Live previews below — click any card to open the full site in a new tab.
+          </p>
         </div>
-        <a href="#" className="inline-flex items-center gap-1.5 text-[16px] font-medium text-ink link-u">
-          See all work <I.ArrowR className="w-4 h-4" />
-        </a>
       </div>
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
-        {WORK.map((w, i) => <WorkTile key={i} {...w} />)}
+      <div className="mt-14 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-8 lg:gap-10">
+        {PORTFOLIO_SITES.map((site, i) => (
+          <div key={site.url} className={i < 3 ? "xl:col-span-2" : "xl:col-span-3"}>
+            <WorkPreviewCard {...site} />
+          </div>
+        ))}
       </div>
     </div>
   </section>
