@@ -2,6 +2,27 @@ const { useState, useEffect, useRef } = React;
 
 const PATRIZIO_PHOTO = "patrizio-20bio.avif";
 
+const LIVE_PREVIEW_W = 1280;
+const LIVE_PREVIEW_H = 820;
+
+const useLivePreviewCover = (fallback = 0.38) => {
+  const ref = useRef(null);
+  const [box, setBox] = useState({ w: 0, h: 0 });
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      setBox({ w: el.clientWidth, h: el.clientHeight });
+    });
+    ro.observe(el);
+    setBox({ w: el.clientWidth, h: el.clientHeight });
+    return () => ro.disconnect();
+  }, []);
+  const { w, h } = box;
+  const scale = w > 0 && h > 0 ? Math.max(w / LIVE_PREVIEW_W, h / LIVE_PREVIEW_H) : fallback;
+  return [ref, scale];
+};
+
 // ————————————————————————————————————————————————————
 // Icons
 // ————————————————————————————————————————————————————
@@ -423,7 +444,8 @@ const PORTFOLIO_SITES = [
   { url: "https://sclawcenter.com", label: "SC Law Center", tag: "Legal" },
 ];
 
-const PortfolioPreviewCard = ({ url, label, tag, previewScale = 1 }) => {
+const PortfolioPreviewCard = ({ url, label, tag }) => {
+  const [clipRef, scale] = useLivePreviewCover(0.38);
   const href = url.replace(/\/$/, "");
   let host = "";
   try {
@@ -442,21 +464,17 @@ const PortfolioPreviewCard = ({ url, label, tag, previewScale = 1 }) => {
           </span>
           <div className="flex-1 min-w-0 flex justify-center">
             <div className="flex items-center gap-2 max-w-full rounded-lg bg-white/90 border border-rule/80 px-3 py-1 shadow-[0_1px_0_rgba(10,10,10,0.04)]">
-              <span className="text-muted/80" aria-hidden="true">
-                <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 shrink-0" fill="none">
-                  <path d="M8 2.5l5.5 3v5L8 13.5 2.5 10.5v-5L8 2.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
-                </svg>
-              </span>
+              <span className="text-muted shrink-0 text-[11px] leading-none" aria-hidden="true">🔒</span>
               <span className="text-[11px] sm:text-[12px] font-mono text-ink/65 truncate tabular-nums">{host}</span>
             </div>
           </div>
           <span className="w-8 shrink-0" aria-hidden="true" />
         </div>
 
-        <div className="relative h-[220px] sm:h-[260px] lg:h-[240px] overflow-hidden bg-[#ECEAE6]">
+        <div ref={clipRef} className="relative h-[220px] sm:h-[260px] lg:h-[240px] overflow-hidden bg-[#ECEAE6]">
           <div
             className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
-            style={{ height: 820, transform: `translateX(-50%) scale(${0.38 * previewScale})` }}
+            style={{ height: LIVE_PREVIEW_H, transform: `translateX(-50%) scale(${scale})` }}
           >
             <iframe
               src={href}

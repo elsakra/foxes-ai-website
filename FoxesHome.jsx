@@ -14,6 +14,28 @@ const PORTFOLIO_SITES = [
   { url: "https://sclawcenter.com", label: "SC Law Center", tag: "Legal" },
 ];
 
+const LIVE_PREVIEW_W = 1280;
+const LIVE_PREVIEW_H = 820;
+
+/** Scale iframe to cover the clip (like object-fit: cover) — fills width and height, no side gutters. */
+const useLivePreviewCover = (fallback = 0.38) => {
+  const ref = useRef(null);
+  const [box, setBox] = useState({ w: 0, h: 0 });
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      setBox({ w: el.clientWidth, h: el.clientHeight });
+    });
+    ro.observe(el);
+    setBox({ w: el.clientWidth, h: el.clientHeight });
+    return () => ro.disconnect();
+  }, []);
+  const { w, h } = box;
+  const scale = w > 0 && h > 0 ? Math.max(w / LIVE_PREVIEW_W, h / LIVE_PREVIEW_H) : fallback;
+  return [ref, scale];
+};
+
 // ———————————————————————————————————————————————
 // Icons (minimal, brand-consistent — no starter-pack look)
 // ———————————————————————————————————————————————
@@ -113,7 +135,7 @@ const Header = () => {
 // ———————————————————————————————————————————————
 const Hero = () => {
   const featured = PORTFOLIO_SITES[0];
-  const previewScale = featured.previewScale ?? 1;
+  const [pvClipRef, pvScale] = useLivePreviewCover(0.4);
   const href = featured.url.replace(/\/$/, "");
   let host = "";
   try {
@@ -169,10 +191,10 @@ const Hero = () => {
                 Open site
               </a>
             </div>
-            <div className="relative h-[240px] sm:h-[280px] lg:h-[300px] overflow-hidden bg-[#ECEAE6]">
+            <div ref={pvClipRef} className="relative h-[240px] sm:h-[280px] lg:h-[300px] overflow-hidden bg-[#ECEAE6]">
               <div
                 className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
-                style={{ height: 820, transform: `translateX(-50%) scale(${0.4 * previewScale})` }}
+                style={{ height: LIVE_PREVIEW_H, transform: `translateX(-50%) scale(${pvScale})` }}
               >
                 <iframe
                   src={href}
@@ -287,7 +309,8 @@ const Founder = () => (
 // ———————————————————————————————————————————————
 // Work — five live portfolio sites (preview + link)
 // ———————————————————————————————————————————————
-const WorkPreviewCard = ({ url, label, tag, previewScale = 1 }) => {
+const WorkPreviewCard = ({ url, label, tag }) => {
+  const [clipRef, scale] = useLivePreviewCover(0.38);
   const href = url.replace(/\/$/, "");
   let host = "";
   try {
@@ -306,21 +329,17 @@ const WorkPreviewCard = ({ url, label, tag, previewScale = 1 }) => {
           </span>
           <div className="flex-1 min-w-0 flex justify-center">
             <div className="flex items-center gap-2 max-w-full rounded-lg bg-white border border-rule/80 px-3 py-1 shadow-[0_1px_0_rgba(10,10,10,0.04)]">
-              <span className="text-muted/80" aria-hidden="true">
-                <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 shrink-0" fill="none">
-                  <path d="M8 2.5l5.5 3v5L8 13.5 2.5 10.5v-5L8 2.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
-                </svg>
-              </span>
+              <span className="text-muted shrink-0 text-[11px] leading-none" aria-hidden="true">🔒</span>
               <span className="text-[11px] sm:text-[12px] font-mono text-ink/65 truncate tabular-nums">{host}</span>
             </div>
           </div>
           <span className="w-8 shrink-0" aria-hidden="true" />
         </div>
 
-        <div className="relative h-[220px] sm:h-[260px] lg:h-[240px] overflow-hidden bg-[#ECEAE6]">
+        <div ref={clipRef} className="relative h-[220px] sm:h-[260px] lg:h-[240px] overflow-hidden bg-[#ECEAE6]">
           <div
             className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
-            style={{ height: 820, transform: `translateX(-50%) scale(${0.38 * previewScale})` }}
+            style={{ height: LIVE_PREVIEW_H, transform: `translateX(-50%) scale(${scale})` }}
           >
             <iframe
               src={href}
