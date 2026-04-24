@@ -7,8 +7,8 @@ const DIY_URL = "/diy.html";
 const PATRIZIO_PHOTO = "patrizio-20bio.avif";
 
 const PORTFOLIO_SITES = [
-  /** Tighter live preview zoom — Pool Bidder’s layout is max-width centered; extra scale crops side gutters so the hero fills the frame like full-bleed sites. */
-  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace", previewScale: 1.34 },
+  /** Slight zoom — only after iframe is a true 1280px viewport (see preview shell). Crops Pool Bidder’s outer gutters without the broken narrow-iframe layout. */
+  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace", previewScale: 1.2 },
   { url: "https://margaritas.ai", label: "Margaritas.ai", tag: "Hospitality & AI" },
   { url: "https://may.construction", label: "May Construction", tag: "Construction" },
   { url: "https://animatedmedical.com", label: "Animated Medical", tag: "Healthcare" },
@@ -172,7 +172,7 @@ const Hero = () => {
             </div>
             <div className="relative h-[240px] sm:h-[280px] lg:h-[300px] overflow-hidden bg-[#ECEAE6]">
               <div
-                className="absolute left-1/2 top-0 w-[1280px] max-w-[220%] origin-top"
+                className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
                 style={{ height: 820, transform: `translateX(-50%) scale(${0.4 * previewScale})` }}
               >
                 <iframe
@@ -320,7 +320,7 @@ const WorkPreviewCard = ({ url, label, tag, previewScale = 1 }) => {
 
         <div className="relative h-[220px] sm:h-[260px] lg:h-[240px] overflow-hidden bg-[#ECEAE6]">
           <div
-            className="absolute left-1/2 top-0 w-[1280px] max-w-[220%] origin-top"
+            className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
             style={{ height: 820, transform: `translateX(-50%) scale(${0.38 * previewScale})` }}
           >
             <iframe

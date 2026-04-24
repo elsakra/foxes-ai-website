@@ -416,7 +416,7 @@ const Testimonials = () => (
 // Portfolio (fixed set of live sites — live iframe preview + full-card link)
 // ————————————————————————————————————————————————————
 const PORTFOLIO_SITES = [
-  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace", previewScale: 1.34 },
+  { url: "https://poolbidder.com", label: "Pool Bidder", tag: "Marketplace", previewScale: 1.2 },
   { url: "https://margaritas.ai", label: "Margaritas.ai", tag: "Hospitality & AI" },
   { url: "https://may.construction", label: "May Construction", tag: "Construction" },
   { url: "https://animatedmedical.com", label: "Animated Medical", tag: "Healthcare" },
@@ -455,7 +455,7 @@ const PortfolioPreviewCard = ({ url, label, tag, previewScale = 1 }) => {
 
         <div className="relative h-[220px] sm:h-[260px] lg:h-[240px] overflow-hidden bg-[#ECEAE6]">
           <div
-            className="absolute left-1/2 top-0 w-[1280px] max-w-[220%] origin-top"
+            className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
             style={{ height: 820, transform: `translateX(-50%) scale(${0.38 * previewScale})` }}
           >
             <iframe
