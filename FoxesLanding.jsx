@@ -398,35 +398,47 @@ const Testimonial = ({ quote, name, role, result, tone = "cream" }) => (
   </div>
 );
 
+const CLIENT_TESTIMONIALS = [
+  {
+    tone: "dark",
+    quote:
+      "We finally have a site that matches the product — clear story, fast pages, and none of the usual agency runaround. It was live while we were still juggling everything else.",
+    name: "Pool Bidder",
+    role: "poolbidder.com",
+    result: "Live same week",
+  },
+  {
+    quote:
+      "The design feels premium and the process was straightforward. We reviewed a real build instead of endless mockups, which kept us moving.",
+    name: "Margaritas.ai",
+    role: "margaritas.ai",
+    result: "Full refresh",
+  },
+  {
+    quote:
+      "Referrals and bids land better because the site finally looks like the company we run. Straight talk, fast execution, no fluff.",
+    name: "May Construction",
+    role: "may.construction",
+    result: "Credibility win",
+  },
+];
+
 const Testimonials = () => (
   <section className="py-24 lg:py-28 bg-cream">
     <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
       <div className="max-w-[720px] mb-14">
-        <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.12em] mb-5">Real owners, real results</div>
+        <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.12em] mb-5">Client voices</div>
         <h2 className="font-display font-semibold text-[40px] sm:text-[48px] display-tight balance">
-          People keep texting us after their call.
+          What leaders say after we ship.
         </h2>
+        <p className="mt-4 text-[17px] text-ink/70 pretty">
+          Summarized from recent feedback after we shipped sites for these teams (portfolio below).
+        </p>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Testimonial
-          tone="dark"
-          quote="I showed up thinking I'd get a pitch. Instead I got a website. I literally said yes on the call."
-          name="Tony D."
-          role="Owner, Napule (Nashville)"
-          result="+38% bookings / mo"
-        />
-        <Testimonial
-          quote="My old site hadn't been touched since 2016. Patrizio had a new one ready in an hour. An hour."
-          name="Rachel K."
-          role="Living Waters Yoga"
-          result="Live in 1 day"
-        />
-        <Testimonial
-          quote="The fact that I could walk with the code made it a no-brainer to just take the call. I stayed for the $99."
-          name="Marcus T."
-          role="HV Urban Development"
-          result="Hosts with us"
-        />
+        {CLIENT_TESTIMONIALS.map((t) => (
+          <Testimonial key={t.role} {...t} />
+        ))}
       </div>
     </div>
   </section>

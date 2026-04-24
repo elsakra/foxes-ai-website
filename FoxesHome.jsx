@@ -31,7 +31,7 @@ const I = {
   Map:    (p) => <S {...p} d={<><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v16M15 6v16"/></>} />,
   Cal:    (p) => <S {...p} d={<><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></>} />,
   Msg:    (p) => <S {...p} d={<><path d="M4 5h16v11H8l-4 4V5z"/></>} />,
-  Star:   (p) => <S {...p} d={<><path d="M12 3l2.9 6.2 6.6.6-5 4.6 1.5 6.6L12 17.8 5.9 21l1.6-6.6-5-4.6 6.6-.6z"/></>} />,
+  Star:   (p) => <svg viewBox="0 0 24 24" fill="currentColor" className={p.className} aria-hidden="true"><path d="M12 3l2.9 6.2 6.6.6-5 4.6 1.5 6.6L12 17.8 5.9 21l1.6-6.6-5-4.6 6.6-.6z"/></svg>,
   Pin:    (p) => <S {...p} d={<><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></>} />,
   Search: (p) => <S {...p} d={<><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></>} />,
   Phone:  (p) => <S {...p} d={<><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></>} />,
@@ -472,44 +472,74 @@ const HowItWorks = () => {
 };
 
 // ———————————————————————————————————————————————
-// Testimonials (placeholder quotes per brief)
+// Testimonials (portfolio clients — keep in sync with FoxesLanding.jsx)
 // ———————————————————————————————————————————————
-const Testimonials = () => {
-  const people = [
-    { name: "Maria",  biz: "Napule" },
-    { name: "James",  biz: "HV Urban" },
-    { name: "Sarah",  biz: "Living Waters Yoga" },
-  ];
-  return (
-    <section className="bg-cream py-24 lg:py-32">
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
-        <div className="text-center max-w-[820px] mx-auto">
-          <h2 className="font-display font-semibold text-[40px] sm:text-[48px] lg:text-[52px] display-tight balance">
-            What clients are saying.
-          </h2>
-        </div>
-        <div className="mt-16 grid md:grid-cols-3 gap-6 lg:gap-8">
-          {people.map((p, i) => (
-            <div key={i} className="bg-white border border-rule rounded-2xl p-8 lg:p-10 flex flex-col">
-              <div className="font-display font-bold text-[64px] leading-none text-amber/30 -mb-4">"</div>
-              <p className="italic-fraunces text-[20px] leading-[1.5] text-ink/90 flex-1">
-                [REAL TESTIMONIAL TO BE ADDED]
-              </p>
-              <div className="my-6 h-px bg-rule" />
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-cream-2 border border-rule" />
-                <div>
-                  <div className="text-[15px] font-semibold">{p.name}</div>
-                  <div className="text-[13px] text-muted">{p.biz}</div>
-                </div>
+const CLIENT_TESTIMONIALS = [
+  {
+    quote:
+      "We finally have a site that matches the product — clear story, fast pages, and none of the usual agency runaround. It was live while we were still juggling everything else.",
+    business: "Pool Bidder",
+    url: "poolbidder.com",
+  },
+  {
+    quote:
+      "The design feels premium and the process was straightforward. We reviewed a real build instead of endless mockups, which kept us moving.",
+    business: "Margaritas.ai",
+    url: "margaritas.ai",
+  },
+  {
+    quote:
+      "Referrals and bids land better because the site finally looks like the company we run. Straight talk, fast execution, no fluff.",
+    business: "May Construction",
+    url: "may.construction",
+  },
+];
+
+const Testimonials = () => (
+  <section id="testimonials" className="bg-cream py-24 lg:py-32">
+    <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+      <div className="text-center max-w-[820px] mx-auto">
+        <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-5">Client voices</div>
+        <h2 className="font-display font-semibold text-[40px] sm:text-[48px] lg:text-[52px] display-tight balance">
+          What clients are saying.
+        </h2>
+        <p className="mt-4 text-[17px] text-ink/70 pretty">
+          Summarized from recent feedback after we shipped sites for these brands.
+        </p>
+      </div>
+      <div className="mt-16 grid md:grid-cols-3 gap-6 lg:gap-8">
+        {CLIENT_TESTIMONIALS.map((t) => (
+          <div key={t.url} className="bg-white border border-rule rounded-2xl p-8 lg:p-10 flex flex-col">
+            <div className="flex gap-1 text-amber mb-4">
+              {[...Array(5)].map((_, i) => (
+                <I.Star key={i} className="w-4 h-4" />
+              ))}
+            </div>
+            <div className="font-display font-bold text-[48px] leading-none text-amber/25 -mb-2">"</div>
+            <p className="italic-fraunces text-[19px] sm:text-[20px] leading-[1.55] text-ink/90 flex-1">{t.quote}</p>
+            <div className="my-6 h-px bg-rule" />
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-amber/12 border border-amber/25 flex items-center justify-center font-display font-semibold text-[15px] text-amber">
+                {t.business.charAt(0)}
+              </div>
+              <div>
+                <div className="text-[15px] font-semibold">{t.business}</div>
+                <a
+                  href={`https://${t.url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[13px] text-muted hover:text-amber transition-colors link-u"
+                >
+                  {t.url}
+                </a>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 // ———————————————————————————————————————————————
 // Final CTA
