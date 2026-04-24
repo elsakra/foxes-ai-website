@@ -1,17 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <rect width="100" height="100" rx="22" fill="#F7F4EE"/>
-  <!-- ears -->
-  <path fill="#C9531E" d="M28 42 22 16 44 34Z"/>
-  <path fill="#A63F18" d="m30 38-5-16 12 12z"/>
-  <path fill="#C9531E" d="M72 42 78 16 56 34Z"/>
-  <path fill="#A63F18" d="m70 38 5-16-12 12z"/>
-  <!-- face -->
+  <path fill="#C9531E" d="M 28 42 L 22 16 L 44 34 Z"/>
+  <path fill="#A63F18" d="M 30 38 L 25 22 L 36 31 Z"/>
+  <path fill="#C9531E" d="M 72 42 L 78 16 L 56 34 Z"/>
+  <path fill="#A63F18" d="M 70 38 L 75 22 L 64 31 Z"/>
   <ellipse cx="50" cy="56" rx="30" ry="28" fill="#C9531E"/>
-  <!-- muzzle -->
   <ellipse cx="50" cy="64" rx="20" ry="15" fill="#FFFBF7"/>
-  <!-- eyes -->
   <ellipse cx="38" cy="50" rx="4.5" ry="5.5" fill="#2C1810"/>
   <ellipse cx="62" cy="50" rx="4.5" ry="5.5" fill="#2C1810"/>
-  <!-- nose -->
   <ellipse cx="50" cy="60" rx="5" ry="4" fill="#2C1810"/>
 </svg>
