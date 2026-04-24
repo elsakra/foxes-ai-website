@@ -691,11 +691,11 @@ const FAQ = () => {
     { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the two answers you gave us in the form. Our designers plus modern AI tools compress what used to take two weeks into under an hour." },
     { q: "What's included in the $99/mo?", a: "Hosting, SSL, your .com domain, branded business email, booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, daily backups, and a lead inbox. Zero labor fees. Ever." },
     { q: "When does the $199/mo apply?", a: "If your business needs bookings, light e‑commerce, or multi‑location support. We'll tell you on the call — no surprises, no upsells buried later." },
-    { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Has built websites for WH Properties, Parasol Management, The Cauble Group, Napule, Living Waters Yoga, HV Urban, and Kevin Sully TV." },
+    { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, May Construction, Animated Medical, SC Law Center, and more." },
     { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We'll even give you a free 15‑minute help call to deploy it on your own host. That's the whole guarantee — no clawback, no drama." },
   ];
   return (
-    <section className="bg-cream-2 py-24 lg:py-28">
+    <section id="faq" className="scroll-mt-28 bg-cream-2 py-24 lg:py-28">
       <div className="max-w-[880px] mx-auto px-6 lg:px-10">
         <div className="text-center mb-14">
           <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.12em] mb-5">Frequently asked</div>

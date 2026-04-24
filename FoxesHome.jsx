@@ -45,6 +45,12 @@ const I = {
   X:      (p) => <S {...p} d={<><path d="M6 6l12 12M18 6L6 18"/></>} />,
 };
 
+const Plus = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+  </svg>
+);
+
 // ———————————————————————————————————————————————
 // Header with sticky blur after 80px
 // ———————————————————————————————————————————————
@@ -473,6 +479,81 @@ const HowItWorks = () => {
 };
 
 // ———————————————————————————————————————————————
+// FAQ (same topics as lander — anchor #faq for nav)
+// ———————————————————————————————————————————————
+const FAQ = () => {
+  const [open, setOpen] = useState(0);
+  const items = [
+    { q: "Is it really free?", a: "Yes. The design and build of your website costs you nothing. If you want us to host it, run your domain, email, booking, and everything else, it's $99–$199/month. If not, we hand you the code. Your choice, on the call." },
+    { q: "What's the catch?", a: "There isn't one. We can build sites fast, and our bet is that once you see yours, you'll want us to keep running it. But if you don't — we'll hand over the code and wish you luck." },
+    { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the two answers you gave us in the form. Our designers plus modern AI tools compress what used to take two weeks into under an hour." },
+    { q: "What's included in the $99/mo?", a: "Hosting, SSL, your .com domain, branded business email, booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, daily backups, and a lead inbox. Zero labor fees. Ever." },
+    { q: "When does the $199/mo apply?", a: "If your business needs bookings, light e‑commerce, or multi‑location support. We'll tell you on the call — no surprises, no upsells buried later." },
+    { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, May Construction, Animated Medical, SC Law Center, and more." },
+    { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We'll even give you a free 15‑minute help call to deploy it on your own host. That's the whole guarantee — no clawback, no drama." },
+  ];
+  return (
+    <section id="faq" className="scroll-mt-28 bg-cream-2 py-24 lg:py-32 border-y border-rule">
+      <div className="max-w-[880px] mx-auto px-6 lg:px-10">
+        <div className="text-center mb-14">
+          <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.12em] mb-5">Frequently asked</div>
+          <h2 className="font-display font-semibold text-[40px] sm:text-[48px] display-tight balance">
+            Questions you should ask us.
+          </h2>
+        </div>
+
+        <div className="border-t border-rule">
+          {items.map((it, i) => {
+            const isOpen = open === i;
+            return (
+              <div key={i} className={`border-b border-rule ${isOpen ? "open" : ""}`}>
+                <button
+                  type="button"
+                  onClick={() => setOpen(isOpen ? -1 : i)}
+                  className="w-full flex items-center justify-between gap-6 py-6 lg:py-7 text-left"
+                  aria-expanded={isOpen}
+                >
+                  <span className="font-display font-semibold text-[20px] lg:text-[22px] display-tight pr-4">
+                    {it.q}
+                  </span>
+                  <span
+                    className={`shrink-0 w-9 h-9 rounded-full border flex items-center justify-center transition-colors duration-200 ${
+                      isOpen ? "border-amber bg-amber" : "border-rule bg-white"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <Plus
+                      className={`w-4 h-4 shrink-0 block transition-transform duration-300 ease-out ${
+                        isOpen ? "rotate-45 text-white" : "rotate-0 text-ink"
+                      }`}
+                    />
+                  </span>
+                </button>
+                <div className={`acc-body ${isOpen ? "open" : ""}`}>
+                  <div>
+                    <p className="pb-7 pr-4 sm:pr-16 text-[17px] leading-[1.65] text-ink/75 pretty">{it.a}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-white border border-rule flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+          <div>
+            <div className="font-display font-semibold text-[22px]">Still have questions?</div>
+            <div className="text-[15px] text-muted mt-1">Text Patrizio directly. Real phone. Real human.</div>
+          </div>
+          <a href="sms:+16155550142" className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-ink text-cream text-[14px] font-semibold hover:bg-amber transition-colors">
+            Text (615) 555‑0142
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ———————————————————————————————————————————————
 // Testimonials (portfolio clients — keep in sync with FoxesLanding.jsx)
 // ———————————————————————————————————————————————
 const CLIENT_TESTIMONIALS = [
@@ -618,6 +699,7 @@ const App = () => (
     <Work />
     <Included />
     <HowItWorks />
+    <FAQ />
     <Testimonials />
     <FinalCTA />
     <Footer />
