@@ -18,7 +18,7 @@ const I = {
   Check:    (p) => <S {...p} d={<><path d="M5 12l5 5 9-10"/></>} />,
   Play:     (p) => <S {...p} d={<><path d="M6 4l14 8-14 8z"/></>} fill="currentColor" stroke="none" />,
   File:     (p) => <S {...p} d={<><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></>} />,
-  Phone:    (p) => <S {...p} d={<><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></>} />,
+  Mail:     (p) => <S {...p} d={<><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7 9-7"/></>} />,
   ArrowR:   (p) => <S {...p} d={<><path d="M5 12h14M13 6l6 6-6 6"/></>} />,
   Alert:    (p) => <S {...p} d={<><path d="M12 3l10 18H2z"/><path d="M12 10v4M12 18v.01"/></>} />,
 };
@@ -51,7 +51,7 @@ const Hero = () => (
         Your website, yours to deploy.
       </h1>
       <p className="mt-6 text-[20px] sm:text-[22px] leading-[1.55] text-ink/75 pretty max-w-[720px]">
-        We've emailed you your code — all source files, assets, and a README. Everything you need to get your site live is below. If you get stuck, your free 15‑minute help call is at the bottom of this page.
+        We've emailed you your code — all source files, assets, and a README. Everything you need to get your site live is below. Self‑hosting is yours to manage; we don't include hands‑on deploy support, but the guide below and email are there if something's unclear.
       </p>
       <div className="mt-8 inline-flex items-start gap-3 p-4 rounded-xl bg-white border border-rule max-w-[520px] no-print">
         <I.Info className="w-5 h-5 text-forest shrink-0 mt-0.5" />
@@ -460,15 +460,15 @@ const RealityCheck = () => (
 // ———————————————————————————————————————————————
 const Help = () => {
   const cards = [
-    { Ic: I.Play,  h: "Watch Patrizio deploy a site, end to end.",      b: "A 28‑minute screen recording walking through every step above on a real site. Pause, rewind, follow along.", cta: "Watch the walkthrough" },
-    { Ic: I.File,  h: "Download the full PDF guide.",                    b: "Everything on this page, formatted for print or offline reference. 42 pages, plus a quick‑reference checklist.", cta: "Download PDF" },
-    { Ic: I.Phone, h: "Stuck? Book a free 15‑minute help call.",         b: "If you hit a wall, grab a slot on our calendar. We'll hop on, figure it out, and send you on your way. No pitch — just help.", cta: "Book a help call" },
+    { Ic: I.Play,  h: "Watch Patrizio deploy a site, end to end.",      b: "A 28‑minute screen recording walking through every step above on a real site. Pause, rewind, follow along.", cta: "Watch the walkthrough", href: "#" },
+    { Ic: I.File,  h: "Download the full PDF guide.",                    b: "Everything on this page, formatted for print or offline reference. 42 pages, plus a quick‑reference checklist.", cta: "Download PDF", href: "#" },
+    { Ic: I.Mail,  h: "Questions about the guide?",                      b: "We don't offer hands‑on help to deploy your export elsewhere. If something in this doc is unclear, email us — or switch to hosted and we'll run the stack for you.", cta: "Email patrizio@foxes.ai", href: "mailto:patrizio@foxes.ai" },
   ];
   return (
     <section className="bg-white py-24 lg:py-28 border-y border-rule">
       <div className="max-w-[1100px] mx-auto px-6 lg:px-10">
         <h2 className="font-display font-semibold text-[36px] sm:text-[44px] display-tight balance max-w-[720px]">
-          If you get stuck — we've got you.
+          Resources — you're driving the deploy.
         </h2>
         <div className="mt-12 grid md:grid-cols-3 gap-5 lg:gap-6">
           {cards.map((c, i) => (
@@ -476,7 +476,7 @@ const Help = () => {
               <c.Ic className="w-6 h-6 text-amber" />
               <h3 className="mt-4 font-display font-semibold text-[22px] display-tight pretty">{c.h}</h3>
               <p className="mt-2 text-[15px] leading-[1.6] text-ink/75 flex-1">{c.b}</p>
-              <a href="#" className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-amber link-u">{c.cta} →</a>
+              <a href={c.href} className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-amber link-u">{c.cta} →</a>
             </div>
           ))}
         </div>

@@ -490,7 +490,7 @@ const FAQ = () => {
     { q: "What's included in the $99/mo?", a: "Hosting, SSL, your .com domain, branded business email, booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, daily backups, and a lead inbox. Zero labor fees. Ever." },
     { q: "When does the $199/mo apply?", a: "If your business needs bookings, light e‑commerce, or multi‑location support. We'll tell you on the call — no surprises, no upsells buried later." },
     { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, May Construction, Animated Medical, SC Law Center, and more." },
-    { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We'll even give you a free 15‑minute help call to deploy it on your own host. That's the whole guarantee — no clawback, no drama." },
+    { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We don't include a free deploy hand-holding call for self‑hosting — that's the tradeoff for $0. No clawback, no drama." },
   ];
   return (
     <section id="faq" className="scroll-mt-28 bg-cream-2 py-24 lg:py-32 border-y border-rule">

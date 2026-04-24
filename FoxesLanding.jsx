@@ -287,7 +287,7 @@ const Hero = () => (
             <Shield className="w-6 h-6 text-forest shrink-0 mt-0.5" />
             <div>
               <div className="font-display font-semibold text-[18px] text-ink">Our "Walk Away" guarantee</div>
-              <div className="mt-1 text-[14px] text-ink/70">If you hate the design, walk. Keep the code. We'll even give you a 15‑min help call to deploy it elsewhere. Seriously.</div>
+              <div className="mt-1 text-[14px] text-ink/70">If you hate the design, walk. Keep the code. No clawback, no drama.</div>
             </div>
           </div>
         </div>
@@ -621,7 +621,7 @@ const Offer = () => (
               Take the code. Host it yourself.
             </h3>
             <p className="mt-4 text-[16px] leading-[1.6] text-ink/75 flex-1">
-              We hand you a clean export + a deploy guide + a free 15‑min help call if you get stuck. The site is yours, free and clear. No catch, no weird license.
+              We hand you a clean export + a deploy guide. Self‑hosting is on you — we don't provide hands‑on help to deploy elsewhere. The site is yours, free and clear. No catch, no weird license.
             </p>
             <div className="mt-8 pt-5 border-t border-rule">
               <div className="text-[14px] font-semibold text-forest">Cost: $0, forever</div>
@@ -661,7 +661,7 @@ const FAQ = () => {
     { q: "What's included in the $99/mo?", a: "Hosting, SSL, your .com domain, branded business email, booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, daily backups, and a lead inbox. Zero labor fees. Ever." },
     { q: "When does the $199/mo apply?", a: "If your business needs bookings, light e‑commerce, or multi‑location support. We'll tell you on the call — no surprises, no upsells buried later." },
     { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, May Construction, Animated Medical, SC Law Center, and more." },
-    { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We'll even give you a free 15‑minute help call to deploy it on your own host. That's the whole guarantee — no clawback, no drama." },
+    { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We don't include a free deploy hand-holding call for self‑hosting — that's the tradeoff for $0. No clawback, no drama." },
   ];
   return (
     <section id="faq" className="scroll-mt-28 bg-cream-2 py-24 lg:py-28">
