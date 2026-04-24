@@ -25,16 +25,6 @@ const Plus = ({ className = "" }) => (
     <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
   </svg>
 );
-const Play = ({ className = "" }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-    <path d="M8 5.5v13l11-6.5z" />
-  </svg>
-);
-const SoundOff = ({ className = "" }) => (
-  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-    <path d="M4 9v6h4l5 4V5L8 9H4zM16 9l4 6M20 9l-4 6" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
 const Star = ({ className = "" }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
     <path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7L2 9.5l7.1-.6L12 2z" />
@@ -226,114 +216,93 @@ const LiveActivity = () => {
 // ————————————————————————————————————————————————————
 // Hero
 // ————————————————————————————————————————————————————
-const Hero = () => {
-  const [muted, setMuted] = useState(true);
-  return (
-    <section id="top" className="relative grain">
-      <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-20 pb-20 lg:pb-28">
-        <div className="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 xl:gap-20 items-start">
-          {/* LEFT */}
-          <div>
-            <div className="mb-6">
-              <LiveActivity />
-            </div>
-
-            <h1 className="font-display font-semibold text-[44px] sm:text-[56px] lg:text-[68px] xl:text-[76px] display-tight balance text-ink">
-              We'll design your new website <em className="italic font-normal text-amber">before</em> our first call.
-            </h1>
-
-            <p className="mt-7 text-[19px] sm:text-[22px] leading-[1.55] text-ink/75 pretty max-w-[600px]">
-              Book 20 minutes. When we hop on Zoom, your site is already built. If you love it — it's yours. If not — take the code and walk. <span className="text-ink font-medium">Either way, you pay nothing.</span>
-            </p>
-
-            {/* Price anchor chip */}
-            <div className="mt-8 inline-flex items-center gap-3 text-[14px]">
-              <span className="px-3 h-8 inline-flex items-center rounded-full bg-ink/5 border border-rule text-muted line-through decoration-amber decoration-2 tnum">Agencies: $6,000–$15,000</span>
-              <ArrowRight className="w-4 h-4 text-muted" />
-              <span className="px-3 h-8 inline-flex items-center rounded-full bg-forest text-cream font-semibold tnum">$0 to see yours</span>
-            </div>
-
-            {/* Video placeholder — Patrizio photo under forest wash */}
-            <div className="mt-10 relative rounded-2xl overflow-hidden border border-rule card-shadow">
-              <div className="aspect-video relative">
-                <img
-                  src={PATRIZIO_PHOTO}
-                  alt="Patrizio Murdocca"
-                  width={1280}
-                  height={720}
-                  className="absolute inset-0 w-full h-full object-cover object-[center_15%]"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-forest/92 via-forest/82 to-[#15301f]/92" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <button className="group w-20 h-20 rounded-full bg-cream text-forest flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
-                    <Play className="w-7 h-7 translate-x-0.5" />
-                  </button>
-                </div>
-                <button
-                  onClick={() => setMuted((m) => !m)}
-                  className="absolute left-4 bottom-4 inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-black/50 backdrop-blur text-cream text-[13px] font-medium hover:bg-black/70 transition-colors"
-                >
-                  <SoundOff className="w-4 h-4" />
-                  {muted ? "Unmute" : "Mute"}
-                </button>
-                <div className="absolute right-4 bottom-4 text-[12px] text-cream/80 font-medium tnum">0:47 / 1:58</div>
-                <div className="absolute left-4 top-4 inline-flex items-center gap-2 text-[12px] text-cream/90 eyebrow uppercase">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber animate-pulse" />
-                  Founder intro — 1 min
-                </div>
-              </div>
-            </div>
-            <p className="mt-4 italic text-[15px] text-muted max-w-[520px]">
-              "I'm Patrizio. I've built 250+ sites. Let me show you what yours could look like."
-            </p>
-
-            {/* Stat row */}
-            <div className="mt-12 grid grid-cols-3 divide-x divide-rule border-y border-rule py-8">
-              <Stat big="250+" label="sites delivered" />
-              <Stat big="47 min" label="avg. build time" />
-              <Stat big="$0" label="to see yours" />
-            </div>
-
-            {/* Bullet checklist */}
-            <ul className="mt-10 space-y-4">
-              {[
-                <>Your site is <em className="italic">designed, built, and live-previewed</em> before we talk</>,
-                <>Love it? <span className="font-semibold">$99/mo</span> — hosting, domain, email, booking, SEO, everything</>,
-                <>Don't love it? Take the code. No cost. No contract. No weirdness.</>,
-                <>20 minutes on Zoom. No slide decks. No "discovery". Just your site.</>,
-              ].map((t, i) => (
-                <li key={i} className="flex items-start gap-3 text-[17px] text-ink/85">
-                  <AmberCheck />
-                  <span>{t}</span>
-                </li>
-              ))}
-            </ul>
-
-            {/* Guarantee strip */}
-            <div className="mt-10 flex items-start gap-4 p-5 rounded-xl bg-forest/5 border border-forest/15">
-              <Shield className="w-6 h-6 text-forest shrink-0 mt-0.5" />
-              <div>
-                <div className="font-display font-semibold text-[18px] text-ink">Our "Walk Away" guarantee</div>
-                <div className="mt-1 text-[14px] text-ink/70">If you hate the design, walk. Keep the code. We'll even give you a 15‑min help call to deploy it elsewhere. Seriously.</div>
-              </div>
-            </div>
+const Hero = () => (
+  <section id="top" className="relative grain">
+    <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-20 pb-20 lg:pb-28">
+      <div className="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 xl:gap-20 items-start">
+        <div>
+          <div className="mb-6">
+            <LiveActivity />
           </div>
 
-          {/* RIGHT — Calendly booking */}
-          <div className="lg:sticky lg:top-24">
-            <BookingCard />
-            <div className="mt-4 flex items-center justify-center gap-2 text-[12px] text-muted">
-              <Clock className="w-3.5 h-3.5" />
-              <span>Next availability: <span className="text-ink font-medium">Tomorrow, 10:00 AM CT</span></span>
+          <h1 className="font-display font-semibold text-[44px] sm:text-[56px] lg:text-[68px] xl:text-[76px] display-tight balance text-ink">
+            We'll design your new website <em className="italic font-normal text-amber">before</em> our first call.
+          </h1>
+
+          <p className="mt-7 text-[19px] sm:text-[22px] leading-[1.55] text-ink/75 pretty max-w-[600px]">
+            Book 20 minutes. When we hop on Zoom, your site is already built. If you love it — it's yours. If not — take the code and walk. <span className="text-ink font-medium">Either way, you pay nothing.</span>
+          </p>
+
+          <div className="mt-8 inline-flex items-center gap-3 text-[14px]">
+            <span className="px-3 h-8 inline-flex items-center rounded-full bg-ink/5 border border-rule text-muted line-through decoration-amber decoration-2 tnum">Agencies: $6,000–$15,000</span>
+            <ArrowRight className="w-4 h-4 text-muted" />
+            <span className="px-3 h-8 inline-flex items-center rounded-full bg-forest text-cream font-semibold tnum">$0 to see yours</span>
+          </div>
+
+          {/* Portrait + signature — swap for founder video when ready */}
+          <figure className="mt-10 rounded-2xl overflow-hidden border border-rule bg-white card-shadow">
+            <div className="relative w-full max-w-[400px] aspect-[3/4] mx-auto bg-cream-2">
+              <img
+                src={PATRIZIO_PHOTO}
+                alt="Patrizio Murdocca, founder of Foxes.ai"
+                width={800}
+                height={1067}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <figcaption className="px-6 sm:px-8 py-6 sm:py-7 bg-cream border-t border-rule text-center">
+              <p className="text-[15px] sm:text-[16px] leading-relaxed text-ink/75 italic font-display max-w-[360px] mx-auto">
+                "I'm Patrizio. I've built 250+ sites. Let me show you what yours could look like."
+              </p>
+              <p className="mt-5 font-display text-[clamp(1.5rem,4vw,1.85rem)] text-ink italic font-medium tracking-tight">
+                Patrizio Murdocca
+              </p>
+              <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-muted font-semibold">Founder, Foxes.ai</p>
+            </figcaption>
+          </figure>
+
+          <div className="mt-12 grid grid-cols-3 divide-x divide-rule border-y border-rule py-8">
+            <Stat big="250+" label="sites delivered" />
+            <Stat big="47 min" label="avg. build time" />
+            <Stat big="$0" label="to see yours" />
+          </div>
+
+          <ul className="mt-10 space-y-4">
+            {[
+              <>Your site is <em className="italic">designed, built, and live-previewed</em> before we talk</>,
+              <>Love it? <span className="font-semibold">$99/mo</span> — hosting, domain, email, booking, SEO, everything</>,
+              <>Don't love it? Take the code. No cost. No contract. No weirdness.</>,
+              <>20 minutes on Zoom. No slide decks. No "discovery". Just your site.</>,
+            ].map((t, i) => (
+              <li key={i} className="flex items-start gap-3 text-[17px] text-ink/85">
+                <AmberCheck />
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-10 flex items-start gap-4 p-5 rounded-xl bg-forest/5 border border-forest/15">
+            <Shield className="w-6 h-6 text-forest shrink-0 mt-0.5" />
+            <div>
+              <div className="font-display font-semibold text-[18px] text-ink">Our "Walk Away" guarantee</div>
+              <div className="mt-1 text-[14px] text-ink/70">If you hate the design, walk. Keep the code. We'll even give you a 15‑min help call to deploy it elsewhere. Seriously.</div>
             </div>
           </div>
         </div>
+
+        <div className="lg:sticky lg:top-24">
+          <BookingCard />
+          <div className="mt-4 flex items-center justify-center gap-2 text-[12px] text-muted">
+            <Clock className="w-3.5 h-3.5" />
+            <span>Next availability: <span className="text-ink font-medium">Tomorrow, 10:00 AM CT</span></span>
+          </div>
+        </div>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 const Stat = ({ big, label }) => (
   <div className="px-4 first:pl-0 last:pr-0 text-center first:text-left last:text-right">
