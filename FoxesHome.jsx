@@ -1,6 +1,7 @@
 const { useState, useEffect, useRef } = React;
 
-const BUILD_URL = "/build"; // production CTA target
+/** Opens the lander booking card + Calendly embed (no separate /build route on static hosting). */
+const BOOKING_URL = "/lander.html#book";
 const LANDER_URL = "/lander.html";
 const DIY_URL = "/diy.html";
 const PATRIZIO_PHOTO = "patrizio-20bio.avif";
@@ -69,7 +70,7 @@ const Header = () => {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <a href={BUILD_URL} className="hidden sm:inline-flex items-center gap-1.5 h-11 px-6 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
+          <a href={BOOKING_URL} className="hidden sm:inline-flex items-center gap-1.5 h-11 px-6 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
             Get my free website
             <I.ArrowR className="w-4 h-4" />
           </a>
@@ -92,7 +93,7 @@ const Header = () => {
               <a key={l} href={h} onClick={() => setOpen(false)} className="font-display font-semibold text-[36px] display-tight py-3">{l}</a>
             ))}
           </nav>
-          <a href={BUILD_URL} className="mt-10 inline-flex items-center gap-2 h-14 px-8 rounded-full bg-amber text-white font-semibold">
+          <a href={BOOKING_URL} className="mt-10 inline-flex items-center gap-2 h-14 px-8 rounded-full bg-amber text-white font-semibold">
             Get my free website <I.ArrowR className="w-4 h-4"/>
           </a>
         </div>
@@ -126,7 +127,7 @@ const Hero = () => {
           Then we keep them running — hosting, domain, email, booking, reviews, the whole stack — for $99/mo, all‑in. Or take the code and run it yourself. Your call.
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-5">
-          <a href={BUILD_URL} className="group inline-flex items-center gap-2 h-12 px-7 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
+          <a href={BOOKING_URL} className="group inline-flex items-center gap-2 h-12 px-7 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
             Get my free website
             <I.ArrowR className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
           </a>
@@ -462,7 +463,7 @@ const HowItWorks = () => {
         </div>
 
         <div className="mt-20 text-center">
-          <a href={BUILD_URL} className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-amber text-white text-[16px] font-semibold hover:bg-[#B4471A] transition-colors">
+          <a href={BOOKING_URL} className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-amber text-white text-[16px] font-semibold hover:bg-[#B4471A] transition-colors">
             Book your call <I.ArrowR className="w-4 h-4"/>
           </a>
         </div>
@@ -556,7 +557,7 @@ const FinalCTA = () => (
       <p className="mt-6 text-[20px] sm:text-[22px] text-cream/75 max-w-[560px] mx-auto pretty">
         Book a 20‑minute call. We'll have your website built and ready when we hop on.
       </p>
-      <a href={BUILD_URL} className="mt-12 inline-flex items-center gap-2.5 h-16 px-12 rounded-full bg-amber text-white font-semibold text-[18px] hover:bg-[#B4471A] transition-colors">
+      <a href={BOOKING_URL} className="mt-12 inline-flex items-center gap-2.5 h-16 px-12 rounded-full bg-amber text-white font-semibold text-[18px] hover:bg-[#B4471A] transition-colors">
         Get my free website <I.ArrowR className="w-5 h-5"/>
       </a>
     </div>
@@ -588,7 +589,7 @@ const Footer = () => (
         <div>
           <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-amber mb-5">Get in touch</div>
           <ul className="space-y-3">
-            <li><a href={BUILD_URL} className="text-[15px] text-cream hover:text-amber transition-colors link-u">Book a call</a></li>
+            <li><a href={BOOKING_URL} className="text-[15px] text-cream hover:text-amber transition-colors link-u">Book a call</a></li>
             <li><a href="mailto:hi@foxes.ai" className="text-[15px] text-cream hover:text-amber transition-colors link-u">Email us</a></li>
             <li><a href="sms:+16155550142" className="text-[15px] text-cream hover:text-amber transition-colors link-u">Text (615) 555‑0142</a></li>
           </ul>

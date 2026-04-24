@@ -1,6 +1,7 @@
 const { useState, useEffect, useRef } = React;
 
-const SWITCH_URL = "/build?from=diy";
+/** Hosted signup / booking — same Calendly block as the lander. */
+const SWITCH_URL = "/lander.html?from=diy#book";
 
 // ———————————————————————————————————————————————
 // Icons — minimal, brand-consistent
