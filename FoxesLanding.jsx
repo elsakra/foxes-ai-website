@@ -253,10 +253,22 @@ const Hero = () => (
             Book 20 minutes. When we hop on Zoom, your site is already built. If you love it — it's yours. If not — take the code and walk. <span className="text-ink font-medium">Either way, you pay nothing.</span>
           </p>
 
-          <div className="mt-8 inline-flex items-center gap-3 text-[14px]">
-            <span className="px-3 h-8 inline-flex items-center rounded-full bg-ink/5 border border-rule text-muted line-through decoration-amber decoration-2 tnum">Agencies: $6,000–$15,000</span>
-            <ArrowRight className="w-4 h-4 text-muted" />
-            <span className="px-3 h-8 inline-flex items-center rounded-full bg-forest text-cream font-semibold tnum">$0 to see yours</span>
+          <div className="mt-8 max-w-[600px]">
+            <a
+              href="#book"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 min-h-[56px] px-8 rounded-full bg-amber text-white text-[16px] font-semibold hover:bg-[#B4471A] transition-colors shadow-lg shadow-amber/20"
+            >
+              Book my free website
+              <ArrowRight className="w-4 h-4 shrink-0" />
+            </a>
+            <p className="mt-3 text-[12px] sm:text-[13px] font-medium text-muted text-center sm:text-left tracking-wide">
+              No credit card · 20 minutes · Site already built
+            </p>
+            <p className="mt-5 text-[13px] sm:text-[14px] text-muted leading-snug">
+              <span className="line-through decoration-amber decoration-2 text-ink/45 tnum">Agencies: $6,000–$15,000</span>
+              <span className="text-ink/55"> · </span>
+              <span className="text-ink/70">See yours for $0 before you pay us anything.</span>
+            </p>
           </div>
 
           {/* Portrait + signature — swap for founder video when ready */}
@@ -800,17 +812,26 @@ const Footer = () => (
 // Mobile sticky CTA
 // ————————————————————————————————————————————————————
 const MobileCTA = () => {
-  const [show, setShow] = useState(false);
+  const [bookInView, setBookInView] = useState(false);
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > 600);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const el = document.getElementById("book");
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setBookInView(entry.isIntersecting),
+      { root: null, threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
+  const show = !bookInView;
   const scrollTo = () => document.getElementById("book")?.scrollIntoView({ behavior: "smooth", block: "start" });
   return (
-    <div className={`lg:hidden fixed inset-x-4 bottom-4 z-50 transition-all duration-300 ${show ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0 pointer-events-none"}`}>
+    <div
+      className={`lg:hidden fixed inset-x-4 bottom-4 z-50 transition-all duration-300 ${show ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0 pointer-events-none"}`}
+      aria-hidden={!show}
+    >
       <button
+        type="button"
         onClick={scrollTo}
         className="w-full h-14 rounded-full bg-amber text-white font-semibold text-[16px] inline-flex items-center justify-center gap-2 shadow-2xl"
       >
