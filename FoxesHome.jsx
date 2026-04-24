@@ -1,0 +1,526 @@
+const { useState, useEffect, useRef } = React;
+
+const BUILD_URL = "/build"; // production CTA target
+
+// ———————————————————————————————————————————————
+// Icons (minimal, brand-consistent — no starter-pack look)
+// ———————————————————————————————————————————————
+const S = ({ d, className = "", stroke = 1.5, fill = "none" }) => (
+  <svg viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">{d}</svg>
+);
+const I = {
+  Pencil: (p) => <S {...p} d={<><path d="M4 20h4L20 8l-4-4L4 16v4z"/><path d="M14 6l4 4"/></>} />,
+  Server: (p) => <S {...p} d={<><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/></>} />,
+  Trend:  (p) => <S {...p} d={<><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></>} />,
+  Shield: (p) => <S {...p} d={<><path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></>} />,
+  Globe:  (p) => <S {...p} d={<><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/></>} />,
+  Mail:   (p) => <S {...p} d={<><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7 9-7"/></>} />,
+  Save:   (p) => <S {...p} d={<><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h8V3M8 13h8v8H8z"/></>} />,
+  Lock:   (p) => <S {...p} d={<><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></>} />,
+  Map:    (p) => <S {...p} d={<><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v16M15 6v16"/></>} />,
+  Cal:    (p) => <S {...p} d={<><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></>} />,
+  Msg:    (p) => <S {...p} d={<><path d="M4 5h16v11H8l-4 4V5z"/></>} />,
+  Star:   (p) => <S {...p} d={<><path d="M12 3l2.9 6.2 6.6.6-5 4.6 1.5 6.6L12 17.8 5.9 21l1.6-6.6-5-4.6 6.6-.6z"/></>} />,
+  Pin:    (p) => <S {...p} d={<><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></>} />,
+  Search: (p) => <S {...p} d={<><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></>} />,
+  Phone:  (p) => <S {...p} d={<><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M11 18h2"/></>} />,
+  Bar:    (p) => <S {...p} d={<><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></>} />,
+  Inbox:  (p) => <S {...p} d={<><path d="M3 13l2-8h14l2 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/></>} />,
+  Life:   (p) => <S {...p} d={<><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5.5 5.5l4 4M14.5 14.5l4 4M18.5 5.5l-4 4M9.5 14.5l-4 4"/></>} />,
+  ArrowR: (p) => <S {...p} d={<><path d="M5 12h14M13 6l6 6-6 6"/></>} />,
+  ArrowD: (p) => <S {...p} d={<><path d="M12 5v14M6 13l6 6 6-6"/></>} />,
+  Menu:   (p) => <S {...p} d={<><path d="M4 7h16M4 12h16M4 17h16"/></>} />,
+  X:      (p) => <S {...p} d={<><path d="M6 6l12 12M18 6L6 18"/></>} />,
+};
+
+// ———————————————————————————————————————————————
+// Header with sticky blur after 80px
+// ———————————————————————————————————————————————
+const Header = () => {
+  const [stuck, setStuck] = useState(false);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setStuck(window.scrollY > 80);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${stuck ? "bg-cream/80 backdrop-blur-md border-b border-rule" : "bg-transparent border-b border-transparent"}`}>
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-10 h-16 lg:h-[72px] flex items-center justify-between">
+        <a href="/" className="flex items-center gap-2">
+          <span className="text-xl leading-none">🦊</span>
+          <span className="font-display font-semibold text-[20px] tracking-tight">Foxes<span className="text-amber">.</span>ai</span>
+        </a>
+        <nav className="hidden lg:flex items-center gap-8">
+          {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"]].map(([l,h]) => (
+            <a key={l} href={h} className="text-[15px] font-medium text-ink hover:text-amber transition-colors">{l}</a>
+          ))}
+        </nav>
+        <div className="flex items-center gap-3">
+          <a href={BUILD_URL} className="hidden sm:inline-flex items-center gap-1.5 h-11 px-6 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
+            Get my free website
+            <I.ArrowR className="w-4 h-4" />
+          </a>
+          <button onClick={() => setOpen(true)} className="lg:hidden w-10 h-10 rounded-full border border-rule bg-cream/70 flex items-center justify-center">
+            <I.Menu className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+      {open && (
+        <div className="lg:hidden fixed inset-0 bg-cream z-50 p-6">
+          <div className="flex items-center justify-between h-16">
+            <a href="/" className="flex items-center gap-2">
+              <span className="text-xl">🦊</span>
+              <span className="font-display font-semibold text-[20px]">Foxes<span className="text-amber">.</span>ai</span>
+            </a>
+            <button onClick={() => setOpen(false)} className="w-10 h-10 rounded-full border border-rule flex items-center justify-center"><I.X className="w-5 h-5"/></button>
+          </div>
+          <nav className="mt-10 flex flex-col gap-1">
+            {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"]].map(([l,h]) => (
+              <a key={l} href={h} onClick={() => setOpen(false)} className="font-display font-semibold text-[36px] display-tight py-3">{l}</a>
+            ))}
+          </nav>
+          <a href={BUILD_URL} className="mt-10 inline-flex items-center gap-2 h-14 px-8 rounded-full bg-amber text-white font-semibold">
+            Get my free website <I.ArrowR className="w-4 h-4"/>
+          </a>
+        </div>
+      )}
+    </header>
+  );
+};
+
+// ———————————————————————————————————————————————
+// Hero
+// ———————————————————————————————————————————————
+const Hero = () => (
+  <section className="relative grain pt-40 lg:pt-[180px] pb-28 lg:pb-32">
+    <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+      <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-8">
+        Websites for local businesses
+      </div>
+      <h1 className="font-display font-semibold display-tight balance text-ink text-[52px] sm:text-[72px] lg:text-[92px] xl:text-[104px] max-w-[1050px]">
+        Stunning websites. Built <span className="italic-fraunces text-amber">free</span>. Delivered before we even meet.
+      </h1>
+      <p className="mt-8 text-[20px] sm:text-[24px] leading-[1.5] text-ink/70 pretty max-w-[720px]">
+        Then we keep them running — hosting, domain, email, booking, reviews, the whole stack — for $99/mo, all‑in. Or take the code and run it yourself. Your call.
+      </p>
+      <div className="mt-10 flex flex-wrap items-center gap-5">
+        <a href={BUILD_URL} className="group inline-flex items-center gap-2 h-12 px-7 rounded-full bg-amber text-white text-[15px] font-semibold hover:bg-[#B4471A] transition-colors">
+          Get my free website
+          <I.ArrowR className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+        </a>
+        <a href="#work" className="inline-flex items-center gap-2 text-[16px] font-medium text-ink link-u">
+          See our work <I.ArrowD className="w-4 h-4" />
+        </a>
+      </div>
+
+      {/* Hero visual: browser frame */}
+      <figure className="mt-20 lg:mt-24">
+        <div className="rounded-2xl overflow-hidden border border-rule card-shadow bg-white">
+          {/* chrome */}
+          <div className="h-10 bg-cream-2 border-b border-rule flex items-center gap-2 px-4">
+            <span className="w-3 h-3 rounded-full bg-[#E8E2D5]" />
+            <span className="w-3 h-3 rounded-full bg-[#E8E2D5]" />
+            <span className="w-3 h-3 rounded-full bg-[#E8E2D5]" />
+            <div className="ml-4 h-6 px-3 inline-flex items-center rounded bg-white border border-rule text-[12px] text-muted tnum">livingwatersyoga.com</div>
+          </div>
+          {/* mock page — editorial, no fake screenshots */}
+          <div className="relative aspect-[16/8.2] bg-gradient-to-br from-[#93A58B] to-[#5F7C69] overflow-hidden">
+            <div className="absolute inset-0 ph-dark opacity-40" />
+            <div className="absolute inset-0 p-10 lg:p-16 flex flex-col justify-between text-cream">
+              <div className="flex items-center justify-between">
+                <div className="font-display font-semibold text-[20px]">Living Waters</div>
+                <div className="hidden sm:flex gap-6 text-[13px] uppercase tracking-[0.14em] text-cream/80">
+                  <span>Classes</span><span>Teachers</span><span>Visit</span><span>Book</span>
+                </div>
+              </div>
+              <div className="max-w-[620px]">
+                <div className="text-[11px] uppercase tracking-[0.18em] text-cream/70 mb-4">Nashville · since 2012</div>
+                <div className="font-display font-semibold text-[40px] sm:text-[56px] lg:text-[72px] display-tight balance">
+                  Slow mornings. Warm light. <span className="italic-fraunces">Breathe.</span>
+                </div>
+                <div className="mt-6 inline-flex items-center gap-2 h-10 px-5 rounded-full bg-cream text-forest text-[13px] font-semibold">
+                  Book a class <I.ArrowR className="w-3.5 h-3.5"/>
+                </div>
+              </div>
+              <div className="flex items-end justify-between">
+                <div className="text-[12px] text-cream/70">★★★★★ · 412 reviews</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-cream/60">Foxes.ai · 2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption className="mt-4 italic text-[15px] text-muted">
+          Living Waters Yoga — built in 47 minutes.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+);
+
+// ———————————————————————————————————————————————
+// What we do
+// ———————————————————————————————————————————————
+const Capabilities = () => {
+  const items = [
+    { Icon: I.Pencil, eyebrow: "Design", h: "We build it.",
+      b: "A custom website, designed around your business — not a template with your logo slapped on. Ready before our first call, so you judge the work, not a pitch." },
+    { Icon: I.Server, eyebrow: "Host", h: "We run it.",
+      b: "Hosting, SSL, your .com domain, branded business email, security monitoring, daily backups. One monthly price, no labor fees, no surprise invoices." },
+    { Icon: I.Trend,  eyebrow: "Grow", h: "We help it grow.",
+      b: "Booking widget, review automation, Google Maps integration, on‑page SEO, lead inbox, analytics. The stack that turns a website into a working storefront." },
+  ];
+  return (
+    <section className="bg-white py-24 lg:py-32 border-y border-rule">
+      <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+        <div className="text-center max-w-[820px] mx-auto">
+          <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-6">What we do</div>
+          <h2 className="font-display font-semibold text-[40px] sm:text-[52px] lg:text-[60px] display-tight balance">
+            Everything your business needs online, in one place.
+          </h2>
+        </div>
+        <div className="mt-20 grid md:grid-cols-3 gap-12 lg:gap-16">
+          {items.map((it, i) => (
+            <div key={i}>
+              <it.Icon className="w-8 h-8 text-amber" />
+              <div className="mt-5 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted">{it.eyebrow}</div>
+              <h3 className="mt-2 font-display font-semibold text-[28px] lg:text-[30px] display-tight">{it.h}</h3>
+              <p className="mt-3 text-[17px] leading-[1.6] text-ink/75 pretty max-w-[380px]">{it.b}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ———————————————————————————————————————————————
+// Founder note
+// ———————————————————————————————————————————————
+const Founder = () => (
+  <section id="about" className="bg-cream-2 py-24 lg:py-32">
+    <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+      <div className="grid lg:grid-cols-[2fr_3fr] gap-14 lg:gap-20 items-center">
+        {/* Portrait placeholder */}
+        <figure>
+          <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-rule relative bg-gradient-to-br from-[#B9A98A] to-[#8a7a5c]">
+            <div className="absolute inset-0 ph-dark" />
+            <div className="absolute inset-x-6 bottom-6 text-cream/90">
+              <div className="text-[11px] uppercase tracking-[0.18em] text-cream/70">Portrait</div>
+              <div className="font-display font-semibold text-[22px] display-tight mt-1">Patrizio Murdocca</div>
+            </div>
+          </div>
+          <figcaption className="mt-3 italic text-[14px] text-muted">Patrizio Murdocca, founder</figcaption>
+        </figure>
+
+        <div>
+          <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-6">Why we do this</div>
+          <h2 className="font-display font-semibold text-[36px] sm:text-[44px] lg:text-[48px] display-tight balance leading-[1.05]">
+            Local businesses deserve websites that match the work they do.
+          </h2>
+          <p className="mt-8 text-[19px] leading-[1.6] text-ink/85 pretty max-w-[620px]">
+            I spent years building 5th Factory into a design agency. When we sold to JBowman Creative, I thought I was done with agency work. But I kept seeing the same thing: local businesses — the best restaurants, the best yoga studios, the best tradespeople — stuck with websites that embarrassed them. They couldn't afford what I used to charge. So Foxes.ai was born: stunning websites, free. We make our money keeping them running. Not building them.
+          </p>
+          <p className="mt-5 text-[19px] leading-[1.6] text-ink/85 pretty max-w-[620px]">
+            My promise: if we can't build you something you love, we'll be the first to say so. If we can, you'll see it before you pay us a dime.
+          </p>
+          <div className="mt-8 italic-fraunces text-[22px]">— Patrizio</div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+// ———————————————————————————————————————————————
+// Work grid — asymmetric
+// ———————————————————————————————————————————————
+const WORK = [
+  { name: "Napule",             cat: "Restaurant",              tone: "amber",  span: "lg:col-span-2", ratio: "aspect-[16/9]" },
+  { name: "WH Properties",      cat: "Real Estate",             tone: "paper",  span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
+  { name: "HV Urban",           cat: "Urban Development",       tone: "forest", span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
+  { name: "The Cauble Group",   cat: "Commercial Real Estate",  tone: "ink",    span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
+  { name: "Living Waters Yoga", cat: "Wellness",                tone: "sage",   span: "lg:col-span-2", ratio: "aspect-[16/9]" },
+  { name: "Parasol Management", cat: "Property Management",     tone: "sand",   span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
+  { name: "Kevin Sully TV",     cat: "Media",                   tone: "ink",    span: "lg:col-span-1", ratio: "aspect-[4/5]"  },
+  { name: "5th Factory Archive",cat: "Agency Portfolio",        tone: "amber",  span: "lg:col-span-2", ratio: "aspect-[16/9]" },
+];
+
+const WorkTile = ({ name, cat, tone, span, ratio }) => {
+  const palettes = {
+    forest: "from-forest to-[#15301f]",
+    amber: "from-[#8a3812] to-[#C9531E]",
+    sand:  "from-[#D9CFB8] to-[#B9A98A]",
+    ink:   "from-[#1a1a1a] to-[#0A0A0A]",
+    sage:  "from-[#93A58B] to-[#5F7C69]",
+    paper: "from-[#EDE6D3] to-[#D9CFB8]",
+  };
+  return (
+    <a href="#" className={`group relative block rounded-xl overflow-hidden border border-rule ${span}`}>
+      <div className={`${ratio} bg-gradient-to-br ${palettes[tone]} relative`}>
+        <div className="absolute inset-0 ph-dark" />
+        {/* faux chrome */}
+        <div className="absolute inset-x-5 top-5 flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-white/40" />
+          <span className="w-2 h-2 rounded-full bg-white/40" />
+          <span className="w-2 h-2 rounded-full bg-white/40" />
+        </div>
+        {/* wordmark baseline */}
+        <div className="absolute inset-x-6 bottom-6 text-cream/90">
+          <div className="font-display font-semibold text-[26px] lg:text-[32px] display-tight">{name}</div>
+          <div className="mt-1.5 h-px w-10 bg-cream/40" />
+          <div className="mt-2 text-[11px] uppercase tracking-[0.14em] text-cream/70">{cat}</div>
+        </div>
+        {/* hover overlay */}
+        <div className="absolute inset-0 bg-forest/85 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-7">
+          <div className="text-[11px] uppercase tracking-[0.16em] text-amber font-semibold">{cat}</div>
+          <div className="mt-2 font-display font-semibold text-[28px] lg:text-[32px] display-tight text-cream">{name}</div>
+          <div className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-cream">
+            View <I.ArrowR className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+};
+
+const Work = () => (
+  <section id="work" className="bg-white py-24 lg:py-32 border-b border-rule">
+    <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+        <div>
+          <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-5">Selected work</div>
+          <h2 className="font-display font-semibold text-[44px] sm:text-[52px] lg:text-[60px] display-tight balance">
+            Some of what we've built.
+          </h2>
+        </div>
+        <a href="#" className="inline-flex items-center gap-1.5 text-[16px] font-medium text-ink link-u">
+          See all work <I.ArrowR className="w-4 h-4" />
+        </a>
+      </div>
+      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+        {WORK.map((w, i) => <WorkTile key={i} {...w} />)}
+      </div>
+    </div>
+  </section>
+);
+
+// ———————————————————————————————————————————————
+// Pricing / included
+// ———————————————————————————————————————————————
+const Included = () => {
+  const items = [
+    [I.Shield, "Hosting + SSL"],
+    [I.Globe,  ".com Domain"],
+    [I.Mail,   "Business Email (3–5 addresses)"],
+    [I.Save,   "Daily Backups"],
+    [I.Lock,   "Security Monitoring"],
+    [I.Map,    "Google Business Optimization"],
+    [I.Cal,    "Booking Widget"],
+    [I.Msg,    "Contact Forms + Auto‑reply"],
+    [I.Star,   "Review Request Automation"],
+    [I.Pin,    "Google Maps Embed"],
+    [I.Search, "On‑Page SEO + Schema"],
+    [I.Phone,  "Mobile Optimization"],
+    [I.Bar,    "Analytics Dashboard"],
+    [I.Inbox,  "Lead Inbox (CRM‑lite)"],
+    [I.Life,   "Unlimited Support"],
+  ];
+  return (
+    <section id="pricing" className="bg-cream py-24 lg:py-32">
+      <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+        <div className="text-center max-w-[820px] mx-auto">
+          <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-6">What's included</div>
+          <h2 className="font-display font-semibold text-[40px] sm:text-[52px] lg:text-[60px] display-tight balance">
+            $99 a month. Everything. No labor fees, ever.
+          </h2>
+          <p className="mt-6 text-[20px] leading-[1.55] text-ink/70 max-w-[660px] mx-auto pretty">
+            One price. One invoice. No "that's extra" ever. If you'd rather self‑host, take the code — it's free and it's yours.
+          </p>
+        </div>
+
+        <div className="mt-20 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 border-t border-l border-rule rounded-2xl overflow-hidden bg-white">
+          {items.map(([Ic, label], i) => (
+            <div key={i} className="border-r border-b border-rule p-6 lg:p-7 bg-white">
+              <Ic className="w-5 h-5 text-amber" />
+              <div className="mt-4 text-[15px] font-medium text-ink leading-snug">{label}</div>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-10 text-center text-[14px] text-muted max-w-[620px] mx-auto">
+          Businesses with e‑commerce, multi‑location setups, or custom booking flows run $199/mo. We'll tell you on the call — no surprises.
+        </p>
+      </div>
+    </section>
+  );
+};
+
+// ———————————————————————————————————————————————
+// How it works — forest band
+// ———————————————————————————————————————————————
+const HowItWorks = () => {
+  const steps = [
+    { n: "01", h: "Book the call",               b: "20 minutes on Zoom. Tell us about your business. No credit card." },
+    { n: "02", h: "We build your site",          b: "Our team + AI tools design it before we hop on. Usually under an hour." },
+    { n: "03", h: "See it live",                 b: "Patrizio screen‑shares the finished site. React honestly. Ask for changes." },
+    { n: "04", h: "Launch or take the code",     b: "Love it? We host it for $99/mo. Don't? We hand you the code free." },
+  ];
+  return (
+    <section className="bg-forest text-cream py-28 lg:py-36 relative overflow-hidden">
+      <div aria-hidden className="absolute -top-40 -right-40 w-[480px] h-[480px] rounded-full bg-amber/10 blur-3xl" />
+      <div className="relative max-w-[1280px] mx-auto px-6 lg:px-10">
+        <div className="text-center max-w-[860px] mx-auto">
+          <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-6">How it works</div>
+          <h2 className="font-display font-semibold text-[40px] sm:text-[52px] lg:text-[60px] display-tight balance">
+            From ad click to a live website in under a week.
+          </h2>
+        </div>
+
+        <div className="mt-20 relative">
+          {/* connector line on desktop */}
+          <div className="hidden lg:block absolute top-[52px] left-[5%] right-[5%] dashed-amber opacity-60" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 relative">
+            {steps.map((s, i) => (
+              <div key={i} className="relative">
+                <div className="font-display font-semibold text-amber text-[80px] lg:text-[96px] display-tight leading-none tnum">{s.n}</div>
+                <h3 className="mt-4 font-display font-semibold text-[24px] lg:text-[26px] display-tight text-cream">{s.h}</h3>
+                <p className="mt-2 text-[15px] leading-[1.6] text-cream/70 pretty max-w-[260px]">{s.b}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-20 text-center">
+          <a href={BUILD_URL} className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-amber text-white text-[16px] font-semibold hover:bg-[#B4471A] transition-colors">
+            Book your call <I.ArrowR className="w-4 h-4"/>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ———————————————————————————————————————————————
+// Testimonials (placeholder quotes per brief)
+// ———————————————————————————————————————————————
+const Testimonials = () => {
+  const people = [
+    { name: "Maria",  biz: "Napule" },
+    { name: "James",  biz: "HV Urban" },
+    { name: "Sarah",  biz: "Living Waters Yoga" },
+  ];
+  return (
+    <section className="bg-cream py-24 lg:py-32">
+      <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+        <div className="text-center max-w-[820px] mx-auto">
+          <h2 className="font-display font-semibold text-[40px] sm:text-[48px] lg:text-[52px] display-tight balance">
+            What clients are saying.
+          </h2>
+        </div>
+        <div className="mt-16 grid md:grid-cols-3 gap-6 lg:gap-8">
+          {people.map((p, i) => (
+            <div key={i} className="bg-white border border-rule rounded-2xl p-8 lg:p-10 flex flex-col">
+              <div className="font-display font-bold text-[64px] leading-none text-amber/30 -mb-4">"</div>
+              <p className="italic-fraunces text-[20px] leading-[1.5] text-ink/90 flex-1">
+                [REAL TESTIMONIAL TO BE ADDED]
+              </p>
+              <div className="my-6 h-px bg-rule" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-cream-2 border border-rule" />
+                <div>
+                  <div className="text-[15px] font-semibold">{p.name}</div>
+                  <div className="text-[13px] text-muted">{p.biz}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ———————————————————————————————————————————————
+// Final CTA
+// ———————————————————————————————————————————————
+const FinalCTA = () => (
+  <section className="bg-forest text-cream relative overflow-hidden">
+    <div aria-hidden className="absolute -top-40 -left-40 w-[480px] h-[480px] rounded-full bg-amber/10 blur-3xl" />
+    <div aria-hidden className="absolute -bottom-40 -right-40 w-[480px] h-[480px] rounded-full bg-amber/5 blur-3xl" />
+    <div className="relative max-w-[900px] mx-auto px-6 lg:px-10 py-32 lg:py-36 text-center">
+      <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.2em] mb-6">Ready?</div>
+      <h2 className="font-display font-semibold text-[56px] sm:text-[72px] lg:text-[80px] display-tight balance leading-[1.02]">
+        Want one?
+      </h2>
+      <p className="mt-6 text-[20px] sm:text-[22px] text-cream/75 max-w-[560px] mx-auto pretty">
+        Book a 20‑minute call. We'll have your website built and ready when we hop on.
+      </p>
+      <a href={BUILD_URL} className="mt-12 inline-flex items-center gap-2.5 h-16 px-12 rounded-full bg-amber text-white font-semibold text-[18px] hover:bg-[#B4471A] transition-colors">
+        Get my free website <I.ArrowR className="w-5 h-5"/>
+      </a>
+    </div>
+  </section>
+);
+
+// ———————————————————————————————————————————————
+// Footer
+// ———————————————————————————————————————————————
+const Footer = () => (
+  <footer className="bg-ink text-cream">
+    <div className="max-w-[1280px] mx-auto px-6 lg:px-10 py-16 lg:py-20">
+      <div className="grid md:grid-cols-3 gap-10">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🦊</span>
+            <span className="font-display font-semibold text-[24px]">Foxes<span className="text-amber">.</span>ai</span>
+          </div>
+          <p className="mt-4 text-[14px] text-cream/60 max-w-[280px]">Stunning websites for local businesses.</p>
+        </div>
+        <div>
+          <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-amber mb-5">Explore</div>
+          <ul className="space-y-3">
+            {[["Work","#work"],["About","#about"],["Pricing","#pricing"],["FAQ","#faq"]].map(([l,h]) => (
+              <li key={l}><a href={h} className="text-[15px] text-cream hover:text-amber transition-colors link-u">{l}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <div className="text-[12px] font-semibold uppercase tracking-[0.16em] text-amber mb-5">Get in touch</div>
+          <ul className="space-y-3">
+            <li><a href={BUILD_URL} className="text-[15px] text-cream hover:text-amber transition-colors link-u">Book a call</a></li>
+            <li><a href="mailto:hi@foxes.ai" className="text-[15px] text-cream hover:text-amber transition-colors link-u">Email us</a></li>
+            <li><a href="sms:+16155550142" className="text-[15px] text-cream hover:text-amber transition-colors link-u">Text (615) 555‑0142</a></li>
+          </ul>
+        </div>
+      </div>
+      <div className="mt-12 pt-8 border-t border-cream/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="text-[13px] text-cream/50">© 2026 Foxes.ai</div>
+        <div className="flex items-center gap-6 text-[13px] text-cream/50">
+          <a href="#" className="hover:text-cream link-u">Privacy</a>
+          <a href="#" className="hover:text-cream link-u">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+);
+
+// ———————————————————————————————————————————————
+// App
+// ———————————————————————————————————————————————
+const App = () => (
+  <div className="min-h-screen bg-cream text-ink">
+    <Header />
+    <Hero />
+    <Capabilities />
+    <Founder />
+    <Work />
+    <Included />
+    <HowItWorks />
+    <Testimonials />
+    <FinalCTA />
+    <Footer />
+  </div>
+);
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
