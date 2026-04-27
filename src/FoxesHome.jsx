@@ -240,7 +240,7 @@ const Founder = () => (
             I spent years building 5th Factory into a design agency. When we sold to JBowman Creative, I thought I was done with agency work. But I kept seeing the same thing: local businesses — the best restaurants, the best yoga studios, the best tradespeople — stuck with websites that embarrassed them. They couldn't afford what I used to charge. So Foxes.ai was born: stunning websites, free. We make our money keeping them running. Not building them.
           </p>
           <p className="mt-5 text-[19px] leading-[1.6] text-ink/85 pretty max-w-[620px]">
-            My promise: if we can't build you something you love, we'll be the first to say so. If we can, you'll see it before you pay us a dime.
+            My promise: if we can't build you something you love, we'll be the first to say so. If we can, you'll have it before you pay us a dime.
           </p>
           <div className="mt-8 italic-fraunces text-[22px]">— Patrizio</div>
         </div>

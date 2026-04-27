@@ -355,7 +355,7 @@ const Hero = () => (
 
           <p className="mt-6 sm:mt-7 text-[18px] sm:text-[20px] lg:text-[21px] leading-[1.55] text-ink/75 pretty max-w-[600px]">
             Book a 20-minute Zoom. Your site is already built — you&apos;ll review it live on the call.{" "}
-            <span className="text-ink font-medium">You pay nothing to see it.</span> Walk away anytime; if you skip hosting, you still get the code and our{" "}
+            <span className="text-ink font-medium">You pay nothing to have it.</span> Walk away anytime; if you skip hosting, you still get the code and our{" "}
             <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">DIY setup guide</a>.
           </p>
 
@@ -374,7 +374,7 @@ const Hero = () => (
             <p className="mt-5 text-[13px] sm:text-[14px] text-muted leading-snug">
               <span className="line-through decoration-amber decoration-2 text-ink/45">Agencies: often five figures before you see a real build</span>
               <span className="text-ink/55"> · </span>
-              <span className="text-ink/70">See yours before you pay us anything.</span>
+              <span className="text-ink/70">Have yours before you pay us anything.</span>
             </p>
           </div>
 
@@ -404,7 +404,7 @@ const Hero = () => (
 
           <div className="mt-12 grid grid-cols-2 divide-x divide-rule border-y border-rule py-8">
             <Stat big="250+" label="sites delivered" />
-            <Stat big="Free" label="to see yours" />
+            <Stat big="Free" label="to have yours" />
           </div>
 
           <ul className="mt-10 space-y-3.5 lg:space-y-3">
@@ -704,7 +704,7 @@ const Portfolio = () => (
 // ————————————————————————————————————————————————————
 const Comparison = () => {
   const rows = [
-    ["See the actual website before you pay",  true,  false, false],
+    ["Have the actual website before you pay",  true,  false, false],
     ["Built before your call",                   true,  false, false],
     ["No credit card to start",                  true,  false, true],
     ["Walk away with the code",                  true,  false, false],
