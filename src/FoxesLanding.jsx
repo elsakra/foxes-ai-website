@@ -357,9 +357,9 @@ const LiveActivity = () => {
 // ————————————————————————————————————————————————————
 const Hero = () => (
   <section id="top" className="relative grain">
-    <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-12 pb-20 lg:pb-20">
-      <div className="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-10 xl:gap-14 items-start">
-        <div>
+    <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pt-6 sm:pt-12 lg:pt-12 pb-20 lg:pb-20">
+      <div className="grid lg:grid-cols-[1.05fr_1fr] gap-6 sm:gap-10 lg:gap-10 xl:gap-14 items-start">
+        <div className="order-2 lg:order-1">
           <div className="mb-6">
             <LiveActivity />
           </div>
@@ -461,7 +461,7 @@ const Hero = () => (
           </div>
         </div>
 
-        <div className="lg:sticky lg:top-[7.25rem]">
+        <div className="order-1 lg:order-2 lg:sticky lg:top-[7.25rem]">
           <BookingCard />
           <div className="mt-3 lg:mt-2 flex items-center justify-center gap-2 text-[12px] text-muted">
             <Clock className="w-3.5 h-3.5" />
