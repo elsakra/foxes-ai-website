@@ -221,67 +221,20 @@ const useBookingIframeHeight = (cardRef, headerRef, footerRef) => {
   return height;
 };
 
-/** Iframe loads when in/near view; mobile + #book load immediately so the hero calendar is ready. */
-const CalendlyEmbedDeferred = ({ height = 680 }) => {
-  const [load, setLoad] = useState(false);
-  const wrapRef = useRef(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.location.hash === "#book") {
-      setLoad(true);
-      return;
-    }
-    if (window.matchMedia("(max-width: 1023px)").matches) {
-      setLoad(true);
-      return;
-    }
-    const el = wrapRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) setLoad(true);
-      },
-      { root: null, rootMargin: "240px 0px 800px 0px", threshold: 0 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={wrapRef}
-      className="rounded-xl overflow-hidden border border-rule bg-white"
-      style={{ minHeight: height }}
-    >
-      {load ? (
-        <iframe
-          src={CALENDLY_URL}
-          width="100%"
-          height={height}
-          title="Book a call with Patrizio"
-          referrerPolicy="no-referrer-when-downgrade"
-          className="border-0 bg-white w-full"
-          style={{ minHeight: height, display: "block" }}
-        />
-      ) : (
-        <div
-          className="flex flex-col items-center justify-center bg-cream/50 px-6 py-12 text-center"
-          style={{ minHeight: height }}
-          aria-live="polite"
-        >
-          <div
-            className="mb-4 h-9 w-9 animate-spin rounded-full border-2 border-amber/25 border-t-amber motion-reduce:animate-none"
-            role="status"
-            aria-label="Loading calendar"
-          />
-          <p className="text-[15px] font-medium text-ink/80">Loading your live calendar…</p>
-          <p className="mt-1 max-w-[280px] text-[13px] text-muted">Opens in a moment — real-time slots from Calendly.</p>
-        </div>
-      )}
-    </div>
-  );
-};
+/** Hero booking: mount the iframe on first paint so the browser can fetch Calendly immediately (no IO / effect delay). */
+const CalendlyEmbedDeferred = ({ height = 680 }) => (
+  <div className="rounded-xl overflow-hidden border border-rule bg-white" style={{ minHeight: height }}>
+    <iframe
+      src={CALENDLY_URL}
+      width="100%"
+      height={height}
+      title="Book a call with Patrizio"
+      referrerPolicy="no-referrer-when-downgrade"
+      className="border-0 bg-white w-full"
+      style={{ minHeight: height, display: "block" }}
+    />
+  </div>
+);
 
 // ————————————————————————————————————————————————————
 // Booking card (now with Calendly, framed with trust elements)
