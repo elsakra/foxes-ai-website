@@ -382,11 +382,21 @@ const Included = () => {
       <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
         <div className="text-center max-w-[820px] mx-auto">
           <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-6">What's included</div>
-          <h2 className="font-display font-semibold text-[40px] sm:text-[52px] lg:text-[60px] display-tight balance">
-            One monthly plan. Everything. No labor fees, ever.
+          <h2 className="font-display font-semibold text-[40px] sm:text-[52px] lg:text-[60px] display-tight balance max-w-[900px] mx-auto">
+            <span className="block">Website build, free.*</span>
+            <span className="block mt-2 sm:mt-3 text-ink/95">
+              Domain, hosting, security — one all‑inclusive monthly price.
+            </span>
           </h2>
           <p className="mt-6 text-[20px] leading-[1.55] text-ink/70 max-w-[660px] mx-auto pretty">
-            Patrizio quotes it on the call from what you need — one invoice, no "that's extra." If you'd rather self‑host, take the code — it's yours.
+            One invoice for what we run. No labor fees, no surprise line items.
+          </p>
+          <p className="mt-6 text-[14px] sm:text-[15px] leading-[1.65] text-ink/70 max-w-[680px] mx-auto text-left border-l-2 border-amber/40 pl-4 sm:pl-5 sm:text-center sm:border-l-0 sm:pl-0">
+            <span className="font-semibold text-amber">*</span>
+            {" "}
+            <span className="font-medium text-ink/85">Free custom website.</span>
+            {" "}
+            Prefer to manage hosting and security yourself? We’ll hand you the code. Want us to handle everything? We can — Patrizio quotes a straightforward monthly on the call.
           </p>
         </div>
 
