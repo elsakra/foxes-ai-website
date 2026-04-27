@@ -105,7 +105,7 @@ const Comparison = () => {
     ["Register a .com domain",                         "~30 min + $12–$20/year",                       "Included — we register it for you"],
     ["Configure DNS records (A, CNAME, MX, TXT)",      "~1–3 hours, depending on host",                "Included"],
     ["Install and renew SSL certificate",              "~1 hour initial + renewals every 90 days",     "Included — auto‑renews"],
-    ["Set up business email (hello@yourbusiness.com)", "~2 hours + $6–$12/user/mo via Google Workspace", "Included — up to 5 addresses"],
+    ["Set up business email (hello@yourbusiness.com)", "~2 hours + $6–$12/user/mo via Google Workspace", "Included — up to 3 inboxes (more at provider cost)"],
     ["Deploy the site code",                           "~2–4 hours (first time)",                      "Done automatically"],
     ["Connect your Google Business Profile",           "~1 hour + ongoing updates",                    "Done + optimized on the call"],
     ["Wire up the booking widget",                     "~2 hours + external service fees",             "Pre‑wired, ready on launch"],

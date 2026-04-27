@@ -360,7 +360,7 @@ const Hero = () => (
           <ul className="mt-10 space-y-4">
             {[
               <>Your site is <em className="italic">designed, built, and live-previewed</em> before we talk</>,
-              <>Love it? <span className="font-semibold">Simple monthly hosting</span> — quoted on the call. Hosting, domain, email, booking, SEO, everything.</>,
+              <>Love it? <span className="font-semibold">Simple monthly hosting</span> — quoted on the call. Hosting, domain, branded email (up to 3 inboxes), booking, SEO, everything.</>,
               <>Don't love it? Take the code. No cost. No contract. No weirdness.</>,
               <>20 minutes on Zoom. No slide decks. No "discovery". Just your site.</>,
             ].map((t, i) => (
@@ -728,7 +728,7 @@ const Offer = () => (
               We host it. Everything included.
             </h3>
             <p className="mt-4 text-[16px] leading-[1.6] text-cream/80 flex-1 relative">
-              Hosting, SSL, your .com domain, branded business email, booking widget, review automation, Google Maps, SEO, analytics, security, and lead inbox.
+              Hosting, SSL, your .com domain, branded business email (up to 3 inboxes; more at provider cost), booking widget, review automation, Google Maps, SEO, analytics, security, and lead inbox.
             </p>
             <div className="mt-8 pt-5 border-t border-cream/15 relative">
               <div className="font-semibold text-[18px] text-amber">Monthly rate quoted on the call — all‑in for what you need. No labor fees. Ever.</div>
@@ -746,10 +746,10 @@ const Offer = () => (
 const FAQ = () => {
   const [open, setOpen] = useState(0);
   const items = [
-    { q: "Is it really free?", a: "Yes. The design and build of your website costs you nothing. If you want us to host it, run your domain, email, booking, and everything else, Patrizio quotes a straightforward monthly on the call based on what you need. If not, we hand you the code. Your choice." },
+    { q: "Is it really free?", a: "Yes. The design and build of your website costs you nothing. If you want us to host it — your domain, branded email (up to 3 inboxes included; additional inboxes at provider cost), booking, and the rest — Patrizio quotes a straightforward monthly on the call based on what you need. If not, we hand you the code. Your choice." },
     { q: "What's the catch?", a: "There isn't one. We can build sites fast, and our bet is that once you see yours, you'll want us to keep running it. But if you don't — we'll hand over the code and wish you luck." },
     { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the short answers you give when you book. Our designers pair that with modern tools so you get a real, reviewable site before the call — not a weeks-long wireframe phase." },
-    { q: "What's included if we host?", a: "Hosting, SSL, your .com domain, branded business email, booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, and a lead inbox. Zero labor fees. Ever." },
+    { q: "What's included if we host?", a: "Hosting, SSL, your .com domain, branded business email (up to 3 inboxes included; beyond that at provider cost), booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, and a lead inbox. Zero labor fees. Ever." },
     { q: "How is hosting priced?", a: "Patrizio quotes one monthly number on the call from what you actually need — heavier booking, e‑commerce, or multi‑location setups may land higher than a simple brochure site, and you'll know before you commit. No surprises, no upsells buried later." },
     { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, Animated Medical, SC Law Center, and more." },
     { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We don't include a free deploy hand-holding call for self‑hosting — that's the tradeoff for getting the build at no cost. No clawback, no drama." },
