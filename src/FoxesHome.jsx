@@ -400,7 +400,7 @@ const Included = () => {
         </div>
 
         <p className="mt-10 text-center text-[14px] text-muted max-w-[620px] mx-auto">
-          Heavier sites — e‑commerce, multi‑location, custom booking — may quote higher than a simple brochure build. You'll know on the call before you commit.
+          Scope and integrations shape the monthly quote — Patrizio walks through it with you on the call before you commit.
         </p>
       </div>
     </section>
