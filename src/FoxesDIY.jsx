@@ -86,7 +86,7 @@ const Honesty = () => (
       <div className="mt-8 bg-white border border-rule rounded-xl p-6">
         <div className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">Worth noting</div>
         <p className="mt-3 text-[16px] leading-[1.65] text-ink/90">
-          The $99/mo hosted option covers every item on this page — plus your .com domain, business email, security monitoring, mobile optimization, and ongoing updates. If at any point the setup below feels like more than you want to take on, just email us. Your setup fee stays waived.
+          If you choose our hosted option, it covers every item on this page — plus your .com domain, business email, security monitoring, mobile optimization, and ongoing updates — at a monthly rate Patrizio quotes on the call. If at any point the setup below feels like more than you want to take on, just email us. Your setup fee stays waived.
         </p>
         <a href={SWITCH_URL} className="inline-block mt-4 text-[14px] font-medium text-amber link-u no-print">
           Switch to hosted instead →
@@ -117,7 +117,7 @@ const Comparison = () => {
     ["Handle downtime alerts + fixes",                 "Your responsibility",                          "We get paged, we fix it"],
     ["Make content updates (new photos, hours, menu)", "You do it, or hire someone",                   "We do it for you"],
   ];
-  const total = ["Total first‑month effort", "20–40 hours + ~$25–$60/mo in service fees", "$99/mo"];
+  const total = ["Total first‑month effort", "20–40 hours + ~$25–$60/mo in service fees", "Quoted on call"];
 
   return (
     <section className="bg-white py-24 lg:py-28 border-b border-rule">
@@ -137,7 +137,7 @@ const Comparison = () => {
               <tr className="bg-forest text-cream">
                 <th className="px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.14em] w-[44%]">What needs to happen</th>
                 <th className="px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.14em] w-[28%]">If you DIY</th>
-                <th className="px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.14em] w-[28%]">If we host ($99/mo)</th>
+                <th className="px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.14em] w-[28%]">If we host (quoted monthly)</th>
               </tr>
             </thead>
             <tbody>
@@ -171,7 +171,7 @@ const Comparison = () => {
         </div>
 
         <p className="mt-12 text-[17px] leading-[1.65] text-ink/80 pretty max-w-[720px]">
-          Every line above is honest. Some people enjoy this work, and we respect that — which is why we give you the code. But if reading this list made your stomach tight, that's a real signal. Most of our customers hire us to handle it because the math works: at $99/mo, we're cheaper than the coffee it takes to do it yourself.
+          Every line above is honest. Some people enjoy this work, and we respect that — which is why we give you the code. But if reading this list made your stomach tight, that's a real signal. Most of our customers hire us to handle it because the time you'd spend here is better spent running the business — and Patrizio will quote hosting plainly on the call.
         </p>
         <a href={SWITCH_URL} className="inline-block mt-5 text-[14px] font-medium text-amber link-u no-print">
           Switch to hosted — setup fee waived →
@@ -440,11 +440,11 @@ const RealityCheck = () => (
         If you made it through that list and you're excited — you're our kind of person. Go build.
       </h2>
       <p className="mt-6 text-[19px] leading-[1.6] text-cream/80 pretty">
-        If you made it through and you're quietly thinking "I don't have time for this" — that's also completely fair. A lot of business owners get here and realize their time is better spent running their business, not DNS records. If that's you, say the word and we'll handle everything for $99 a month. Your setup is already done.
+        If you made it through and you're quietly thinking "I don't have time for this" — that's also completely fair. A lot of business owners get here and realize their time is better spent running their business, not DNS records. If that's you, say the word and we'll handle everything — monthly rate on the call. Your setup is already done.
       </p>
       <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center no-print">
         <a href={SWITCH_URL} className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-amber text-white text-[16px] font-semibold hover:bg-[#B4471A] transition-colors">
-          Switch to hosted — $99/mo
+          Switch to hosted
         </a>
         <a href="#" className="inline-flex items-center justify-center h-14 px-8 rounded-full border border-cream/30 text-cream text-[16px] font-semibold hover:bg-cream/5 transition-colors">
           I've got it, continue with DIY

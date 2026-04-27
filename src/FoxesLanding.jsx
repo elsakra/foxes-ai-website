@@ -86,7 +86,7 @@ const AnnouncementBar = () => (
         <span className="text-cream/60"> · </span>
         <span className="font-semibold text-amber">No credit card</span>
         <span className="text-cream/60"> · </span>
-        <span>Keep the code free or host with us from $99/mo</span>
+        <span>Keep the code free or host with us — monthly rate quoted on your call</span>
       </span>
     </div>
   </div>
@@ -322,9 +322,9 @@ const Hero = () => (
               No credit card · 20 minutes · Site already built
             </p>
             <p className="mt-5 text-[13px] sm:text-[14px] text-muted leading-snug">
-              <span className="line-through decoration-amber decoration-2 text-ink/45 tnum">Agencies: $6,000–$15,000</span>
+              <span className="line-through decoration-amber decoration-2 text-ink/45">Agencies: often five figures before you see a real build</span>
               <span className="text-ink/55"> · </span>
-              <span className="text-ink/70">See yours for $0 before you pay us anything.</span>
+              <span className="text-ink/70">See yours before you pay us anything.</span>
             </p>
           </div>
 
@@ -354,13 +354,13 @@ const Hero = () => (
 
           <div className="mt-12 grid grid-cols-2 divide-x divide-rule border-y border-rule py-8">
             <Stat big="250+" label="sites delivered" />
-            <Stat big="$0" label="to see yours" />
+            <Stat big="Free" label="to see yours" />
           </div>
 
           <ul className="mt-10 space-y-4">
             {[
               <>Your site is <em className="italic">designed, built, and live-previewed</em> before we talk</>,
-              <>Love it? <span className="font-semibold">$99/mo</span> — hosting, domain, email, booking, SEO, everything</>,
+              <>Love it? <span className="font-semibold">Simple monthly hosting</span> — quoted on the call. Hosting, domain, email, booking, SEO, everything.</>,
               <>Don't love it? Take the code. No cost. No contract. No weirdness.</>,
               <>20 minutes on Zoom. No slide decks. No "discovery". Just your site.</>,
             ].map((t, i) => (
@@ -635,9 +635,9 @@ const Comparison = () => {
     ["Built before your call",                   true,  false, false],
     ["No credit card to start",                  true,  false, true],
     ["Walk away with the code",                  true,  false, false],
-    ["$99/mo all-in — or $0, your call",         true,  false, false],
+    ["All-in monthly hosting — or take the code", true,  false, false],
     ["Booking, SEO, email, reviews included",    true,  false, false],
-    ["Upfront cost",                             "$0",  "$6k–$15k", "$30/mo + setup"],
+    ["Upfront cost",                             "None", "Often thousands", "Plans + setup"],
     ["Time to launch",                           "1 day", "4–8 weeks", "Weekends for weeks"],
   ];
   return (
@@ -670,7 +670,7 @@ const Comparison = () => {
           ))}
         </div>
 
-        <p className="mt-5 text-[13px] text-muted">*Agency pricing based on average quoted cost for a 5‑page small business site with basic SEO, 2025.</p>
+        <p className="mt-5 text-[13px] text-muted">*Typical agency engagements involve deposits and substantial totals before a live build. DIY platforms often advertise low monthly fees with add‑ons extra.</p>
       </div>
     </section>
   );
@@ -715,7 +715,7 @@ const Offer = () => (
               We hand you a clean export + a deploy guide. Self‑hosting is on you — we don't provide hands‑on help to deploy elsewhere. The site is yours, free and clear. No catch, no weird license.
             </p>
             <div className="mt-8 pt-5 border-t border-rule">
-              <div className="text-[14px] font-semibold text-forest">Cost: $0, forever</div>
+              <div className="text-[14px] font-semibold text-forest">Cost: Nothing — the build is yours</div>
             </div>
           </div>
 
@@ -731,7 +731,7 @@ const Offer = () => (
               Hosting, SSL, your .com domain, branded business email, booking widget, review automation, Google Maps, SEO, analytics, security, and lead inbox.
             </p>
             <div className="mt-8 pt-5 border-t border-cream/15 relative">
-              <div className="font-semibold text-[18px] text-amber">$99/mo all‑in. No labor fees. Ever.</div>
+              <div className="font-semibold text-[18px] text-amber">Monthly rate quoted on the call — all‑in for what you need. No labor fees. Ever.</div>
             </div>
           </div>
         </div>
@@ -746,13 +746,13 @@ const Offer = () => (
 const FAQ = () => {
   const [open, setOpen] = useState(0);
   const items = [
-    { q: "Is it really free?", a: "Yes. The design and build of your website costs you nothing. If you want us to host it, run your domain, email, booking, and everything else, it's $99–$199/month. If not, we hand you the code. Your choice, on the call." },
+    { q: "Is it really free?", a: "Yes. The design and build of your website costs you nothing. If you want us to host it, run your domain, email, booking, and everything else, Patrizio quotes a straightforward monthly on the call based on what you need. If not, we hand you the code. Your choice." },
     { q: "What's the catch?", a: "There isn't one. We can build sites fast, and our bet is that once you see yours, you'll want us to keep running it. But if you don't — we'll hand over the code and wish you luck." },
     { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the short answers you give when you book. Our designers pair that with modern tools so you get a real, reviewable site before the call — not a weeks-long wireframe phase." },
-    { q: "What's included in the $99/mo?", a: "Hosting, SSL, your .com domain, branded business email, booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, and a lead inbox. Zero labor fees. Ever." },
-    { q: "When does the $199/mo apply?", a: "If your business needs bookings, light e‑commerce, or multi‑location support. We'll tell you on the call — no surprises, no upsells buried later." },
+    { q: "What's included if we host?", a: "Hosting, SSL, your .com domain, branded business email, booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, and a lead inbox. Zero labor fees. Ever." },
+    { q: "How is hosting priced?", a: "Patrizio quotes one monthly number on the call from what you actually need — heavier booking, e‑commerce, or multi‑location setups may land higher than a simple brochure site, and you'll know before you commit. No surprises, no upsells buried later." },
     { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, Animated Medical, SC Law Center, and more." },
-    { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We don't include a free deploy hand-holding call for self‑hosting — that's the tradeoff for $0. No clawback, no drama." },
+    { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We don't include a free deploy hand-holding call for self‑hosting — that's the tradeoff for getting the build at no cost. No clawback, no drama." },
   ];
   return (
     <section id="faq" className="scroll-mt-28 bg-cream-2 py-24 lg:py-28">
