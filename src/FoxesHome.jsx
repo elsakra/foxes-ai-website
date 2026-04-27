@@ -1,4 +1,5 @@
-const { useState, useEffect, useRef } = React;
+import { useState, useEffect, useRef } from "react";
+import { useEmbedLivePortfolioPreviews } from "./hooks/useEmbedLivePortfolioPreviews.js";
 
 /** Opens the lander booking card + Calendly embed (no separate /build route on static hosting). */
 const BOOKING_URL = "/lander.html#book";
@@ -79,10 +80,21 @@ const Header = () => {
   const [stuck, setStuck] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    const onScroll = () => setStuck(window.scrollY > 80);
-    onScroll();
+    let raf = 0;
+    const tick = () => {
+      raf = 0;
+      setStuck(window.scrollY > 80);
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(tick);
+    };
+    tick();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
   return (
     <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${stuck ? "bg-cream/80 backdrop-blur-md border-b border-rule" : "bg-transparent border-b border-transparent"}`}>
@@ -241,6 +253,7 @@ const Founder = () => (
 // ———————————————————————————————————————————————
 const WorkPreviewCard = ({ url, label, tag }) => {
   const [clipRef, scale] = useLivePreviewCover(0.38);
+  const allowIframes = useEmbedLivePortfolioPreviews();
   const href = url.replace(/\/$/, "");
   let host = "";
   try {
@@ -267,19 +280,28 @@ const WorkPreviewCard = ({ url, label, tag }) => {
         </div>
 
         <div ref={clipRef} className="relative h-[220px] sm:h-[260px] lg:h-[240px] overflow-hidden bg-[#ECEAE6]">
-          <div
-            className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
-            style={{ height: LIVE_PREVIEW_H, transform: `translateX(-50%) scale(${scale})` }}
-          >
-            <iframe
-              src={href}
-              title={`${label} live preview`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              tabIndex={-1}
-              className="w-full h-full border-0 bg-white pointer-events-none"
-            />
-          </div>
+          {allowIframes ? (
+            <div
+              className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
+              style={{ height: LIVE_PREVIEW_H, transform: `translateX(-50%) scale(${scale})` }}
+            >
+              <iframe
+                src={href}
+                title={`${label} live preview`}
+                loading="eager"
+                referrerPolicy="no-referrer-when-downgrade"
+                tabIndex={-1}
+                className="w-full h-full border-0 bg-white pointer-events-none"
+              />
+            </div>
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-cream-2 to-[#D8D4CC] p-4 text-center">
+              <span className="text-[11px] font-mono text-ink/50 max-w-full truncate px-1" title={host}>
+                {host}
+              </span>
+              <p className="mt-2 text-[13px] text-ink/55 leading-snug">Live preview on desktop — tap to open the full site</p>
+            </div>
+          )}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/20" aria-hidden="true" />
           <div
             className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -657,4 +679,4 @@ const App = () => (
   </div>
 );
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+export default App;

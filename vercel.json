@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/build", "destination": "/build.html" }]
+  "rewrites": [{ "source": "/build", "destination": "/build.html" }],
+  "redirects": [
+    { "source": "/home.html", "destination": "/", "permanent": true }
+  ]
 }

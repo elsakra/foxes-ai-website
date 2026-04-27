@@ -1,4 +1,4 @@
-const { useState, useEffect, useRef } = React;
+import { useState, useEffect, useRef } from "react";
 
 /** Hosted signup / booking — same Calendly block as the lander. */
 const SWITCH_URL = "/lander.html?from=diy#book";
@@ -539,4 +539,4 @@ const App = () => (
   </div>
 );
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+export default App;
