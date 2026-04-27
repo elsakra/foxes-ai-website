@@ -5,6 +5,7 @@ import { useEmbedLivePortfolioPreviews } from "./hooks/useEmbedLivePortfolioPrev
 const BOOKING_URL = "/lander.html#book";
 const LANDER_URL = "/lander.html";
 const DIY_URL = "/diy.html";
+const DIY_GUIDE_URL = "https://www.foxes.ai/diy.html";
 const PATRIZIO_PHOTO = "patrizio-20bio.avif";
 
 const PORTFOLIO_SITES = [
@@ -396,7 +397,12 @@ const Included = () => {
             {" "}
             <span className="font-medium text-ink/85">Free custom website.</span>
             {" "}
-            Prefer to manage hosting and security yourself? We’ll hand you the code. Want us to handle everything? We can — Patrizio quotes a straightforward monthly on the call.
+            Prefer to manage hosting and security yourself? We’ll hand you the code{" "}
+            <span className="text-ink/80">and</span> a full step-by-step{" "}
+            <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u">
+              DIY setup guide
+            </a>{" "}
+            — hosting, DNS, going live — so you&apos;re never left figuring it out alone. Want us to handle everything? We can — Patrizio quotes a straightforward monthly on the call.
           </p>
         </div>
 
@@ -425,7 +431,22 @@ const HowItWorks = () => {
     { n: "01", h: "Book the call",               b: "20 minutes on Zoom. Tell us about your business. No credit card." },
     { n: "02", h: "We build your site",          b: "Our team and AI-assisted tools design it before we hop on — your first look is a real build, not a napkin sketch." },
     { n: "03", h: "See it live",                 b: "Patrizio screen‑shares the finished site. React honestly. Ask for changes." },
-    { n: "04", h: "Launch or take the code",     b: "Love it? We host it — monthly rate on the call. Don't? We hand you the code free." },
+    {
+      n: "04",
+      h: "Launch or take the code",
+      b: (
+        <>
+          Love it? We host it — monthly rate on the call. Prefer to DIY? You get the full code{" "}
+          <span className="text-cream/80">and</span> our complete hosting walkthrough — not a vague &quot;you&apos;re on your own&quot; handoff.{" "}
+          <a
+            href={DIY_GUIDE_URL}
+            className="text-amber font-semibold underline decoration-amber/55 underline-offset-[3px] hover:text-cream"
+          >
+            DIY setup guide →
+          </a>
+        </>
+      ),
+    },
   ];
   return (
     <section className="bg-forest text-cream py-28 lg:py-36 relative overflow-hidden">
@@ -446,7 +467,7 @@ const HowItWorks = () => {
               <div key={i} className="relative">
                 <div className="font-display font-semibold text-amber text-[80px] lg:text-[96px] display-tight leading-none tnum">{s.n}</div>
                 <h3 className="mt-4 font-display font-semibold text-[24px] lg:text-[26px] display-tight text-cream">{s.h}</h3>
-                <p className="mt-2 text-[15px] leading-[1.6] text-cream/70 pretty max-w-[260px]">{s.b}</p>
+                <p className="mt-2 text-[15px] leading-[1.6] text-cream/70 pretty max-w-[280px]">{s.b}</p>
               </div>
             ))}
           </div>
@@ -468,13 +489,36 @@ const HowItWorks = () => {
 const FAQ = () => {
   const [open, setOpen] = useState(0);
   const items = [
-    { q: "Is it really free?", a: "Yes. The design and build of your website costs you nothing. If you want us to host it — your domain, branded email (up to 3 inboxes included; additional inboxes at provider cost), booking, and the rest — Patrizio quotes a straightforward monthly on the call based on what you need. If not, we hand you the code. Your choice." },
-    { q: "What's the catch?", a: "There isn't one. We can build sites fast, and our bet is that once you see yours, you'll want us to keep running it. But if you don't — we'll hand over the code and wish you luck." },
+    {
+      q: "Is it really free?",
+      a: (
+        <>
+          Yes. The design and build of your website costs you nothing. If you want us to host it — your domain, branded email (up to 3 inboxes included; additional inboxes at provider cost), booking, and the rest — Patrizio quotes a straightforward monthly on the call based on what you need. If not, we hand you the code{" "}
+          <span className="text-ink/80">and</span> a full <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u">DIY setup guide</a> to host it yourself — still $0. Your choice.
+        </>
+      ),
+    },
+    {
+      q: "What's the catch?",
+      a: (
+        <>
+          There isn&apos;t one. We build sites fast, and our bet is you&apos;ll want us to keep running yours. If you&apos;d rather self-host, you still get the code{" "}
+          <span className="text-ink/80">and</span> our complete <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u">DIY hosting guide</a> — so you&apos;re set up to succeed, not left on your own.
+        </>
+      ),
+    },
     { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the short answers you give when you book. Our designers pair that with modern tools so you get a real, reviewable site before the call — not a weeks-long wireframe phase." },
     { q: "What's included if we host?", a: "Hosting, SSL, your .com domain, branded business email (up to 3 inboxes included; beyond that at provider cost), booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, and a lead inbox. Zero labor fees. Ever." },
     { q: "How is hosting priced?", a: "Patrizio quotes one monthly number on the call from what you actually need — heavier booking, e‑commerce, or multi‑location setups may land higher than a simple brochure site, and you'll know before you commit. No surprises, no upsells buried later." },
     { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, Animated Medical, SC Law Center, and more." },
-    { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We don't include a free deploy hand-holding call for self‑hosting — that's the tradeoff for getting the build at no cost. No clawback, no drama." },
+    {
+      q: "What if I hate the design?",
+      a: (
+        <>
+          You walk, and you keep the code anyway — <span className="text-ink/80">plus</span> the same <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u">step-by-step DIY guide</a> we give everyone who self-hosts, so you&apos;re never stuck figuring out deploy alone. No clawback, no drama.
+        </>
+      ),
+    },
   ];
   return (
     <section id="faq" className="scroll-mt-28 bg-cream-2 py-24 lg:py-32 border-y border-rule">
@@ -515,7 +559,7 @@ const FAQ = () => {
                 </button>
                 <div className={`acc-body ${isOpen ? "open" : ""}`}>
                   <div>
-                    <p className="pb-7 pr-4 sm:pr-16 text-[17px] leading-[1.65] text-ink/75 pretty">{it.a}</p>
+                    <div className="pb-7 pr-4 sm:pr-16 text-[17px] leading-[1.65] text-ink/75 pretty">{it.a}</div>
                   </div>
                 </div>
               </div>

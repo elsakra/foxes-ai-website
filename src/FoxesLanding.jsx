@@ -152,6 +152,9 @@ const Header = () => (
 // ————————————————————————————————————————————————————
 const CALENDLY_URL = "https://calendly.com/patrizio-foxes/30min?back=1&hide_gdpr_banner=1&primary_color=C9531E&text_color=0A0A0A&background_color=FFFFFF";
 
+/** Public DIY hosting guide (absolute URL for clarity in copy + emails). */
+const DIY_GUIDE_URL = "https://www.foxes.ai/diy.html";
+
 /** Vertical padding of the embed wrapper on lg (`p-3 sm:p-4 lg:p-3` → 12px top + bottom). */
 const BOOKING_EMBED_WRAP_PAD_Y = 24;
 
@@ -296,7 +299,7 @@ const BookingCard = () => {
         <ul className="mt-3 sm:mt-4 lg:mt-2.5 space-y-1 lg:space-y-0.5 text-[13px] sm:text-[14px] text-ink/75">
           <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> We design it <em className="italic">before</em> we meet</li>
           <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> No credit card, no pressure, no catch</li>
-          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> Walk away with the code if you pass</li>
+          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> Walk away with the code <span className="text-ink/80">and</span> the full DIY guide if you pass</li>
         </ul>
       </div>
       {/* calendly */}
@@ -366,7 +369,12 @@ const Hero = () => (
           </h1>
 
           <p className="mt-7 text-[19px] sm:text-[22px] leading-[1.55] text-ink/75 pretty max-w-[600px]">
-            Book 20 minutes. When we hop on Zoom, your site is already built. If you love it — it's yours. If not — take the code and walk. <span className="text-ink font-medium">Either way, you pay nothing.</span>
+            Book 20 minutes. When we hop on Zoom, your site is already built. If you love it — it's yours. If not — you get the full codebase{" "}
+            <span className="text-ink/80">and</span> a written, end-to-end{" "}
+            <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">
+              DIY setup guide
+            </a>{" "}
+            to host it yourself — you're never left guessing. <span className="text-ink font-medium">Either way, you pay nothing.</span>
           </p>
 
           <div className="mt-8 max-w-[600px] scroll-mt-28">
@@ -421,7 +429,13 @@ const Hero = () => (
             {[
               <>Your site is <em className="italic">designed, built, and live-previewed</em> before we talk</>,
               <>Love it? <span className="font-semibold">Simple monthly hosting</span> — quoted on the call. Hosting, domain, branded email (up to 3 inboxes), booking, SEO, everything.</>,
-              <>Don't love it? Take the code. No cost. No contract. No weirdness.</>,
+              <>
+                Don't love it? You still leave set up for success: we hand you the <span className="font-semibold text-ink">full code</span>{" "}
+                <span className="text-ink/80">and</span> a complete guide to hosting it yourself — DNS, deploy, go-live — not an empty &quot;good luck&quot; send-off. No cost, no contract, no weirdness.{" "}
+                <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u whitespace-nowrap">
+                  Read the DIY guide →
+                </a>
+              </>,
               <>20 minutes on Zoom. No slide decks. No "discovery". Just your site.</>,
             ].map((t, i) => (
               <li key={i} className="flex items-start gap-3 text-[17px] text-ink/85">
@@ -435,7 +449,14 @@ const Hero = () => (
             <Shield className="w-6 h-6 text-forest shrink-0 mt-0.5" />
             <div>
               <div className="font-display font-semibold text-[18px] text-ink">Our "Walk Away" guarantee</div>
-              <div className="mt-1 text-[14px] text-ink/70">If you hate the design, walk. Keep the code. No clawback, no drama.</div>
+              <div className="mt-1 text-[14px] text-ink/70">
+                If you hate the design, walk — you still keep the code,{" "}
+                <span className="text-ink/80">plus</span> our full DIY hosting guide so you&apos;re not on your own.{" "}
+                <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">
+                  See the guide
+                </a>
+                . No clawback, no drama.
+              </div>
             </div>
           </div>
         </div>
@@ -769,10 +790,13 @@ const Offer = () => (
           <div className="bg-cream border border-rule rounded-2xl p-7 lg:p-8 flex flex-col">
             <div className="text-[12px] font-semibold text-muted uppercase tracking-[0.16em]">Path 1</div>
             <h3 className="mt-5 font-display font-semibold text-[24px] lg:text-[26px] display-tight">
-              Take the code. Host it yourself.
+              Take the code — we arm you to self‑host.
             </h3>
             <p className="mt-4 text-[16px] leading-[1.6] text-ink/75 flex-1">
-              We hand you a clean export + a deploy guide. Self‑hosting is on you — we don't provide hands‑on help to deploy elsewhere. The site is yours, free and clear. No catch, no weird license.
+              You get a clean export <span className="text-ink/80">and</span> a thorough, step-by-step DIY guide (hosting, DNS, SSL, going live) so self-hosting feels doable — not a cold handoff. The site is yours, free and clear.{" "}
+              <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u">
+                Open the setup guide →
+              </a>
             </p>
             <div className="mt-8 pt-5 border-t border-rule">
               <div className="text-[14px] font-semibold text-forest">Cost: Nothing — the build is yours</div>
@@ -806,13 +830,36 @@ const Offer = () => (
 const FAQ = () => {
   const [open, setOpen] = useState(0);
   const items = [
-    { q: "Is it really free?", a: "Yes. The design and build of your website costs you nothing. If you want us to host it — your domain, branded email (up to 3 inboxes included; additional inboxes at provider cost), booking, and the rest — Patrizio quotes a straightforward monthly on the call based on what you need. If not, we hand you the code. Your choice." },
-    { q: "What's the catch?", a: "There isn't one. We can build sites fast, and our bet is that once you see yours, you'll want us to keep running it. But if you don't — we'll hand over the code and wish you luck." },
+    {
+      q: "Is it really free?",
+      a: (
+        <>
+          Yes. The design and build of your website costs you nothing. If you want us to host it — your domain, branded email (up to 3 inboxes included; additional inboxes at provider cost), booking, and the rest — Patrizio quotes a straightforward monthly on the call based on what you need. If not, we hand you the code{" "}
+          <span className="text-ink/80">and</span> a full <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u">DIY setup guide</a> to host it yourself — still $0. Your choice.
+        </>
+      ),
+    },
+    {
+      q: "What's the catch?",
+      a: (
+        <>
+          There isn&apos;t one. We build sites fast, and our bet is you&apos;ll want us to keep running yours. If you&apos;d rather self-host, you still get the code{" "}
+          <span className="text-ink/80">and</span> our complete <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u">DIY hosting guide</a> — so you&apos;re set up to succeed, not left on your own.
+        </>
+      ),
+    },
     { q: "How do you build it before we even talk?", a: "We use your Google Business Profile, existing site (if any), and the short answers you give when you book. Our designers pair that with modern tools so you get a real, reviewable site before the call — not a weeks-long wireframe phase." },
     { q: "What's included if we host?", a: "Hosting, SSL, your .com domain, branded business email (up to 3 inboxes included; beyond that at provider cost), booking widget, review request automation, Google Reviews display, Google Maps integration, mobile optimization, on‑page SEO, analytics dashboard, security monitoring, and a lead inbox. Zero labor fees. Ever." },
     { q: "How is hosting priced?", a: "Patrizio quotes one monthly number on the call from what you actually need — heavier booking, e‑commerce, or multi‑location setups may land higher than a simple brochure site, and you'll know before you commit. No surprises, no upsells buried later." },
     { q: "Who's Patrizio?", a: "Founder of Foxes.ai. Previously founded 5th Factory, acquired by JBowman Creative in Nashville. Recent builds include Pool Bidder, Margaritas.ai, Animated Medical, SC Law Center, and more." },
-    { q: "What if I hate the design?", a: "You walk. You keep the code anyway. We don't include a free deploy hand-holding call for self‑hosting — that's the tradeoff for getting the build at no cost. No clawback, no drama." },
+    {
+      q: "What if I hate the design?",
+      a: (
+        <>
+          You walk, and you keep the code anyway — <span className="text-ink/80">plus</span> the same <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u">step-by-step DIY guide</a> we give everyone who self-hosts, so you&apos;re never stuck figuring out deploy alone. No clawback, no drama.
+        </>
+      ),
+    },
   ];
   return (
     <section id="faq" className="scroll-mt-28 bg-cream-2 py-24 lg:py-28">
@@ -852,7 +899,7 @@ const FAQ = () => {
                 </button>
                 <div className={`acc-body ${isOpen ? "open" : ""}`}>
                   <div>
-                    <p className="pb-7 pr-16 text-[17px] leading-[1.65] text-ink/75 pretty">{it.a}</p>
+                    <div className="pb-7 pr-16 text-[17px] leading-[1.65] text-ink/75 pretty">{it.a}</div>
                   </div>
                 </div>
               </div>
@@ -927,7 +974,7 @@ const Footer = () => (
         <span className="ml-2">© 2026</span>
       </div>
       <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-6 gap-y-2 text-[14px] text-muted">
-        <a href="/diy.html" className="hover:text-ink link-u">DIY setup guide</a>
+        <a href={DIY_GUIDE_URL} className="hover:text-ink link-u">DIY setup guide</a>
         <a href="#" className="hover:text-ink link-u">Privacy</a>
         <a href="#" className="hover:text-ink link-u">Terms</a>
       </div>
