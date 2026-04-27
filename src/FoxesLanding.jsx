@@ -128,10 +128,17 @@ const ScrollProgress = () => {
 // ————————————————————————————————————————————————————
 const Header = () => (
   <header className="relative z-40 border-b border-rule bg-cream/80 backdrop-blur-sm sticky top-0">
-    <div className="max-w-[1280px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
-      <a href="/" className="flex items-center gap-2 group">
+    <div className="max-w-[1280px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-3">
+      <a href="/" className="flex items-center gap-2 group min-w-0">
         <span className="text-xl leading-none">🦊</span>
-        <span className="font-display font-semibold text-[20px] tracking-tight">Foxes<span className="text-amber">.</span>ai</span>
+        <span className="font-display font-semibold text-[20px] tracking-tight truncate">Foxes<span className="text-amber">.</span>ai</span>
+      </a>
+      <a
+        href="#book"
+        className="sm:hidden shrink-0 inline-flex items-center gap-1 h-9 px-3.5 rounded-full bg-ink text-cream text-[12px] font-semibold hover:bg-amber transition-colors"
+      >
+        Book free call
+        <ArrowRight className="w-3 h-3" />
       </a>
       <div className="hidden sm:flex items-center gap-5">
         <a href="/" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">Home</a>
@@ -154,6 +161,13 @@ const CALENDLY_URL = "https://calendly.com/patrizio-foxes/30min?back=1&hide_gdpr
 
 /** Public DIY hosting guide (absolute URL for clarity in copy + emails). */
 const DIY_GUIDE_URL = "https://www.foxes.ai/diy.html";
+
+/** Slim hero trust row (matches TrustBar clients + testimonial tone). */
+const HERO_TRUST_CLIENTS = ["Pool Bidder", "Margaritas.ai", "Animated Medical", "SC Law Center"];
+const HERO_TRUST_QUOTE = {
+  short: "Clear story, fast pages, and none of the usual agency runaround.",
+  name: "Pool Bidder",
+};
 
 /** Vertical padding of the embed wrapper on lg (`p-3 sm:p-4 lg:p-3` → 12px top + bottom). */
 const BOOKING_EMBED_WRAP_PAD_Y = 24;
@@ -207,30 +221,32 @@ const useBookingIframeHeight = (cardRef, headerRef, footerRef) => {
   return height;
 };
 
-/** Iframe + third-party work only when the booking block is near the viewport (or #book deep link). */
+/** Iframe loads when in/near view; mobile + #book load immediately so the hero calendar is ready. */
 const CalendlyEmbedDeferred = ({ height = 680 }) => {
   const [load, setLoad] = useState(false);
   const wrapRef = useRef(null);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (window.location.hash === "#book") {
       setLoad(true);
+      return;
     }
-  }, []);
-
-  useEffect(() => {
-    if (load) return;
+    if (window.matchMedia("(max-width: 1023px)").matches) {
+      setLoad(true);
+      return;
+    }
     const el = wrapRef.current;
     if (!el) return;
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) setLoad(true);
       },
-      { root: null, rootMargin: "100px 0px 400px 0px", threshold: 0 }
+      { root: null, rootMargin: "240px 0px 800px 0px", threshold: 0 }
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [load]);
+  }, []);
 
   return (
     <div
@@ -244,7 +260,6 @@ const CalendlyEmbedDeferred = ({ height = 680 }) => {
           width="100%"
           height={height}
           title="Book a call with Patrizio"
-          loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           className="border-0 bg-white w-full"
           style={{ minHeight: height, display: "block" }}
@@ -258,10 +273,10 @@ const CalendlyEmbedDeferred = ({ height = 680 }) => {
           <div
             className="mb-4 h-9 w-9 animate-spin rounded-full border-2 border-amber/25 border-t-amber motion-reduce:animate-none"
             role="status"
-            aria-label="Preparing calendar"
+            aria-label="Loading calendar"
           />
-          <p className="text-[15px] font-medium text-ink/80">Preparing the scheduler…</p>
-          <p className="mt-1 max-w-[280px] text-[13px] text-muted">Loads automatically as you scroll to this section — keeps the rest of the page fast.</p>
+          <p className="text-[15px] font-medium text-ink/80">Loading your live calendar…</p>
+          <p className="mt-1 max-w-[280px] text-[13px] text-muted">Opens in a moment — real-time slots from Calendly.</p>
         </div>
       )}
     </div>
@@ -294,7 +309,7 @@ const BookingCard = () => {
           </div>
         </div>
         <h3 className="mt-2 sm:mt-3 lg:mt-2 font-display font-semibold text-[22px] sm:text-[24px] lg:text-[22px] display-tight leading-snug">
-          Pick a time. See your site on the call.
+          Book your call — see your site on Zoom.
         </h3>
         <ul className="mt-3 sm:mt-4 lg:mt-2.5 space-y-1 lg:space-y-0.5 text-[13px] sm:text-[14px] text-ink/75">
           <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> We design it <em className="italic">before</em> we meet</li>
@@ -353,6 +368,23 @@ const LiveActivity = () => {
 };
 
 // ————————————————————————————————————————————————————
+// Hero trust (client names + quote — visible without scrolling past hero)
+// ————————————————————————————————————————————————————
+const HeroBookingTrust = () => (
+  <div className="mt-4 lg:mt-5 px-0.5">
+    <figure className="text-center max-w-[440px] mx-auto">
+      <blockquote className="text-[13px] sm:text-[14px] leading-snug text-ink/70 italic font-display">
+        &ldquo;{HERO_TRUST_QUOTE.short}&rdquo;
+      </blockquote>
+      <figcaption className="mt-2 text-[12px] font-semibold text-ink/80 not-italic">— {HERO_TRUST_QUOTE.name}</figcaption>
+    </figure>
+    <p className="mt-3 text-[10px] sm:text-[11px] text-center text-muted uppercase tracking-[0.14em] font-medium leading-relaxed">
+      {HERO_TRUST_CLIENTS.join(" · ")}
+    </p>
+  </div>
+);
+
+// ————————————————————————————————————————————————————
 // Hero
 // ————————————————————————————————————————————————————
 const Hero = () => (
@@ -360,7 +392,7 @@ const Hero = () => (
     <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pt-6 sm:pt-12 lg:pt-12 pb-20 lg:pb-20">
       <div className="grid lg:grid-cols-[1.05fr_1fr] gap-6 sm:gap-10 lg:gap-10 xl:gap-14 items-start">
         <div className="order-2 lg:order-1">
-          <div className="mb-6">
+          <div className="hidden lg:block mb-6">
             <LiveActivity />
           </div>
 
@@ -368,22 +400,19 @@ const Hero = () => (
             We'll design your new website <em className="italic font-normal text-amber">before</em> our first call.
           </h1>
 
-          <p className="mt-7 text-[19px] sm:text-[22px] leading-[1.55] text-ink/75 pretty max-w-[600px]">
-            Book 20 minutes. When we hop on Zoom, your site is already built. If you love it — it's yours. If not — you get the full codebase{" "}
-            <span className="text-ink/80">and</span> a written, end-to-end{" "}
-            <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">
-              DIY setup guide
-            </a>{" "}
-            to host it yourself — you're never left guessing. <span className="text-ink font-medium">Either way, you pay nothing.</span>
+          <p className="mt-6 sm:mt-7 text-[18px] sm:text-[20px] lg:text-[21px] leading-[1.55] text-ink/75 pretty max-w-[600px]">
+            Book a 20-minute Zoom. Your site is already built — you&apos;ll review it live on the call.{" "}
+            <span className="text-ink font-medium">You pay nothing to see it.</span> Walk away anytime; if you skip hosting, you still get the code and our{" "}
+            <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">DIY setup guide</a>.
           </p>
 
-          <div className="mt-8 max-w-[600px] scroll-mt-28">
+          <div className="mt-7 sm:mt-8 max-w-[600px] scroll-mt-28">
             <a
               id="hero-book-link"
               href="#book"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 min-h-[56px] px-8 rounded-full bg-amber text-white text-[16px] font-semibold hover:bg-[#B4471A] transition-colors shadow-lg shadow-amber/20"
             >
-              Book my free website
+              Book free call
               <ArrowRight className="w-4 h-4 shrink-0" />
             </a>
             <p className="mt-3 text-[12px] sm:text-[13px] font-medium text-muted text-center sm:text-left tracking-wide">
@@ -425,7 +454,7 @@ const Hero = () => (
             <Stat big="Free" label="to see yours" />
           </div>
 
-          <ul className="mt-10 space-y-4">
+          <ul className="mt-10 space-y-3.5 lg:space-y-3">
             {[
               <>Your site is <em className="italic">designed, built, and live-previewed</em> before we talk</>,
               <>Love it? <span className="font-semibold">Simple monthly hosting</span> — quoted on the call. Hosting, domain, branded email (up to 3 inboxes), booking, SEO, everything.</>,
@@ -438,18 +467,18 @@ const Hero = () => (
               </>,
               <>20 minutes on Zoom. No slide decks. No "discovery". Just your site.</>,
             ].map((t, i) => (
-              <li key={i} className="flex items-start gap-3 text-[17px] text-ink/85">
+              <li key={i} className="flex items-start gap-3 text-[17px] lg:text-[15px] text-ink/85 lg:text-ink/75">
                 <AmberCheck />
                 <span>{t}</span>
               </li>
             ))}
           </ul>
 
-          <div className="mt-10 flex items-start gap-4 p-5 rounded-xl bg-forest/5 border border-forest/15">
+          <div className="mt-10 flex items-start gap-4 p-5 lg:p-4 rounded-xl bg-forest/5 border border-forest/15">
             <Shield className="w-6 h-6 text-forest shrink-0 mt-0.5" />
             <div>
-              <div className="font-display font-semibold text-[18px] text-ink">Our "Walk Away" guarantee</div>
-              <div className="mt-1 text-[14px] text-ink/70">
+              <div className="font-display font-semibold text-[18px] lg:text-[16px] text-ink">Our "Walk Away" guarantee</div>
+              <div className="mt-1 text-[14px] lg:text-[13px] text-ink/70">
                 If you hate the design, walk — you still keep the code,{" "}
                 <span className="text-ink/80">plus</span> our full DIY hosting guide so you&apos;re not on your own.{" "}
                 <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">
@@ -462,11 +491,21 @@ const Hero = () => (
         </div>
 
         <div className="order-1 lg:order-2 lg:sticky lg:top-[7.25rem]">
-          <BookingCard />
-          <div className="mt-3 lg:mt-2 flex items-center justify-center gap-2 text-[12px] text-muted">
-            <Clock className="w-3.5 h-3.5" />
-            <span>Next availability: <span className="text-ink font-medium">Tomorrow, 10:00 AM CT</span></span>
+          <div className="lg:hidden space-y-3 mb-1">
+            <LiveActivity />
+            <p className="font-display font-semibold text-[24px] sm:text-[30px] display-tight balance text-ink leading-[1.12]">
+              We&apos;ll design your new website <em className="italic font-normal text-amber">before</em> our first call.
+            </p>
+            <p className="text-[12px] sm:text-[13px] font-medium text-muted tracking-wide">
+              No credit card · 20 min · Site ready before you meet Patrizio
+            </p>
           </div>
+          <BookingCard />
+          <div className="mt-3 lg:mt-2 flex items-center justify-center gap-2 text-[12px] text-muted text-center">
+            <Clock className="w-3.5 h-3.5 shrink-0" />
+            <span>Live times below — <span className="text-ink font-medium">updates in real time</span></span>
+          </div>
+          <HeroBookingTrust />
         </div>
       </div>
     </div>
@@ -1048,7 +1087,7 @@ const MobileCTA = () => {
         onClick={scrollTo}
         className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-amber text-[16px] font-semibold text-white shadow-2xl"
       >
-        Book my free website
+        Book free call
         <ArrowRight className="h-4 w-4" />
       </button>
     </div>
