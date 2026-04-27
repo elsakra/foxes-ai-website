@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useEmbedLivePortfolioPreviews } from "./hooks/useEmbedLivePortfolioPreviews.js";
 
 const PATRIZIO_PHOTO = "patrizio-20bio.avif";
@@ -152,6 +152,58 @@ const Header = () => (
 // ————————————————————————————————————————————————————
 const CALENDLY_URL = "https://calendly.com/patrizio-foxes/30min?back=1&hide_gdpr_banner=1&primary_color=C9531E&text_color=0A0A0A&background_color=FFFFFF";
 
+/** Vertical padding of the embed wrapper on lg (`p-3 sm:p-4 lg:p-3` → 12px top + bottom). */
+const BOOKING_EMBED_WRAP_PAD_Y = 24;
+
+/**
+ * On lg+ viewports, size the Calendly iframe so header + footer + iframe fit in the visible window
+ * (reduces page scroll while the booking column is on screen).
+ */
+const useBookingIframeHeight = (cardRef, headerRef, footerRef) => {
+  const [height, setHeight] = useState(680);
+
+  useLayoutEffect(() => {
+    const recalc = () => {
+      if (typeof window === "undefined" || window.matchMedia("(max-width: 1023px)").matches) {
+        setHeight(680);
+        return;
+      }
+      const card = cardRef.current;
+      const head = headerRef.current;
+      const foot = footerRef.current;
+      if (!card || !head || !foot) return;
+      const vh = window.visualViewport?.height ?? window.innerHeight;
+      const top = card.getBoundingClientRect().top;
+      const reserve = 12;
+      const avail = vh - top - reserve;
+      const chrome = head.offsetHeight + foot.offsetHeight + BOOKING_EMBED_WRAP_PAD_Y;
+      const next = Math.floor(avail - chrome);
+      /* Prefer fitting the card in the viewport; Calendly may scroll inside if the iframe is short. */
+      setHeight(Math.max(320, Math.min(720, next)));
+    };
+
+    recalc();
+    window.addEventListener("resize", recalc);
+    window.visualViewport?.addEventListener("resize", recalc);
+    window.visualViewport?.addEventListener("scroll", recalc);
+    const ro = new ResizeObserver(recalc);
+    const c = cardRef.current;
+    const h = headerRef.current;
+    const f = footerRef.current;
+    if (c) ro.observe(c);
+    if (h) ro.observe(h);
+    if (f) ro.observe(f);
+    return () => {
+      window.removeEventListener("resize", recalc);
+      window.visualViewport?.removeEventListener("resize", recalc);
+      window.visualViewport?.removeEventListener("scroll", recalc);
+      ro.disconnect();
+    };
+  }, []);
+
+  return height;
+};
+
 /** Iframe + third-party work only when the booking block is near the viewport (or #book deep link). */
 const CalendlyEmbedDeferred = ({ height = 680 }) => {
   const [load, setLoad] = useState(false);
@@ -196,7 +248,8 @@ const CalendlyEmbedDeferred = ({ height = 680 }) => {
         />
       ) : (
         <div
-          className="flex min-h-[680px] flex-col items-center justify-center bg-cream/50 px-6 py-12 text-center"
+          className="flex flex-col items-center justify-center bg-cream/50 px-6 py-12 text-center"
+          style={{ minHeight: height }}
           aria-live="polite"
         >
           <div
@@ -215,50 +268,57 @@ const CalendlyEmbedDeferred = ({ height = 680 }) => {
 // ————————————————————————————————————————————————————
 // Booking card (now with Calendly, framed with trust elements)
 // ————————————————————————————————————————————————————
-const BookingCard = () => (
-  <div id="book" className="bg-white border border-rule rounded-2xl card-shadow-lg overflow-hidden">
-    {/* header */}
-    <div className="px-7 pt-7 pb-5 bg-cream border-b border-rule">
-      <div className="flex items-center justify-between">
-        <div className="inline-flex items-center gap-2 text-[12px] font-semibold text-forest uppercase tracking-[0.14em]">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-forest opacity-60 animate-ping" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-forest" />
-          </span>
-          Live availability
+const BookingCard = () => {
+  const cardRef = useRef(null);
+  const headerRef = useRef(null);
+  const footerRef = useRef(null);
+  const embedH = useBookingIframeHeight(cardRef, headerRef, footerRef);
+
+  return (
+    <div id="book" ref={cardRef} className="bg-white border border-rule rounded-2xl card-shadow-lg overflow-hidden">
+      {/* header — tighter on lg so more viewport goes to Calendly */}
+      <div ref={headerRef} className="px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5 lg:px-6 lg:pt-5 lg:pb-3 bg-cream border-b border-rule">
+        <div className="flex items-center justify-between">
+          <div className="inline-flex items-center gap-2 text-[11px] lg:text-[12px] font-semibold text-forest uppercase tracking-[0.14em]">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-forest opacity-60 animate-ping" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-forest" />
+            </span>
+            Live availability
+          </div>
+          <div className="text-[11px] lg:text-[12px] text-muted">
+            <span className="text-ink font-medium tnum">20 min</span> · Zoom
+          </div>
         </div>
-        <div className="text-[12px] text-muted">
-          <span className="text-ink font-medium tnum">20 min</span> · Zoom
+        <h3 className="mt-2 sm:mt-3 lg:mt-2 font-display font-semibold text-[22px] sm:text-[24px] lg:text-[22px] display-tight leading-snug">
+          Pick a time. See your site on the call.
+        </h3>
+        <ul className="mt-3 sm:mt-4 lg:mt-2.5 space-y-1 lg:space-y-0.5 text-[13px] sm:text-[14px] text-ink/75">
+          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> We design it <em className="italic">before</em> we meet</li>
+          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> No credit card, no pressure, no catch</li>
+          <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> Walk away with the code if you pass</li>
+        </ul>
+      </div>
+      {/* calendly */}
+      <div className="p-3 sm:p-4 lg:p-3">
+        <CalendlyEmbedDeferred height={embedH} />
+      </div>
+      {/* footer trust */}
+      <div ref={footerRef} className="px-5 sm:px-7 lg:px-6 py-3 sm:py-4 lg:py-2.5 bg-cream border-t border-rule flex items-center justify-between gap-4 text-[11px] sm:text-[12px] text-muted">
+        <div className="inline-flex items-center gap-1.5 min-w-0">
+          <Shield className="w-4 h-4 text-forest shrink-0" />
+          <span className="truncate sm:whitespace-normal">100% free — nothing to cancel</span>
+        </div>
+        <div className="inline-flex items-center gap-1.5 shrink-0">
+          <span className="font-medium text-ink tnum">4.9</span>
+          <div className="flex gap-0.5 text-amber">
+            {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3" />)}
+          </div>
         </div>
       </div>
-      <h3 className="mt-3 font-display font-semibold text-[24px] sm:text-[26px] display-tight">
-        Pick a time. See your site on the call.
-      </h3>
-      <ul className="mt-4 space-y-1.5 text-[14px] text-ink/75">
-        <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> We design it <em className="italic">before</em> we meet</li>
-        <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> No credit card, no pressure, no catch</li>
-        <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> Walk away with the code if you pass</li>
-      </ul>
     </div>
-    {/* calendly */}
-    <div className="p-3 sm:p-4">
-      <CalendlyEmbedDeferred height={680} />
-    </div>
-    {/* footer trust */}
-    <div className="px-7 py-4 bg-cream border-t border-rule flex items-center justify-between gap-4 text-[12px] text-muted">
-      <div className="inline-flex items-center gap-1.5">
-        <Shield className="w-4 h-4 text-forest" />
-        <span>100% free — nothing to cancel</span>
-      </div>
-      <div className="inline-flex items-center gap-1.5">
-        <span className="font-medium text-ink tnum">4.9</span>
-        <div className="flex gap-0.5 text-amber">
-          {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3" />)}
-        </div>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 // ————————————————————————————————————————————————————
 // Live activity ticker (social proof)
@@ -294,8 +354,8 @@ const LiveActivity = () => {
 // ————————————————————————————————————————————————————
 const Hero = () => (
   <section id="top" className="relative grain">
-    <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-20 pb-20 lg:pb-28">
-      <div className="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 xl:gap-20 items-start">
+    <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-12 pb-20 lg:pb-20">
+      <div className="grid lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-10 xl:gap-14 items-start">
         <div>
           <div className="mb-6">
             <LiveActivity />
@@ -380,9 +440,9 @@ const Hero = () => (
           </div>
         </div>
 
-        <div className="lg:sticky lg:top-24">
+        <div className="lg:sticky lg:top-[7.25rem]">
           <BookingCard />
-          <div className="mt-4 flex items-center justify-center gap-2 text-[12px] text-muted">
+          <div className="mt-3 lg:mt-2 flex items-center justify-center gap-2 text-[12px] text-muted">
             <Clock className="w-3.5 h-3.5" />
             <span>Next availability: <span className="text-ink font-medium">Tomorrow, 10:00 AM CT</span></span>
           </div>
