@@ -1,53 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { MetaPixel } from "./MetaPixel";
-import type { PlaceSnapshot } from "@/lib/google-places";
 
 type Step = 1 | 2 | 3;
-
-type AutocompletePrediction = {
-  place_id: string;
-  primary_text: string;
-  secondary_text: string;
-};
-
-function absOrigin(): string {
-  if (typeof window !== "undefined") {
-    return `${window.location.origin}`;
-  }
-  return process.env.NEXT_PUBLIC_APP_ORIGIN ?? "http://localhost:3000";
-}
-
-/** Map Google Places types → short industry phrase */
-function deriveIndustry(types: string[]): string {
-  const map: Record<string, string> = {
-    restaurant: "Restaurant",
-    food: "Food & beverage",
-    store: "Retail",
-    dentist: "Dental",
-    doctor: "Medical",
-    lawyer: "Legal services",
-    plumber: "Home services",
-    electrician: "Home services",
-    gym: "Fitness",
-    beauty_salon: "Beauty",
-    car_dealer: "Automotive",
-    lodging: "Hospitality",
-    real_estate_agency: "Real estate",
-    general_contractor: "Construction",
-    roofing_contractor: "Home services",
-  };
-  const skip = new Set(["establishment", "point_of_interest", "premise"]);
-  for (const t of types) {
-    if (!skip.has(t) && map[t]) return map[t];
-  }
-  for (const t of types) {
-    if (!skip.has(t)) return t.replace(/_/g, " ");
-  }
-  return "";
-}
 
 export function OnboardingWizard() {
   const searchParams = useSearchParams();
@@ -62,13 +19,7 @@ export function OnboardingWizard() {
   );
 
   const [step, setStep] = useState<Step>(1);
-  const [searchInput, setSearchInput] = useState("");
-  const [predictions, setPredictions] = useState<AutocompletePrediction[]>([]);
-  const [showPred, setShowPred] = useState(false);
-  const [detailLoading, setDetailLoading] = useState(false);
-  const [place, setPlace] = useState<PlaceSnapshot | null>(null);
-
-  /** User-editable label after place selected */
+  const [businessName, setBusinessName] = useState("");
   const [industryLabel, setIndustryLabel] = useState("");
 
   const [fullName, setFullName] = useState("");
@@ -78,67 +29,21 @@ export function OnboardingWizard() {
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
-  const debouncedRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const vsl = process.env.NEXT_PUBLIC_VSL_EMBED_URL || "";
   const confirmVideo =
     process.env.NEXT_PUBLIC_CONFIRMATION_VIDEO_EMBED_URL || "";
 
+  const businessTrimmed = businessName.trim();
   const industryTrimmed = industryLabel.trim();
-  const canContinueStep1 = place !== null && industryTrimmed.length >= 1;
+  const canContinueStep1 =
+    businessTrimmed.length >= 1 && industryTrimmed.length >= 1;
   const canShowPhone =
     fullName.trim().length > 1 && /\S+@\S+\.\S+/.test(email.trim());
   const canSubmitStep2 = canShowPhone && phone.trim().length >= 8;
 
-  useEffect(() => {
-    if (debouncedRef.current) clearTimeout(debouncedRef.current);
-    const q = searchInput.trim();
-    if (q.length < 2) {
-      setPredictions([]);
-      return;
-    }
-    debouncedRef.current = setTimeout(async () => {
-      try {
-        const res = await fetch("/api/places/autocomplete", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ input: q }),
-        });
-        const j = (await res.json()) as { suggestions?: AutocompletePrediction[] };
-        setPredictions(j.suggestions ?? []);
-        setShowPred(true);
-      } catch {
-        setPredictions([]);
-      }
-    }, 280);
-    return () => {
-      if (debouncedRef.current) clearTimeout(debouncedRef.current);
-    };
-  }, [searchInput]);
-
-  async function choosePrediction(pred: AutocompletePrediction) {
-    setShowPred(false);
-    setSearchInput(`${pred.primary_text} — ${pred.secondary_text}`);
-    setDetailLoading(true);
-    setPlace(null);
-    try {
-      const res = await fetch(
-        `/api/places/details?place_id=${encodeURIComponent(pred.place_id)}`
-      );
-      const j = (await res.json()) as { place?: PlaceSnapshot };
-      if (!j.place) throw new Error("No listing");
-      setPlace(j.place);
-      const hint = deriveIndustry(j.place.secondary_types ?? []);
-      setIndustryLabel(hint || "");
-    } catch {
-      setError("Could not load listing details.");
-    } finally {
-      setDetailLoading(false);
-    }
-  }
-
   const goStep2 = () => {
     if (!canContinueStep1) {
-      setError("Pick a Google listing and set your niche label.");
+      setError("Add your business name and industry or niche.");
       return;
     }
     setError(null);
@@ -152,7 +57,7 @@ export function OnboardingWizard() {
 
   const submitLead = () => {
     setError(null);
-    if (!place || !canSubmitStep2) {
+    if (!canSubmitStep2) {
       setError("Enter a valid mobile number.");
       return;
     }
@@ -161,14 +66,12 @@ export function OnboardingWizard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          businessName: place.display_name,
+          businessName: businessTrimmed,
           industry: industryTrimmed,
           fullName: fullName.trim(),
           email: email.trim(),
           phone: phone.trim(),
           website: honeypot,
-          google_place_id: place.place_id,
-          place_snapshot: place,
           ...utm,
         }),
       });
@@ -193,17 +96,13 @@ export function OnboardingWizard() {
   };
 
   const timeline = [
-    { title: "Location & niche", subtitle: "We verify your listing and positioning" },
+    { title: "Your business", subtitle: "We use what you entered to prep creative direction." },
     { title: "Your contact", subtitle: "We reach you inside 1–2 hours during business hours" },
     {
       title: "Kickoff scheduled",
       subtitle: "We prep your onboarding and site roadmap",
     },
   ];
-
-  const photoAbs = place?.photo_url
-    ? `${absOrigin()}${place.photo_url}`
-    : null;
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-white">
@@ -238,7 +137,7 @@ export function OnboardingWizard() {
             <p className="text-xs font-semibold text-ink mb-3">Trusted playbook</p>
             <div className="rounded-xl overflow-hidden bg-onboarding-muted border border-rule">
               <div className="p-4 text-[13px] text-muted leading-relaxed">
-                “Higher-trust creatives on day one—we align your site with discovery patterns from Search + Maps.”
+                “Higher-trust creatives on day one—we align visuals and messaging to your market.”
                 <span className="block mt-3 text-[12px] text-ink font-medium">
                   Foxes · onboarding experience
                 </span>
@@ -273,105 +172,44 @@ export function OnboardingWizard() {
                 <span className="text-onboarding-blue">before you choose hosting</span>.
               </h1>
               <p className="mt-4 text-[16px] text-ink/70 leading-relaxed">
-                Find your listing so we tailor messaging, visuals, and CTA stacks to fit how shoppers actually find you online.
+                Tell us about your business so we tailor messaging, visuals, and CTAs before we ever pitch hosting.
               </p>
 
               <label className="mt-10 block">
+                <span className="text-[13px] font-medium text-ink">Business name</span>
+                <input
+                  className="mt-2 w-full rounded-xl border border-rule px-4 py-3.5 text-[16px] focus:outline-none focus:ring-2 focus:ring-onboarding-blue/30"
+                  value={businessName}
+                  onChange={(e) => setBusinessName(e.target.value)}
+                  placeholder="Your business name as customers know it"
+                  autoComplete="organization"
+                />
+              </label>
+
+              <label className="mt-8 block">
                 <span className="text-[13px] font-medium text-ink">
-                  Find your business (as listed on Google)
+                  Industry / niche
                 </span>
-                <div className="relative mt-2">
-                  <input
-                    className="w-full rounded-xl border border-rule px-4 py-3.5 text-[16px] focus:outline-none focus:ring-2 focus:ring-onboarding-blue/30"
-                    value={searchInput}
-                    onChange={(e) => {
-                      setSearchInput(e.target.value);
-                      setPlace(null);
-                      setShowPred(true);
-                    }}
-                    onFocus={() => setShowPred(true)}
-                    placeholder="Enter your business name"
-                    autoComplete="off"
-                  />
-                  {showPred && predictions.length > 0 && (
-                    <ul
-                      className="absolute z-40 mt-2 w-full rounded-xl border border-rule bg-white shadow-xl max-h-56 overflow-auto"
-                      role="listbox"
-                    >
-                      {predictions.map((p) => (
-                        <li key={p.place_id}>
-                          <button
-                            type="button"
-                            className="w-full text-left px-4 py-3 hover:bg-onboarding-muted/60 text-[14px]"
-                            onMouseDown={(e) => e.preventDefault()}
-                            onClick={() => void choosePrediction(p)}
-                          >
-                            <span className="font-medium text-ink block">{p.primary_text}</span>
-                            <span className="text-muted text-[13px]">{p.secondary_text}</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                <input
+                  className="mt-2 w-full rounded-xl border border-rule px-4 py-3.5 text-[16px] focus:outline-none focus:ring-2 focus:ring-onboarding-blue/30"
+                  value={industryLabel}
+                  onChange={(e) => setIndustryLabel(e.target.value)}
+                  placeholder="e.g. Boutique dental studio · Boutique retail · Home services"
+                  autoComplete="off"
+                />
                 <p className="mt-3 text-[13px] text-muted">
-                  Can&apos;t find it? Type the nearest match—we&apos;ll align details on kickoff.
+                  A short label is enough—we align details with you before kickoff.
                 </p>
               </label>
 
-              {detailLoading && <p className="mt-4 text-sm text-muted">Loading listing…</p>}
-
-              {place && (
-                <>
-                  <div className="mt-8 rounded-2xl border border-rule shadow-sm bg-white overflow-hidden flex gap-4 p-4">
-                    <div className="w-[84px] h-[84px] shrink-0 rounded-lg bg-rule overflow-hidden shrink-0">
-                      {photoAbs ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={photoAbs}
-                          alt=""
-                          width={84}
-                          height={84}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div className="h-full flex items-center justify-center text-muted text-[11px] px-2 text-center">
-                          Photo
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex justify-between gap-2">
-                        <p className="font-semibold text-ink truncate">{place.display_name}</p>
-                        {place.rating != null && (
-                          <span className="text-[13px] font-medium whitespace-nowrap text-amber-700">
-                            {place.rating} ★
-                            {place.user_ratings_total != null && (
-                              <span className="text-muted font-normal">
-                                {" "}
-                                ({place.user_ratings_total})
-                              </span>
-                            )}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[13px] text-muted mt-1 leading-snug">{place.formatted_address}</p>
-                      {place.formatted_phone && (
-                        <p className="text-[13px] text-muted mt-1">{place.formatted_phone}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <label className="mt-8 block text-[13px] font-medium text-muted">
-                    Industry / niche label
-                    <input
-                      className="mt-2 w-full rounded-xl border border-rule px-4 py-3 text-[16px] text-ink"
-                      value={industryLabel}
-                      onChange={(e) => setIndustryLabel(e.target.value)}
-                      placeholder="e.g. Home services · Dental studio"
-                    />
-                  </label>
-                </>
+              {businessTrimmed && industryTrimmed && (
+                <div className="mt-8 rounded-2xl border border-rule shadow-sm bg-white p-5">
+                  <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">
+                    Summary
+                  </p>
+                  <p className="font-semibold text-ink text-lg">{businessTrimmed}</p>
+                  <p className="text-[15px] text-muted mt-1">{industryTrimmed}</p>
+                </div>
               )}
 
               <div className="mt-14 flex justify-end">
@@ -400,26 +238,10 @@ export function OnboardingWizard() {
                 Calls come from an actual strategist—SMS + confirmation email fired automatically.
               </p>
 
-              {place && (
-                <div className="mt-8 rounded-2xl border border-rule shadow-sm p-5 flex gap-4">
-                  <div className="w-[72px] h-[72px] shrink-0 rounded-lg bg-rule overflow-hidden">
-                    {photoAbs ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={photoAbs}
-                        alt=""
-                        width={72}
-                        height={72}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : null}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-ink">{place.display_name}</p>
-                    <p className="text-[13px] text-muted">{place.formatted_address}</p>
-                  </div>
-                </div>
-              )}
+              <div className="mt-8 rounded-2xl border border-rule shadow-sm p-5 bg-onboarding-muted/30">
+                <p className="font-semibold text-ink">{businessTrimmed}</p>
+                <p className="text-[14px] text-muted mt-1">{industryTrimmed}</p>
+              </div>
 
               <input
                 type="text"

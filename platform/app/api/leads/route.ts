@@ -9,10 +9,20 @@ import { sendMetaLeadEvent } from "@/lib/meta-capi";
 
 export const dynamic = "force-dynamic";
 
+/** Allowed browser origins for cross-origin POST /api/leads. Env merges with these defaults so production works without configuring Vercel for foxes.ai. */
+const DEFAULT_LEAD_FORM_ORIGINS = [
+  "https://foxes.ai",
+  "https://www.foxes.ai",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:3000",
+];
+
 function allowedLeadFormOrigins(): string[] {
   const raw =
     process.env.ONBOARDING_ALLOWED_ORIGINS ?? process.env.FUNNEL_ALLOWED_ORIGINS ?? "";
-  return raw.split(",").map((s) => s.trim()).filter(Boolean);
+  const fromEnv = raw.split(",").map((s) => s.trim()).filter(Boolean);
+  return [...new Set([...fromEnv, ...DEFAULT_LEAD_FORM_ORIGINS])];
 }
 
 function leadFormCorsHeaders(req: Request): Record<string, string> {
@@ -29,21 +39,6 @@ function leadFormCorsHeaders(req: Request): Record<string, string> {
   return {};
 }
 
-const SnapshotSchema = z
-  .object({
-    place_id: z.string(),
-    display_name: z.string(),
-    formatted_address: z.string().nullable().optional(),
-    formatted_phone: z.string().nullable().optional(),
-    international_phone: z.string().nullable().optional(),
-    rating: z.number().nullable().optional(),
-    user_ratings_total: z.number().nullable().optional(),
-    secondary_types: z.array(z.string()).optional(),
-    photo_url: z.string().nullable().optional(),
-    website: z.string().nullable().optional(),
-  })
-  .passthrough();
-
 const LeadSchema = z.object({
   businessName: z.string().min(1).max(400),
   industry: z.string().min(1).max(400),
@@ -56,8 +51,6 @@ const LeadSchema = z.object({
   utm_medium: z.string().optional(),
   utm_campaign: z.string().optional(),
   utm_content: z.string().optional(),
-  google_place_id: z.string().max(512).optional(),
-  place_snapshot: SnapshotSchema.optional(),
 });
 
 export function OPTIONS(req: Request) {
@@ -86,27 +79,18 @@ export async function POST(req: Request) {
   const phone = normalizeUsPhone(parsed.data.phone);
   const firstName = parsed.data.fullName.trim().split(/\s+/)[0] ?? "there";
 
-  const intake: Record<string, unknown> = {};
-  if (parsed.data.place_snapshot) {
-    intake.place = parsed.data.place_snapshot;
-  }
-  if (parsed.data.google_place_id) {
-    intake.google_place_id = parsed.data.google_place_id;
-  }
-
   const supabase = createServiceRoleClient();
   const insertPayload = {
-      business_name: parsed.data.businessName.trim(),
-      industry: parsed.data.industry.trim(),
-      full_name: parsed.data.fullName.trim(),
-      email: parsed.data.email.trim().toLowerCase(),
-      phone,
-      utm_source: parsed.data.utm_source ?? null,
-      utm_medium: parsed.data.utm_medium ?? null,
-      utm_campaign: parsed.data.utm_campaign ?? null,
-      utm_content: parsed.data.utm_content ?? null,
-      ...(Object.keys(intake).length ? { intake: intake as Record<string, unknown> } : {}),
-    };
+    business_name: parsed.data.businessName.trim(),
+    industry: parsed.data.industry.trim(),
+    full_name: parsed.data.fullName.trim(),
+    email: parsed.data.email.trim().toLowerCase(),
+    phone,
+    utm_source: parsed.data.utm_source ?? null,
+    utm_medium: parsed.data.utm_medium ?? null,
+    utm_campaign: parsed.data.utm_campaign ?? null,
+    utm_content: parsed.data.utm_content ?? null,
+  };
 
   const insert = await supabase.from("leads").insert(insertPayload).select("id").single();
 
@@ -118,10 +102,6 @@ export async function POST(req: Request) {
   const leadId = insert.data.id as string;
   const origin = process.env.NEXT_PUBLIC_APP_ORIGIN || new URL(req.url).origin;
 
-  const addr = parsed.data.place_snapshot?.formatted_address
-    ? `\n📍 ${parsed.data.place_snapshot.formatted_address}`
-    : "";
-
   await Promise.allSettled([
     sendLeadConfirmation({
       to: parsed.data.email,
@@ -130,7 +110,7 @@ export async function POST(req: Request) {
     }),
     sendKickoffSms(phone, firstName),
     slackNewLead(
-      `🚨 NEW LEAD: ${parsed.data.fullName} — ${parsed.data.businessName} (${parsed.data.industry}). Call within 1–2 hrs. Phone: ${phone} · Email: ${parsed.data.email} · Lead ID \`${leadId}\`${addr}`
+      `🚨 NEW LEAD: ${parsed.data.fullName} — ${parsed.data.businessName} (${parsed.data.industry}). Call within 1–2 hrs. Phone: ${phone} · Email: ${parsed.data.email} · Lead ID \`${leadId}\``
     ),
     sendMetaLeadEvent({
       leadId,
