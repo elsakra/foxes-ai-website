@@ -21,6 +21,7 @@ export function OnboardingWizard() {
   const [step, setStep] = useState<Step>(1);
   const [businessName, setBusinessName] = useState("");
   const [industryLabel, setIndustryLabel] = useState("");
+  const [existingWebsiteUrl, setExistingWebsiteUrl] = useState("");
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,6 +36,7 @@ export function OnboardingWizard() {
 
   const businessTrimmed = businessName.trim();
   const industryTrimmed = industryLabel.trim();
+  const existingSiteTrimmed = existingWebsiteUrl.trim();
   const canContinueStep1 =
     businessTrimmed.length >= 1 && industryTrimmed.length >= 1;
   const canShowPhone =
@@ -72,6 +74,7 @@ export function OnboardingWizard() {
           email: email.trim(),
           phone: phone.trim(),
           website: honeypot,
+          ...(existingSiteTrimmed ? { existingWebsiteUrl: existingSiteTrimmed } : {}),
           ...utm,
         }),
       });
@@ -202,6 +205,24 @@ export function OnboardingWizard() {
                 </p>
               </label>
 
+              <label className="mt-8 block">
+                <span className="text-[13px] font-medium text-ink">
+                  Current website{" "}
+                  <span className="font-normal text-muted">(optional)</span>
+                </span>
+                <input
+                  className="mt-2 w-full rounded-xl border border-rule px-4 py-3.5 text-[16px] focus:outline-none focus:ring-2 focus:ring-onboarding-blue/30"
+                  inputMode="url"
+                  value={existingWebsiteUrl}
+                  onChange={(e) => setExistingWebsiteUrl(e.target.value)}
+                  placeholder="https:// or yourbusiness.com"
+                  autoComplete="url"
+                />
+                <p className="mt-3 text-[13px] text-muted">
+                  If you already have a site or landing page, paste it here—we use it for inspiration, not to sell hosting.
+                </p>
+              </label>
+
               {businessTrimmed && industryTrimmed && (
                 <div className="mt-8 rounded-2xl border border-rule shadow-sm bg-white p-5">
                   <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">
@@ -209,6 +230,9 @@ export function OnboardingWizard() {
                   </p>
                   <p className="font-semibold text-ink text-lg">{businessTrimmed}</p>
                   <p className="text-[15px] text-muted mt-1">{industryTrimmed}</p>
+                  {existingSiteTrimmed && (
+                    <p className="text-[14px] text-onboarding-blue mt-3 break-all">{existingSiteTrimmed}</p>
+                  )}
                 </div>
               )}
 
@@ -241,6 +265,9 @@ export function OnboardingWizard() {
               <div className="mt-8 rounded-2xl border border-rule shadow-sm p-5 bg-onboarding-muted/30">
                 <p className="font-semibold text-ink">{businessTrimmed}</p>
                 <p className="text-[14px] text-muted mt-1">{industryTrimmed}</p>
+                {existingSiteTrimmed ? (
+                  <p className="text-[13px] text-onboarding-blue mt-2 break-all">{existingSiteTrimmed}</p>
+                ) : null}
               </div>
 
               <input

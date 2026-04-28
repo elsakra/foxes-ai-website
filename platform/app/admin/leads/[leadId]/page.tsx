@@ -22,6 +22,8 @@ export default async function AdminLeadDetail({
 
   const intake = (lead.intake as Record<string, unknown>) || {};
   const draft = lead.anthropic_last_draft;
+  const existingWebsite =
+    typeof intake.existing_website_url === "string" ? intake.existing_website_url : null;
 
   return (
     <main className="grain min-h-screen px-6 py-10">
@@ -35,6 +37,21 @@ export default async function AdminLeadDetail({
       <p className="mt-2 text-muted">
         {lead.full_name} · {lead.email} · <span className="tnum">{lead.phone}</span>
       </p>
+      {existingWebsite ? (
+        <p className="mt-3 text-[14px] text-ink">
+          <span className="text-muted">Current site:</span>{" "}
+          <a
+            href={
+              /^https?:\/\//i.test(existingWebsite) ? existingWebsite : `https://${existingWebsite}`
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-forest underline underline-offset-2 break-all"
+          >
+            {existingWebsite}
+          </a>
+        </p>
+      ) : null}
 
       <div className="mt-10 grid lg:grid-cols-2 gap-10 max-w-[1200px]">
         <IntakeEditor leadId={leadId} initialIntake={intake} />

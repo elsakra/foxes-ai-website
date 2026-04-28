@@ -39,6 +39,20 @@ function leadFormCorsHeaders(req: Request): Record<string, string> {
   return {};
 }
 
+/** Store a display-safe URL; prepend https:// when no scheme; keep raw if unparseable */
+function normalizeExistingWebsiteUrl(raw: string | undefined): string | null {
+  const t = raw?.trim();
+  if (!t) return null;
+  const withProto = /^https?:\/\//i.test(t) ? t : `https://${t}`;
+  try {
+    const u = new URL(withProto);
+    if (u.protocol !== "http:" && u.protocol !== "https:") return t.slice(0, 500);
+    return u.toString().slice(0, 500);
+  } catch {
+    return t.slice(0, 500);
+  }
+}
+
 const LeadSchema = z.object({
   businessName: z.string().min(1).max(400),
   industry: z.string().min(1).max(400),
@@ -47,6 +61,8 @@ const LeadSchema = z.object({
   phone: z.string().min(8).max(40),
   /** Honeypot — must be empty */
   website: z.string().optional(),
+  /** Optional current / old business site (not the honeypot) */
+  existingWebsiteUrl: z.string().max(500).optional(),
   utm_source: z.string().optional(),
   utm_medium: z.string().optional(),
   utm_campaign: z.string().optional(),
@@ -79,6 +95,10 @@ export async function POST(req: Request) {
   const phone = normalizeUsPhone(parsed.data.phone);
   const firstName = parsed.data.fullName.trim().split(/\s+/)[0] ?? "there";
 
+  const normalizedSite = normalizeExistingWebsiteUrl(parsed.data.existingWebsiteUrl);
+  const intake: Record<string, unknown> = {};
+  if (normalizedSite) intake.existing_website_url = normalizedSite;
+
   const supabase = createServiceRoleClient();
   const insertPayload = {
     business_name: parsed.data.businessName.trim(),
@@ -90,6 +110,7 @@ export async function POST(req: Request) {
     utm_medium: parsed.data.utm_medium ?? null,
     utm_campaign: parsed.data.utm_campaign ?? null,
     utm_content: parsed.data.utm_content ?? null,
+    ...(Object.keys(intake).length ? { intake } : {}),
   };
 
   const insert = await supabase.from("leads").insert(insertPayload).select("id").single();
@@ -102,6 +123,8 @@ export async function POST(req: Request) {
   const leadId = insert.data.id as string;
   const origin = process.env.NEXT_PUBLIC_APP_ORIGIN || new URL(req.url).origin;
 
+  const siteLine = normalizedSite ? ` · Site: ${normalizedSite}` : "";
+
   await Promise.allSettled([
     sendLeadConfirmation({
       to: parsed.data.email,
@@ -110,7 +133,7 @@ export async function POST(req: Request) {
     }),
     sendKickoffSms(phone, firstName),
     slackNewLead(
-      `🚨 NEW LEAD: ${parsed.data.fullName} — ${parsed.data.businessName} (${parsed.data.industry}). Call within 1–2 hrs. Phone: ${phone} · Email: ${parsed.data.email} · Lead ID \`${leadId}\``
+      `🚨 NEW LEAD: ${parsed.data.fullName} — ${parsed.data.businessName} (${parsed.data.industry}). Call within 1–2 hrs. Phone: ${phone} · Email: ${parsed.data.email} · Lead ID \`${leadId}\`${siteLine}`
     ),
     sendMetaLeadEvent({
       leadId,

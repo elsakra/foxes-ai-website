@@ -77,6 +77,7 @@ export default function FoxesOnboarding() {
   const [step, setStep] = useState(1);
   const [businessName, setBusinessName] = useState("");
   const [industryLabel, setIndustryLabel] = useState("");
+  const [existingWebsiteUrl, setExistingWebsiteUrl] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -86,6 +87,7 @@ export default function FoxesOnboarding() {
 
   const businessTrimmed = businessName.trim();
   const industryTrimmed = industryLabel.trim();
+  const existingSiteTrimmed = existingWebsiteUrl.trim();
   const canContinueStep1 =
     businessTrimmed.length >= 1 && industryTrimmed.length >= 1;
   const canShowPhone = fullName.trim().length > 1 && /\S+@\S+\.\S+/.test(email.trim());
@@ -108,6 +110,7 @@ export default function FoxesOnboarding() {
           email: email.trim(),
           phone: phone.trim(),
           website: honeypot,
+          ...(existingSiteTrimmed ? { existingWebsiteUrl: existingSiteTrimmed } : {}),
           ...utm,
         }),
       });
@@ -211,11 +214,31 @@ export default function FoxesOnboarding() {
                 />
               </label>
 
+              <label className="mt-8 block">
+                <span className="text-[13px] font-medium text-ink">
+                  Current website <span className="font-normal text-muted">(optional)</span>
+                </span>
+                <input
+                  className="mt-2 w-full rounded-xl border border-rule px-4 py-3.5 text-[16px]"
+                  inputMode="url"
+                  value={existingWebsiteUrl}
+                  onChange={(e) => setExistingWebsiteUrl(e.target.value)}
+                  placeholder="https:// or yourbusiness.com"
+                  autoComplete="url"
+                />
+                <p className="mt-3 text-[13px] text-muted">
+                  Paste an existing site or page if you have one—we use it as reference only.
+                </p>
+              </label>
+
               {businessTrimmed && industryTrimmed && (
                 <div className="mt-8 rounded-2xl border border-rule shadow-sm bg-white p-5">
                   <p className="text-xs font-semibold text-muted uppercase mb-2">Summary</p>
                   <p className="font-semibold text-lg">{businessTrimmed}</p>
                   <p className="text-[15px] text-muted mt-1">{industryTrimmed}</p>
+                  {existingSiteTrimmed ? (
+                    <p className="text-[14px] text-onboarding-blue mt-2 break-all">{existingSiteTrimmed}</p>
+                  ) : null}
                 </div>
               )}
 
@@ -247,6 +270,9 @@ export default function FoxesOnboarding() {
               <div className="mt-8 rounded-2xl border border-rule shadow-sm p-5 bg-onboarding-muted/30">
                 <p className="font-semibold">{businessTrimmed}</p>
                 <p className="text-[13px] text-muted mt-1">{industryTrimmed}</p>
+                {existingSiteTrimmed ? (
+                  <p className="text-[13px] text-onboarding-blue mt-2 break-all">{existingSiteTrimmed}</p>
+                ) : null}
               </div>
 
               <input
