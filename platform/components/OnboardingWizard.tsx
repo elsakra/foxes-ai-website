@@ -130,10 +130,11 @@ export function OnboardingWizard() {
               />
             </div>
           ) : (
-            <p className="mt-6 text-sm text-ink/60">
-              Configure{" "}
-              <code className="text-xs">NEXT_PUBLIC_VSL_EMBED_URL</code> for a welcome video embed.
-            </p>
+            <div className="mt-8 rounded-2xl border border-white/70 bg-white/55 shadow-sm aspect-video flex items-center justify-center px-10 text-center">
+              <p className="text-[15px] text-ink/65 leading-snug">
+                Welcome video arrives here—we open with why local sites earn trust fast, then jump into your build.
+              </p>
+            </div>
           )}
 
           <div className="mt-10 rounded-2xl bg-white border border-white/70 shadow-md p-4 max-w-sm">
@@ -150,7 +151,7 @@ export function OnboardingWizard() {
         </div>
       </aside>
 
-      <main className="flex-1 min-h-screen lg:border-l border-rule bg-white relative">
+      <main className="flex-1 min-h-screen lg:border-l border-rule bg-white">
         {step !== 3 && (
           <div className="px-8 pt-8 pb-4 flex gap-4 items-start">
             <span
@@ -370,38 +371,34 @@ export function OnboardingWizard() {
                 <h1 className="font-display text-2xl font-semibold text-ink leading-snug">
                   Here&apos;s what happens next
                 </h1>
-                <ul className="list-disc pl-5 text-[15px] text-muted space-y-2">
-                  <li>Watch this quick rundown while our team tees up onboarding.</li>
-                  <li>Keep your phone reachable—the number you supplied is routed to concierge SMS + email.</li>
-                  <li>Compile inspiration: comps you love, rivals to avoid, palettes, screenshots.</li>
-                </ul>
                 {confirmVideo ? (
-                  <div className="rounded-2xl overflow-hidden border border-rule aspect-video bg-ink mt-8">
-                    <iframe
-                      title="What happens next"
-                      src={confirmVideo}
-                      className="w-full h-full min-h-[240px]"
-                      allow="fullscreen; autoplay; picture-in-picture"
-                    />
-                  </div>
+                  <>
+                    <ul className="list-disc pl-5 text-[15px] text-muted space-y-2">
+                      <li>Watch the short rundown below while we tee up onboarding.</li>
+                      <li>Keep your phone nearby—we route SMS + email automatically.</li>
+                      <li>Pull inspiration: comps, rivals to avoid, palettes, screenshots.</li>
+                    </ul>
+                    <div className="rounded-2xl overflow-hidden border border-rule aspect-video bg-ink mt-8">
+                      <iframe
+                        title="What happens next"
+                        src={confirmVideo}
+                        className="w-full h-full min-h-[240px]"
+                        allow="fullscreen; autoplay; picture-in-picture"
+                      />
+                    </div>
+                  </>
                 ) : (
-                  <p className="text-sm text-muted">
-                    Set{" "}
-                    <code className="text-xs">NEXT_PUBLIC_CONFIRMATION_VIDEO_EMBED_URL</code> whenever you clip a concierge follow‑up.
-                  </p>
+                  <>
+                    <ul className="list-disc pl-5 text-[15px] text-muted space-y-2">
+                      <li>We&apos;ll reach out shortly—watch for a text from our team.</li>
+                      <li>Keep ideas handy: comps, colors, and sites you admire (your notes are saved with this lead).</li>
+                    </ul>
+                  </>
                 )}
               </div>
             </div>
           )}
         </div>
-
-        <a
-          href="mailto:patrizio@foxes.ai"
-          className="hidden lg:flex absolute bottom-6 right-10 h-12 w-12 rounded-full bg-onboarding-blue text-white shadow-lg items-center justify-center text-xl hover:bg-[#1d4ed8] transition-colors"
-          aria-label="Email support"
-        >
-          💬
-        </a>
       </main>
     </div>
   );

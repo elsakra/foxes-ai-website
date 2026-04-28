@@ -153,7 +153,11 @@ export default function FoxesOnboarding() {
               />
             </div>
           ) : (
-            <p className="mt-6 text-sm text-ink/60">Set `VITE_ONBOARDING_VSL_EMBED_URL` for the welcome reel.</p>
+            <div className="mt-8 rounded-2xl border border-white/70 bg-white/55 shadow-sm aspect-video flex items-center justify-center px-10 text-center">
+              <p className="text-[15px] text-ink/65 leading-snug">
+                Welcome video arrives here—we open with why local sites earn trust fast, then jump into your build.
+              </p>
+            </div>
           )}
           <div className="mt-10 rounded-2xl bg-white border border-white/70 shadow-md p-4 max-w-sm">
             <p className="text-xs font-semibold text-ink mb-3">Trusted playbook</p>
@@ -164,7 +168,7 @@ export default function FoxesOnboarding() {
         </div>
       </aside>
 
-      <main className="flex-1 min-h-screen lg:border-l border-rule bg-white relative">
+      <main className="flex-1 min-h-screen lg:border-l border-rule bg-white">
         {step !== 3 && (
           <div className="px-8 pt-8 pb-4 flex gap-4 items-start">
             <span
@@ -359,36 +363,32 @@ export default function FoxesOnboarding() {
               </div>
               <div className="flex-1">
                 <h1 className="font-display text-2xl font-semibold">Next steps</h1>
-                <ul className="list-disc pl-5 mt-4 text-muted text-[15px] space-y-2">
-                  <li>Watch the rundown below.</li>
-                  <li>Stay near your phone—we&apos;ll ping you shortly.</li>
-                </ul>
                 {CONFIRM_VIDEO ? (
-                  <div className="rounded-2xl overflow-hidden border border-rule aspect-video bg-ink mt-8">
-                    <iframe
-                      title="Next"
-                      src={CONFIRM_VIDEO}
-                      className="w-full h-full min-h-[220px]"
-                      allow="fullscreen; autoplay"
-                    />
-                  </div>
+                  <>
+                    <ul className="list-disc pl-5 mt-4 text-muted text-[15px] space-y-2">
+                      <li>Watch the rundown below—we&apos;ll tee up onboarding on our side.</li>
+                      <li>Stay near your phone—we route SMS + email automatically.</li>
+                      <li>Pull inspiration: comps, rivals to avoid, palettes, screenshots.</li>
+                    </ul>
+                    <div className="rounded-2xl overflow-hidden border border-rule aspect-video bg-ink mt-8">
+                      <iframe
+                        title="Next"
+                        src={CONFIRM_VIDEO}
+                        className="w-full h-full min-h-[220px]"
+                        allow="fullscreen; autoplay"
+                      />
+                    </div>
+                  </>
                 ) : (
-                  <p className="mt-6 text-muted text-sm">
-                    Set `VITE_ONBOARDING_CONFIRM_EMBED_URL` for the follow-up reel.
-                  </p>
+                  <ul className="list-disc pl-5 mt-4 text-muted text-[15px] space-y-2">
+                    <li>We&apos;ll reach out shortly—watch for a text from our team.</li>
+                    <li>Keep ideas handy: comps, colors, and sites you admire—we saved what you submitted.</li>
+                  </ul>
                 )}
               </div>
             </div>
           )}
         </div>
-
-        <a
-          href="mailto:patrizio@foxes.ai"
-          className="hidden lg:flex absolute bottom-6 right-10 h-12 w-12 rounded-full bg-onboarding-blue text-white shadow-lg items-center justify-center hover:bg-[#1d4ed8]"
-          aria-label="Email"
-        >
-          💬
-        </a>
       </main>
     </div>
   );
