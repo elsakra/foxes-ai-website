@@ -11,16 +11,27 @@ const CONFIRM_VIDEO =
   import.meta.env.VITE_FUNNEL_CONFIRMATION_EMBED_URL ||
   "";
 
+/** Next app (POST /api/leads) — Vercel production alias for project foxes-ai-platform */
+const DEFAULT_PRODUCTION_API_ORIGIN = "https://foxes-ai-platform.vercel.app";
+
 function getApiOrigin() {
-  const direct = import.meta.env.VITE_ONBOARDING_API_ORIGIN?.replace(/\/$/, "");
+  const direct = import.meta.env.VITE_ONBOARDING_API_ORIGIN?.trim().replace(/\/$/, "");
   if (direct) return direct;
   const legacy = import.meta.env.VITE_FUNNEL_API_URL || "";
-  if (!legacy) return "";
-  try {
-    return new URL(legacy).origin;
-  } catch {
-    return "";
+  if (legacy) {
+    try {
+      return new URL(legacy).origin;
+    } catch {
+      /* fall through */
+    }
   }
+  if (typeof window !== "undefined") {
+    const h = window.location.hostname;
+    if (h === "localhost" || h === "127.0.0.1") {
+      return "http://localhost:3000";
+    }
+  }
+  return DEFAULT_PRODUCTION_API_ORIGIN;
 }
 
 function useUtm() {
@@ -81,10 +92,6 @@ export default function FoxesOnboarding() {
   const canSubmitStep2 = canShowPhone && phone.trim().length >= 8;
 
   const submitLead = () => {
-    if (!apiOrigin) {
-      setError("Set VITE_ONBOARDING_API_ORIGIN to your Next.js origin.");
-      return;
-    }
     setError(null);
     if (!canSubmitStep2) {
       setError("Enter a valid mobile.");
@@ -121,19 +128,6 @@ export default function FoxesOnboarding() {
     { title: "Your contact", subtitle: "We reach you inside 1–2 business hours." },
     { title: "Kickoff", subtitle: "We prep creative + technical roadmap." },
   ];
-
-  if (!apiOrigin) {
-    return (
-      <div className="min-h-screen bg-white px-8 py-24 max-w-xl mx-auto">
-        <p className="text-ink font-display text-xl font-semibold">Almost there</p>
-        <p className="mt-4 text-muted text-[15px]">
-          Configure <code className="text-sm">VITE_ONBOARDING_API_ORIGIN</code> to your deployed Next.js origin (e.g.
-          https://your-app.vercel.app) so this page can POST leads—or use{" "}
-          <code className="text-sm">/onboarding</code> on the Next app directly.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-white">
