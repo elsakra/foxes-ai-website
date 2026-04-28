@@ -13,6 +13,7 @@ export default defineConfig({
         lander: resolve(__dirname, "lander.html"),
         diy: resolve(__dirname, "diy.html"),
         build: resolve(__dirname, "build.html"),
+        funnel: resolve(__dirname, "funnel.html"),
       },
     },
   },
