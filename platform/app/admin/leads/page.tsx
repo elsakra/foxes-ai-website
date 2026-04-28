@@ -52,7 +52,7 @@ export default async function AdminLeadsPage() {
               <th className="py-3 px-4 font-semibold">Business</th>
               <th className="py-3 px-4 font-semibold">Contact</th>
               <th className="py-3 px-4 font-semibold">Phone</th>
-              <th className="py-3 px-4 font-semibold">Stage</th>
+              <th className="py-3 px-4 font-semibold">Pipeline</th>
               <th className="py-3 px-4 font-semibold"></th>
             </tr>
           </thead>

@@ -8,14 +8,15 @@ export default function HomePage() {
         Foxes.ai platform
       </h1>
       <p className="mt-4 text-muted text-[17px] leading-relaxed">
-        Marketing funnel lives here. Deploy this app at <code>/free-website</code> for Meta ads.
+        Marketing onboarding lives here. Deploy this app for ads at{" "}
+        <code>/onboarding</code> (<code>/free-website</code> redirects for legacy links).
       </p>
       <ul className="mt-8 space-y-3 text-[16px] text-forest font-medium">
         <li>
-          <Link href="/free-website" className="underline decoration-forest/40 underline-offset-4">
-            /free-website
+          <Link href="/onboarding" className="underline decoration-forest/40 underline-offset-4">
+            /onboarding
           </Link>{" "}
-          · Ad destination + VSL embed + intake
+          · Ad landing + onboarding experience
         </li>
         <li>
           <Link href="/admin/login" className="underline decoration-forest/40 underline-offset-4">

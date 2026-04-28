@@ -15,6 +15,9 @@ const config: Config = {
         forest: "#1F3B2D",
         rule: "#E8E2D5",
         muted: "#6B6B6B",
+        /** Jumper-ish onboarding accents */
+        "onboarding-blue": "#2563EB",
+        "onboarding-muted": "#E2E8F0",
       },
       fontFamily: {
         display: ["var(--font-fraunces)", "Georgia", "serif"],

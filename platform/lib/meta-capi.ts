@@ -21,7 +21,7 @@ export async function sendMetaLeadEvent(payload: {
           event_time: Math.floor(Date.now() / 1000),
           event_id: `lead_${payload.leadId}`,
           action_source: "website",
-          event_source_url: payload.eventSourceUrl || "https://foxes.ai/free-website",
+          event_source_url: payload.eventSourceUrl || "https://foxes.ai/onboarding",
           user_data: {
             ...(hashedEmail ? { em: [hashedEmail] } : {}),
             ...(hashedPhone ? { ph: [hashedPhone] } : {}),

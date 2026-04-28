@@ -14,6 +14,7 @@ export default defineConfig({
         diy: resolve(__dirname, "diy.html"),
         build: resolve(__dirname, "build.html"),
         funnel: resolve(__dirname, "funnel.html"),
+        onboarding: resolve(__dirname, "onboarding.html"),
       },
     },
   },

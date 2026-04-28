@@ -53,5 +53,33 @@ export async function POST(req: Request) {
     }
   }
 
+  if (event.type === "customer.subscription.updated") {
+    const sub = event.data.object as Stripe.Subscription;
+    const subId = sub.id;
+    const status = sub.status;
+    const stage =
+      status === "active" || status === "trialing"
+        ? "subscribed_active"
+        : status === "canceled" || status === "unpaid" || status === "incomplete_expired"
+          ? "subscription_ended"
+          : status === "past_due"
+            ? "subscription_at_risk"
+            : "subscription_other";
+    const { data: leadRow } = await supabase
+      .from("leads")
+      .select("id")
+      .eq("stripe_subscription_id", subId)
+      .maybeSingle();
+    if (leadRow?.id) {
+      await supabase
+        .from("leads")
+        .update({
+          funnel_stage: stage,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", leadRow.id as string);
+    }
+  }
+
   return NextResponse.json({ received: true });
 }

@@ -143,7 +143,7 @@ const Header = () => (
       <div className="hidden sm:flex items-center gap-5">
         <a href="/" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">Home</a>
         <a
-          href="funnel.html"
+          href="onboarding.html"
           className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u"
         >
           Quick apply

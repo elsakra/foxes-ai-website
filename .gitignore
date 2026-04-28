@@ -7,5 +7,8 @@ dist
 .env.*.local
 platform/.env.local
 
+# Supabase CLI local state
+supabase/.temp
+
 # local Vercel link at repo root (deploy with: copy platform/.vercel/project.json to .vercel/)
 .vercel

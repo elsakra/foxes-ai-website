@@ -39,7 +39,7 @@ export default async function CheckoutPage({
       <p className="mt-12 text-[13px] text-muted">
         rather DIY? You already have the export path from Patrizio — no hard feelings.
       </p>
-      <Link href="/free-website" className="mt-8 inline-block text-forest underline text-sm">
+      <Link href="/onboarding" className="mt-8 inline-block text-forest underline text-sm">
         Back to marketing site
       </Link>
     </main>

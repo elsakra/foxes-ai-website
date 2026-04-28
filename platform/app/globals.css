@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .onboarding-gradient {
+    background: linear-gradient(165deg, #e8eff7 0%, #dcecf9 50%, #e5eef9 100%);
+  }
+}
+
 :root {
   --cream: #f7f4ee;
   --ink: #0a0a0a;
