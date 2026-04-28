@@ -99,11 +99,14 @@ export function OnboardingWizard() {
   };
 
   const timeline = [
-    { title: "Your business", subtitle: "We use what you entered to prep creative direction." },
-    { title: "Your contact", subtitle: "We reach you inside 1–2 hours during business hours" },
+    { title: "Share your business", subtitle: "Tell us how you show up—we use it to steer creative direction." },
     {
-      title: "Kickoff scheduled",
-      subtitle: "We prep your onboarding and site roadmap",
+      title: "Lock your contact",
+      subtitle: "Mobile + inbox so automated SMS and confirmation email can reach you instantly.",
+    },
+    {
+      title: "Create access",
+      subtitle: "You're queued for onboarding—we're lining up your site roadmap now.",
     },
   ];
 
@@ -270,7 +273,7 @@ export function OnboardingWizard() {
                 Reserve your onboarding kickoff
               </h1>
               <p className="mt-2 text-muted text-[15px] leading-relaxed">
-                Calls come from an actual strategist—SMS + confirmation email fired automatically.
+                SMS plus confirmation email send automatically—we typically call within 5 minutes of submit.
               </p>
 
               <div className="mt-8 rounded-2xl border border-rule shadow-sm p-5 bg-onboarding-muted/30">
@@ -374,8 +377,10 @@ export function OnboardingWizard() {
                   <h1 className="font-display mt-6 text-[clamp(1.6rem,4vw,2rem)] font-semibold text-ink tracking-tight">
                     You&apos;re in
                   </h1>
-                  <p className="mt-3 max-w-md mx-auto text-[16px] text-muted leading-relaxed">
-                    Your details are saved. We&apos;ll text you shortly to line up your kickoff—keep your phone handy.
+                  <p className="mt-3 max-w-lg mx-auto text-[16px] text-muted leading-relaxed">
+                    Expect a strategist to <strong className="text-ink">call within 5 minutes</strong>. Confirmation{" "}
+                    <strong className="text-ink">text and email</strong> go out right away—even if you skipped the optional
+                    website field.
                   </p>
                 </div>
 
@@ -397,67 +402,83 @@ export function OnboardingWizard() {
                   ))}
                 </div>
 
+                <div className="border-t border-green-800/20 bg-green-50 px-6 sm:px-8 py-5 flex gap-4 items-start">
+                  <span
+                    className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white text-sm font-bold shadow-sm"
+                    aria-hidden
+                  >
+                    ✓
+                  </span>
+                  <div>
+                    <p className="font-semibold text-green-950">All set!</p>
+                    <p className="mt-1 text-[14px] text-green-900/90 leading-relaxed">
+                      You&apos;re in! We&apos;re preparing your kickoff and will{" "}
+                      <strong>call you within 5 minutes to get started</strong>.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="px-6 sm:px-8 py-8 bg-onboarding-muted/20 border-t border-rule">
-                  <h2 className="font-display text-[19px] font-semibold text-ink">What happens next</h2>
-                  <ul className="mt-5 space-y-4">
-                    {(confirmVideo
-                      ? [
-                          {
-                            label: "Quick video",
-                            body: "Catch the short rundown below—we're lining up your project in parallel.",
-                          },
-                          {
-                            label: "Texts & email",
-                            body: "SMS and confirmation email are already headed to the number you gave us.",
-                          },
-                          {
-                            label: "Inspiration stash",
-                            body: "Note sites, colors, and comps you love—we'll weave them into discovery.",
-                          },
-                        ]
-                      : [
-                          {
-                            label: "Reach out",
-                            body: "Expect a text from our team within about two business hours.",
-                          },
-                          {
-                            label: "Gather ideas",
-                            body: "Screenshots, competitors, palettes—we'll cover it on the call; nothing else required right now.",
-                          },
-                        ]
-                    ).map(({ label, body }) => (
-                      <li key={label} className="flex gap-4">
-                        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white border border-rule text-onboarding-blue shadow-sm">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                            <path
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M12 6v6l3 2m6 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        </span>
-                        <div>
-                          <p className="font-semibold text-[14px] text-ink">{label}</p>
-                          <p className="mt-0.5 text-[14px] text-muted leading-relaxed">{body}</p>
-                        </div>
-                      </li>
-                    ))}
+                  <h2 className="font-display text-[19px] font-semibold text-ink">
+                    Here&apos;s your next steps:
+                  </h2>
+                  <ul className="mt-5 list-disc pl-5 space-y-3 text-[15px] text-muted leading-relaxed marker:text-onboarding-blue">
+                    <li>
+                      {confirmVideo ? (
+                        <>
+                          Watch the <strong className="text-ink">video below</strong>—quick rundown while we finalize
+                          onboarding on our side.
+                        </>
+                      ) : (
+                        <>
+                          The <strong className="text-ink">confirmation video</strong> slot is below—activate it with{" "}
+                          <code className="text-[12px] text-ink bg-white border border-rule px-1 rounded">
+                            NEXT_PUBLIC_CONFIRMATION_VIDEO_EMBED_URL
+                          </code>
+                          .
+                        </>
+                      )}
+                    </li>
+                    <li>
+                      Stay near your phone. Someone from Patrizio&apos;s team will{" "}
+                      <strong className="text-ink">call within 5 minutes</strong> to align on messaging, creatives, and what
+                      you want the site to achieve.
+                    </li>
+                    <li>
+                      A confirmation <strong className="text-ink">text and email</strong> were triggered automatically—they
+                      don&apos;t depend on filling the optional website field.
+                    </li>
                   </ul>
                 </div>
 
-                {confirmVideo ? (
-                  <div className="px-6 sm:px-8 pb-8 pt-0">
-                    <div className="rounded-2xl overflow-hidden border border-rule aspect-video bg-ink shadow-inner">
+                <div className="px-6 sm:px-8 pb-8 pt-0 border-t border-rule">
+                  <p className="text-[13px] font-semibold text-ink mb-3 uppercase tracking-[0.08em]">
+                    Confirmation video
+                  </p>
+                  <div className="rounded-2xl overflow-hidden border border-rule aspect-video bg-ink shadow-inner relative">
+                    {confirmVideo ? (
                       <iframe
-                        title="What happens next"
+                        title="Confirmation rundown"
                         src={confirmVideo}
                         className="w-full h-full min-h-[220px]"
                         allow="fullscreen; autoplay; picture-in-picture"
                       />
-                    </div>
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center bg-gradient-to-b from-slate-800 to-slate-950">
+                        <p className="text-[15px] font-medium text-white/90">
+                          Embed your confirmation rundown URL to show the video player here.
+                        </p>
+                        <p className="mt-2 text-[13px] text-white/55 max-w-sm leading-relaxed">
+                          Text + confirmation email already send regardless—set{" "}
+                          <code className="text-emerald-200/90 bg-white/10 px-1 rounded text-[11px]">
+                            NEXT_PUBLIC_CONFIRMATION_VIDEO_EMBED_URL
+                          </code>{" "}
+                          to enable the embed.
+                        </p>
+                      </div>
+                    )}
                   </div>
-                ) : null}
+                </div>
               </div>
 
               <p className="mt-10 text-center text-[14px] text-muted">

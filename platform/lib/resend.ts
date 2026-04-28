@@ -7,11 +7,12 @@ export async function sendLeadConfirmation(opts: {
 }): Promise<{ id?: string }> {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
-    console.warn("RESEND_API_KEY missing — skipping email");
+    console.warn("[resend] RESEND_API_KEY missing — skipping email");
     return {};
   }
   const from =
-    process.env.RESEND_FROM_EMAIL || "Foxes.ai <onboarding@resend.dev>";
+    process.env.RESEND_FROM_EMAIL ||
+    "Foxes.ai <noreply@alerts.intentsignal.ai>";
   const resend = new Resend(key);
   const { data, error } = await resend.emails.send({
     from,
@@ -21,8 +22,9 @@ export async function sendLeadConfirmation(opts: {
       <div style="font-family:Georgia,serif;color:#0A0A0A;line-height:1.6;">
         <p>Hi ${escapeHtml(opts.firstName)},</p>
         <p>Thanks for raising your hand for <strong>${escapeHtml(opts.businessName)}</strong>.</p>
-        <p>Someone from Patrizio&apos;s team will reach out within <strong>1–2 hours</strong> for a quick 5-minute kickoff call (regular phone — no Zoom needed).</p>
-        <p>Have your services, ideal customer, competitors you like (or dislike), and any logo/color notes handy.</p>
+        <p>This message is sent automatically when you submit the form—<strong>whether or not you added an optional website URL</strong>. You should also receive a <strong>confirmation SMS</strong> to the mobile number you gave us.</p>
+        <p>Someone from Patrizio&apos;s team will call you within about <strong>5 minutes</strong> to kick things off on the phone.</p>
+        <p>If you grabbed a rundown video on the confirmation page, watch while you&apos;re queued up—stay near your phone.</p>
         <p>— Foxes.ai</p>
       </div>
     `,

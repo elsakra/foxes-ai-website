@@ -7,3 +7,8 @@ export function normalizeUsPhone(raw: string): string {
   if (raw.startsWith("+")) return raw.trim();
   return `+${d}`;
 }
+
+/** True when the number is a valid US mobile-style E.164 (+1 NXX NXX XXXX, N 2–9). */
+export function isValidUsMobileE164(e164: string): boolean {
+  return /^\+1[2-9]\d{9}$/.test(e164.replace(/\s/g, ""));
+}

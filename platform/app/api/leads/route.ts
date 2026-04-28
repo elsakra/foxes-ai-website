@@ -125,21 +125,30 @@ export async function POST(req: Request) {
 
   const siteLine = normalizedSite ? ` · Site: ${normalizedSite}` : "";
 
-  await Promise.allSettled([
+  /* SMS + email run for every saved lead; optional website only enriches intake — it never gates notifications. */
+  await Promise.all([
     sendLeadConfirmation({
       to: parsed.data.email,
       firstName,
       businessName: parsed.data.businessName,
+    }).catch((e) => {
+      console.error("[leads] confirmation email failed", e);
     }),
-    sendKickoffSms(phone, firstName),
+    sendKickoffSms(phone, firstName).catch((e) => {
+      console.error("[leads] kickoff SMS failed", e);
+    }),
     slackNewLead(
-      `🚨 NEW LEAD: ${parsed.data.fullName} — ${parsed.data.businessName} (${parsed.data.industry}). Call within 1–2 hrs. Phone: ${phone} · Email: ${parsed.data.email} · Lead ID \`${leadId}\`${siteLine}`
-    ),
+      `🚨 NEW LEAD: ${parsed.data.fullName} — ${parsed.data.businessName} (${parsed.data.industry}). Call within ~5 min. Phone: ${phone} · Email: ${parsed.data.email} · Lead ID \`${leadId}\`${siteLine}`
+    ).catch((e) => {
+      console.error("[leads] slack notify failed", e);
+    }),
     sendMetaLeadEvent({
       leadId,
       email: parsed.data.email,
       phone,
       eventSourceUrl: `${origin}/onboarding`,
+    }).catch((e) => {
+      console.error("[leads] Meta CAPI failed", e);
     }),
   ]);
 
