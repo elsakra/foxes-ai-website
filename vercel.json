@@ -1,5 +1,11 @@
 {
-  "rewrites": [{ "source": "/build", "destination": "/build.html" }],
+  "rewrites": [
+    { "source": "/build", "destination": "/build.html" },
+    { "source": "/onboarding", "destination": "/onboarding.html" },
+    { "source": "/lander", "destination": "/lander.html" },
+    { "source": "/diy", "destination": "/diy.html" },
+    { "source": "/funnel", "destination": "/funnel.html" }
+  ],
   "redirects": [
     { "source": "/home.html", "destination": "/", "permanent": true }
   ]
