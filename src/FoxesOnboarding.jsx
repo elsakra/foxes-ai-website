@@ -135,40 +135,44 @@ export default function FoxesOnboarding() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-white">
       <MetaPixelLoader />
-      <aside className="lg:w-[42%] w-full onboarding-gradient lg:min-h-screen flex flex-col">
-        <div className="p-8 lg:p-12 flex flex-col flex-1">
-          <p className="text-[13px] font-semibold text-onboarding-blue uppercase tracking-[0.12em]">
-            Foxes.ai · Website onboarding
-          </p>
-          <h2 className="font-display mt-6 text-[26px] sm:text-[30px] font-semibold text-ink leading-tight max-w-[28rem]">
-            Your standout local site starts here
-          </h2>
-          {VSL ? (
-            <div className="mt-8 rounded-2xl overflow-hidden border border-white/60 shadow-lg aspect-video bg-ink relative">
-              <iframe
-                title="Overview"
-                src={VSL}
-                className="w-full h-full min-h-[200px]"
-                allow="fullscreen; autoplay; picture-in-picture"
-              />
-            </div>
-          ) : (
-            <div className="mt-8 rounded-2xl border border-white/70 bg-white/55 shadow-sm aspect-video flex items-center justify-center px-10 text-center">
-              <p className="text-[15px] text-ink/65 leading-snug">
-                Welcome video arrives here—we open with why local sites earn trust fast, then jump into your build.
-              </p>
-            </div>
-          )}
-          <div className="mt-10 rounded-2xl bg-white border border-white/70 shadow-md p-4 max-w-sm">
-            <p className="text-xs font-semibold text-ink mb-3">Trusted playbook</p>
-            <div className="rounded-xl overflow-hidden bg-onboarding-muted border border-rule p-4 text-[13px] text-muted">
-              “Higher-trust creatives on day one—we align visuals and messaging to your market.”
+      {step !== 3 && (
+        <aside className="lg:w-[42%] w-full onboarding-gradient lg:min-h-screen flex flex-col">
+          <div className="p-8 lg:p-12 flex flex-col flex-1">
+            <p className="text-[13px] font-semibold text-onboarding-blue uppercase tracking-[0.12em]">
+              Foxes.ai · Website onboarding
+            </p>
+            <h2 className="font-display mt-6 text-[26px] sm:text-[30px] font-semibold text-ink leading-tight max-w-[28rem]">
+              Your standout local site starts here
+            </h2>
+            {VSL ? (
+              <div className="mt-8 rounded-2xl overflow-hidden border border-white/60 shadow-lg aspect-video bg-ink relative">
+                <iframe
+                  title="Overview"
+                  src={VSL}
+                  className="w-full h-full min-h-[200px]"
+                  allow="fullscreen; autoplay; picture-in-picture"
+                />
+              </div>
+            ) : (
+              <div className="mt-8 rounded-2xl border border-white/70 bg-white/55 shadow-sm aspect-video flex items-center justify-center px-10 text-center">
+                <p className="text-[15px] text-ink/65 leading-snug">
+                  Welcome video arrives here—we open with why local sites earn trust fast, then jump into your build.
+                </p>
+              </div>
+            )}
+            <div className="mt-10 rounded-2xl bg-white border border-white/70 shadow-md p-4 max-w-sm">
+              <p className="text-xs font-semibold text-ink mb-3">Trusted playbook</p>
+              <div className="rounded-xl overflow-hidden bg-onboarding-muted border border-rule p-4 text-[13px] text-muted">
+                “Higher-trust creatives on day one—we align visuals and messaging to your market.”
+              </div>
             </div>
           </div>
-        </div>
-      </aside>
+        </aside>
+      )}
 
-      <main className="flex-1 min-h-screen lg:border-l border-rule bg-white">
+      <main
+        className={`flex-1 min-h-screen ${step !== 3 ? "bg-white lg:border-l border-rule" : "bg-gradient-to-b from-slate-50 to-white lg:py-8"}`}
+      >
         {step !== 3 && (
           <div className="px-8 pt-8 pb-4 flex gap-4 items-start">
             <span
@@ -185,7 +189,13 @@ export default function FoxesOnboarding() {
           </div>
         )}
 
-        <div className="px-8 pb-24 max-w-xl">
+        <div
+          className={
+            step === 3
+              ? "px-6 pb-20 pt-6 sm:px-10 lg:pb-28 max-w-3xl mx-auto w-full"
+              : "px-8 pb-24 max-w-xl"
+          }
+        >
           {step === 1 && (
             <div className="animate-[fadein_.25s_ease]">
               <h1 className="font-display text-[28px] sm:text-[34px] font-semibold text-ink leading-tight">
@@ -343,49 +353,121 @@ export default function FoxesOnboarding() {
           )}
 
           {step === 3 && (
-            <div className="flex flex-col lg:flex-row gap-12 animate-[fadein_.35s_ease]">
-              <div className="lg:w-[46%] rounded-2xl border border-rule bg-onboarding-muted/40 p-6">
-                {timeline.map((t, i) => (
-                  <div key={t.title} className="relative pl-10 pb-8 last:pb-0">
-                    <span className="absolute left-0 top-0 flex h-7 w-7 items-center justify-center rounded-full bg-onboarding-blue text-white text-xs">
-                      ✓
-                    </span>
-                    {i < timeline.length - 1 && (
-                      <span className="absolute left-[13px] top-8 bottom-[-8px] w-px bg-onboarding-muted" />
-                    )}
-                    <p className="font-semibold">{t.title}</p>
-                    <p className="text-[13px] text-muted">{t.subtitle}</p>
+            <div className="animate-[fadein_.35s_ease]">
+              <div className="rounded-3xl border border-rule bg-white shadow-[0_24px_60px_-28px_rgba(15,23,42,0.2)] overflow-hidden">
+                <div className="bg-gradient-to-b from-emerald-50/90 to-white px-6 sm:px-10 py-10 sm:py-12 text-center border-b border-rule">
+                  <div className="inline-flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-emerald-600 text-white shadow-md ring-4 ring-emerald-600/15">
+                    <svg
+                      className="w-10 h-10"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      viewBox="0 0 24 24"
+                      aria-hidden
+                    >
+                      <path d="M5 13l4 4L19 7" />
+                    </svg>
                   </div>
-                ))}
-                <div className="mt-2 rounded-xl border border-green-700/25 bg-green-50 px-4 py-3 text-sm font-semibold text-green-900">
-                  You&apos;re set!
+                  <h1 className="font-display mt-6 text-[clamp(1.6rem,4vw,2rem)] font-semibold text-ink tracking-tight">
+                    You&apos;re in
+                  </h1>
+                  <p className="mt-3 max-w-md mx-auto text-[16px] text-muted leading-relaxed">
+                    Your details are saved. We&apos;ll text you shortly to line up your kickoff—keep your phone handy.
+                  </p>
                 </div>
-              </div>
-              <div className="flex-1">
-                <h1 className="font-display text-2xl font-semibold">Next steps</h1>
+
+                <div className="grid divide-y md:divide-y-0 md:divide-x divide-rule bg-rule md:grid-cols-3">
+                  {timeline.map((t) => (
+                    <div key={t.title} className="bg-white p-5 sm:p-6 text-left">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-onboarding-blue/10 text-onboarding-blue mb-3">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <p className="font-semibold text-[15px] text-ink">{t.title}</p>
+                      <p className="mt-1.5 text-[13px] text-muted leading-relaxed">{t.subtitle}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="px-6 sm:px-8 py-8 bg-onboarding-muted/20 border-t border-rule">
+                  <h2 className="font-display text-[19px] font-semibold text-ink">What happens next</h2>
+                  <ul className="mt-5 space-y-4">
+                    {(CONFIRM_VIDEO
+                      ? [
+                          {
+                            label: "Quick video",
+                            body: "Catch the short rundown below—we're lining up your project in parallel.",
+                          },
+                          {
+                            label: "Texts & email",
+                            body: "SMS and confirmation email are already headed to the number you gave us.",
+                          },
+                          {
+                            label: "Inspiration stash",
+                            body: "Note sites, colors, and comps you love—we'll weave them into discovery.",
+                          },
+                        ]
+                      : [
+                          {
+                            label: "Reach out",
+                            body: "Expect a text from our team within about two business hours.",
+                          },
+                          {
+                            label: "Gather ideas",
+                            body: "Screenshots, competitors, palettes—we'll cover it on the call; nothing else required right now.",
+                          },
+                        ]
+                    ).map(({ label, body }) => (
+                      <li key={label} className="flex gap-4">
+                        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white border border-rule text-onboarding-blue shadow-sm">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                            <path
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M12 6v6l3 2m6 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </span>
+                        <div>
+                          <p className="font-semibold text-[14px] text-ink">{label}</p>
+                          <p className="mt-0.5 text-[14px] text-muted leading-relaxed">{body}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
                 {CONFIRM_VIDEO ? (
-                  <>
-                    <ul className="list-disc pl-5 mt-4 text-muted text-[15px] space-y-2">
-                      <li>Watch the rundown below—we&apos;ll tee up onboarding on our side.</li>
-                      <li>Stay near your phone—we route SMS + email automatically.</li>
-                      <li>Pull inspiration: comps, rivals to avoid, palettes, screenshots.</li>
-                    </ul>
-                    <div className="rounded-2xl overflow-hidden border border-rule aspect-video bg-ink mt-8">
+                  <div className="px-6 sm:px-8 pb-8 pt-0">
+                    <div className="rounded-2xl overflow-hidden border border-rule aspect-video bg-ink shadow-inner">
                       <iframe
-                        title="Next"
+                        title="What happens next"
                         src={CONFIRM_VIDEO}
                         className="w-full h-full min-h-[220px]"
-                        allow="fullscreen; autoplay"
+                        allow="fullscreen; autoplay; picture-in-picture"
                       />
                     </div>
-                  </>
-                ) : (
-                  <ul className="list-disc pl-5 mt-4 text-muted text-[15px] space-y-2">
-                    <li>We&apos;ll reach out shortly—watch for a text from our team.</li>
-                    <li>Keep ideas handy: comps, colors, and sites you admire—we saved what you submitted.</li>
-                  </ul>
-                )}
+                  </div>
+                ) : null}
               </div>
+
+              <p className="mt-10 text-center text-[14px] text-muted">
+                Questions?{" "}
+                <a
+                  href="mailto:patrizio@foxes.ai"
+                  className="font-medium text-onboarding-blue underline underline-offset-2 hover:text-[#1d4ed8]"
+                >
+                  patrizio@foxes.ai
+                </a>
+              </p>
             </div>
           )}
         </div>
