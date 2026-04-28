@@ -6,3 +6,6 @@ dist
 .env.local
 .env.*.local
 platform/.env.local
+
+# local Vercel link at repo root (deploy with: copy platform/.vercel/project.json to .vercel/)
+.vercel
