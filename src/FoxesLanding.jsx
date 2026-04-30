@@ -19,7 +19,9 @@ function getMetaPixelTestEventCode() {
 function MetaPixelLoader() {
   useEffect(() => {
     if (!META_PIXEL_ID || typeof document === "undefined") return;
+    /* lander.html may have already inited the pixel (see inline script id there). */
     if (document.getElementById(`fb-pixel-lander-${META_PIXEL_ID}`)) return;
+    if (typeof window.fbq === "function") return;
     const s = document.createElement("script");
     s.id = `fb-pixel-lander-${META_PIXEL_ID}`;
     const id = JSON.stringify(META_PIXEL_ID);
