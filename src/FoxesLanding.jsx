@@ -5,6 +5,17 @@ const LANDER_META_PIXEL_DEFAULT = "952579584035948";
 const META_PIXEL_ID =
   (import.meta.env.VITE_LANDER_META_PIXEL_ID?.trim() || LANDER_META_PIXEL_DEFAULT);
 
+function getMetaPixelTestEventCode() {
+  const env = import.meta.env.VITE_META_PIXEL_TEST_EVENT_CODE?.trim();
+  if (env) return env;
+  if (typeof window === "undefined") return "";
+  try {
+    return new URLSearchParams(window.location.search).get("test_event_code")?.trim() ?? "";
+  } catch {
+    return "";
+  }
+}
+
 function MetaPixelLoader() {
   useEffect(() => {
     if (!META_PIXEL_ID || typeof document === "undefined") return;
@@ -12,6 +23,10 @@ function MetaPixelLoader() {
     const s = document.createElement("script");
     s.id = `fb-pixel-lander-${META_PIXEL_ID}`;
     const id = JSON.stringify(META_PIXEL_ID);
+    const testCode = getMetaPixelTestEventCode();
+    const testSnippet = testCode
+      ? `fbq('set','test_event_code',${JSON.stringify(testCode)});`
+      : "";
     s.textContent = `!function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -20,7 +35,7 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window,document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', ${id});
+${testSnippet}fbq('init', ${id});
 fbq('track', 'PageView');`;
     document.head.appendChild(s);
   }, []);
