@@ -8,16 +8,18 @@ export default function HomePage() {
         Foxes.ai platform
       </h1>
       <p className="mt-4 text-muted text-[17px] leading-relaxed">
-        Marketing onboarding lives here. Deploy this app for ads at{" "}
-        <code>/onboarding</code> (<code>/free-website</code> redirects for legacy links).
+        Public marketing flows live on{" "}
+        <a
+          href="https://foxes.ai/lander.html"
+          className="text-forest underline decoration-forest/40 underline-offset-4"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          foxes.ai/lander
+        </a>{" "}
+        (Vite).
       </p>
       <ul className="mt-8 space-y-3 text-[16px] text-forest font-medium">
-        <li>
-          <Link href="/onboarding" className="underline decoration-forest/40 underline-offset-4">
-            /onboarding
-          </Link>{" "}
-          · Ad landing + onboarding experience
-        </li>
         <li>
           <Link href="/admin/login" className="underline decoration-forest/40 underline-offset-4">
             /admin/login

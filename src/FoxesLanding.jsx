@@ -204,12 +204,6 @@ const Header = () => (
       </a>
       <div className="hidden sm:flex items-center gap-5">
         <a href="/" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">Home</a>
-        <a
-          href="onboarding.html"
-          className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u"
-        >
-          Quick apply
-        </a>
         <a href="mailto:patrizio@foxes.ai" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">
           Email
         </a>

@@ -1,13 +1,14 @@
 {
   "rewrites": [
     { "source": "/build", "destination": "/build.html" },
-    { "source": "/onboarding", "destination": "/onboarding.html" },
     { "source": "/lander", "destination": "/lander.html" },
     { "source": "/diy", "destination": "/diy.html" },
     { "source": "/funnel", "destination": "/funnel.html" }
   ],
   "redirects": [
     { "source": "/home.html", "destination": "/", "permanent": true },
+    { "source": "/onboarding", "destination": "/lander.html", "permanent": true },
+    { "source": "/onboarding.html", "destination": "/lander.html", "permanent": true },
     {
       "source": "/admin",
       "destination": "https://foxes-ai-platform.vercel.app/admin",

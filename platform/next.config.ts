@@ -9,7 +9,12 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/free-website",
-        destination: "/onboarding",
+        destination: "https://foxes.ai/lander.html",
+        permanent: true,
+      },
+      {
+        source: "/onboarding",
+        destination: "https://foxes.ai/lander.html",
         permanent: true,
       },
     ];

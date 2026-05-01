@@ -121,7 +121,6 @@ export async function POST(req: Request) {
   }
 
   const leadId = insert.data.id as string;
-  const origin = process.env.NEXT_PUBLIC_APP_ORIGIN || new URL(req.url).origin;
 
   const siteLine = normalizedSite ? ` · Site: ${normalizedSite}` : "";
 
@@ -146,7 +145,7 @@ export async function POST(req: Request) {
       leadId,
       email: parsed.data.email,
       phone,
-      eventSourceUrl: `${origin}/onboarding`,
+      eventSourceUrl: "https://foxes.ai/lander.html",
     }).catch((e) => {
       console.error("[leads] Meta CAPI failed", e);
     }),
