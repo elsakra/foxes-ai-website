@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7ZMY0PE5KP"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-7ZMY0PE5KP');
-  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -18,9 +9,30 @@
   <meta name="description" content="Everything you need to deploy your Foxes.ai website yourself. Hosting, DNS, SSL, email, analytics — the full step-by-step guide." />
   <meta name="robots" content="noindex, follow" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    (function () {
+      function loadGA() {
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=G-7ZMY0PE5KP";
+        s.onload = function () {
+          gtag("js", new Date());
+          gtag("config", "G-7ZMY0PE5KP");
+        };
+        document.head.appendChild(s);
+      }
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(loadGA, { timeout: 4000 });
+      } else {
+        window.addEventListener("load", function () {
+          setTimeout(loadGA, 2000);
+        });
+      }
+    })();
+  </script>
 </head>
 <body>
   <div id="root"></div>

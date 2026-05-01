@@ -1,3 +1,9 @@
+@import "@fontsource-variable/fraunces/standard.css";
+@import "@fontsource-variable/fraunces/standard-italic.css";
+@import "@fontsource-variable/inter/index.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,7 +23,7 @@
     background: #f7f4ee;
   }
   .font-display {
-    font-family: Fraunces, Georgia, serif;
+    font-family: "Fraunces Variable", Fraunces, Georgia, serif;
     font-optical-sizing: auto;
   }
   .display-tight {
@@ -28,7 +34,7 @@
     letter-spacing: 0.12em;
   }
   .italic-fraunces {
-    font-family: Fraunces, Georgia, serif;
+    font-family: "Fraunces Variable", Fraunces, Georgia, serif;
     font-style: italic;
     font-weight: 400;
   }

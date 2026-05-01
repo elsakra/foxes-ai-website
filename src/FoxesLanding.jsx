@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useEmbedLivePortfolioPreviews } from "./hooks/useEmbedLivePortfolioPreviews.js";
 
 const LANDER_META_PIXEL_DEFAULT = "952579584035948";
@@ -227,6 +227,24 @@ const Header = () => (
 // ————————————————————————————————————————————————————
 const CALENDLY_URL = "https://calendly.com/patrizio-foxes/30min?back=1&hide_gdpr_banner=1&primary_color=C9531E&text_color=0A0A0A&background_color=FFFFFF";
 
+/** Forward ad/analytics params into Calendly for attribution inside their dashboard. */
+const CALENDLY_URL_TRACKING_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid"];
+
+function buildCalendlyBookingUrl() {
+  try {
+    const url = new URL(CALENDLY_URL);
+    if (typeof window === "undefined") return url.toString();
+    const inbound = new URLSearchParams(window.location.search);
+    for (const key of CALENDLY_URL_TRACKING_KEYS) {
+      const v = inbound.get(key);
+      if (v) url.searchParams.set(key, v);
+    }
+    return url.toString();
+  } catch {
+    return CALENDLY_URL;
+  }
+}
+
 /** Public DIY hosting guide (absolute URL for clarity in copy + emails). */
 const DIY_GUIDE_URL = "https://www.foxes.ai/diy.html";
 
@@ -263,35 +281,71 @@ function loadCalendlyScript() {
   });
 }
 
-/** Calendly JS inline embed (postMessage events). Plain iframe embed does not support event tracking per Calendly docs. */
+/** Calendly JS inline embed (postMessage events). Init deferred until #book nears viewport to protect LCP. */
 const CalendlyInlineEmbed = () => {
   const hostRef = useRef(null);
+  const calendlyUrl = useMemo(() => buildCalendlyBookingUrl(), []);
 
   useEffect(() => {
     const mountEl = hostRef.current;
     if (!mountEl) return;
     let cancelled = false;
+    const book = typeof document !== "undefined" ? document.getElementById("book") : null;
+    const target = book ?? mountEl;
 
-    (async () => {
+    const runInit = async () => {
+      if (cancelled || mountEl.dataset.calendlyMounted === "1") return;
+      mountEl.dataset.calendlyMounted = "1";
       try {
         await loadCalendlyScript();
         if (cancelled || hostRef.current !== mountEl || !window.Calendly) return;
         mountEl.innerHTML = "";
         window.Calendly.initInlineWidget({
-          url: CALENDLY_URL,
+          url: calendlyUrl,
           parentElement: mountEl,
           resize: true,
         });
       } catch {
-        /* non-fatal */
+        delete mountEl.dataset.calendlyMounted;
       }
-    })();
+    };
+
+    const kick = () => {
+      const ric = window.requestIdleCallback ?? ((fn) => window.setTimeout(fn, 800));
+      ric(
+        () => {
+          void runInit();
+        },
+        { timeout: 3200 }
+      );
+    };
+
+    let fallbackTimer = null;
+    let io;
+
+    const reveal = () => {
+      io?.disconnect();
+      if (fallbackTimer != null) window.clearTimeout(fallbackTimer);
+      kick();
+    };
+
+    io = new IntersectionObserver(
+      ([e]) => {
+        if (e?.isIntersecting) reveal();
+      },
+      { root: null, rootMargin: "280px", threshold: 0 }
+    );
+    io.observe(target);
+    fallbackTimer = window.setTimeout(reveal, 5500);
 
     return () => {
       cancelled = true;
+      io?.disconnect();
+      if (fallbackTimer != null) window.clearTimeout(fallbackTimer);
       mountEl.innerHTML = "";
+      delete mountEl.dataset.calendlyMounted;
     };
-  }, []);
+  }, [calendlyUrl]);
 
   return (
     <div
@@ -646,6 +700,7 @@ const PORTFOLIO_SITES = [
 const PortfolioPreviewCard = ({ url, label, tag }) => {
   const [clipRef, scale] = useLivePreviewCover(0.38);
   const allowIframes = useEmbedLivePortfolioPreviews();
+  const [iframeOn, setIframeOn] = useState(false);
   const href = url.replace(/\/$/, "");
   let host = "";
   try {
@@ -653,6 +708,23 @@ const PortfolioPreviewCard = ({ url, label, tag }) => {
   } catch {
     host = href;
   }
+
+  useEffect(() => {
+    const el = clipRef.current;
+    if (!el || !allowIframes) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e?.isIntersecting) {
+          setIframeOn(true);
+          io.disconnect();
+        }
+      },
+      { root: null, rootMargin: "160px", threshold: 0.04 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [allowIframes, href]);
+
   return (
     <article className="group relative">
       <div className="rounded-2xl overflow-hidden border border-rule bg-white card-shadow transition-all duration-300 group-hover:-translate-y-1 group-hover:card-shadow-lg">
@@ -673,19 +745,31 @@ const PortfolioPreviewCard = ({ url, label, tag }) => {
 
         <div ref={clipRef} className="relative h-[220px] sm:h-[260px] lg:h-[240px] overflow-hidden bg-[#ECEAE6]">
           {allowIframes ? (
-            <div
-              className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
-              style={{ height: LIVE_PREVIEW_H, transform: `translateX(-50%) scale(${scale})` }}
-            >
-              <iframe
-                src={href}
-                title={`${label} live preview`}
-                loading="eager"
-                referrerPolicy="no-referrer-when-downgrade"
-                tabIndex={-1}
-                className="w-full h-full border-0 bg-white pointer-events-none"
-              />
-            </div>
+            iframeOn ? (
+              <div
+                className="absolute left-1/2 top-0 w-[1280px] min-w-[1280px] origin-top"
+                style={{ height: LIVE_PREVIEW_H, transform: `translateX(-50%) scale(${scale})` }}
+              >
+                <iframe
+                  src={href}
+                  title={`${label} live preview`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  tabIndex={-1}
+                  className="w-full h-full border-0 bg-white pointer-events-none"
+                />
+              </div>
+            ) : (
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-cream-2 to-[#D8D4CC] px-4 text-center"
+                aria-hidden="true"
+              >
+                <span className="text-[11px] font-mono text-ink/50 max-w-full truncate px-1" title={host}>
+                  {host}
+                </span>
+                <p className="mt-2 max-w-[220px] text-[12px] text-ink/50 leading-snug">Preview loads as you scroll</p>
+              </div>
+            )
           ) : (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-cream-2 to-[#D8D4CC] p-4 text-center">
               <span className="text-[11px] font-mono text-ink/50 max-w-full truncate px-1" title={host}>

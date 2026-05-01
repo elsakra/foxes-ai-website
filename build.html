@@ -1,21 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7ZMY0PE5KP"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-7ZMY0PE5KP');
-  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Website onboarding — Foxes.ai</title>
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="canonical" href="https://foxes.ai/onboarding.html" />
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    (function () {
+      function loadGA() {
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=G-7ZMY0PE5KP";
+        s.onload = function () {
+          gtag("js", new Date());
+          gtag("config", "G-7ZMY0PE5KP");
+        };
+        document.head.appendChild(s);
+      }
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(loadGA, { timeout: 4000 });
+      } else {
+        window.addEventListener("load", function () {
+          setTimeout(loadGA, 2000);
+        });
+      }
+    })();
+  </script>
   <script>
     location.replace("onboarding.html");
   </script>

@@ -15,8 +15,8 @@ export default {
         "onboarding-muted": "#E2E8F0",
       },
       fontFamily: {
-        display: ["Fraunces", "Georgia", "serif"],
-        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Fraunces Variable", "Fraunces", "Georgia", "serif"],
+        sans: ["Inter Variable", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "ui-monospace", "monospace"],
       },
     },
