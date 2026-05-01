@@ -2,6 +2,8 @@
   "rewrites": [
     { "source": "/build", "destination": "/build.html" },
     { "source": "/lander", "destination": "/lander.html" },
+    { "source": "/preview", "destination": "/preview.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/diy", "destination": "/diy.html" },
     { "source": "/funnel", "destination": "/funnel.html" }
   ],

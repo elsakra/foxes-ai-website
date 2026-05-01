@@ -706,7 +706,7 @@ const Footer = () => (
       <div className="mt-12 pt-8 border-t border-cream/10 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="text-[13px] text-cream/50">© 2026 Foxes.ai</div>
         <div className="flex items-center gap-6 text-[13px] text-cream/50">
-          <a href="#" className="hover:text-cream link-u">Privacy</a>
+          <a href="/privacy.html" className="hover:text-cream link-u">Privacy</a>
           <a href="#" className="hover:text-cream link-u">Terms</a>
         </div>
       </div>

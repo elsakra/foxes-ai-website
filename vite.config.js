@@ -11,6 +11,8 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         home: resolve(__dirname, "home.html"),
         lander: resolve(__dirname, "lander.html"),
+        preview: resolve(__dirname, "preview.html"),
+        privacy: resolve(__dirname, "privacy.html"),
         diy: resolve(__dirname, "diy.html"),
         build: resolve(__dirname, "build.html"),
         funnel: resolve(__dirname, "funnel.html"),

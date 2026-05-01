@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "create:preview-typeform": "node create-preview-typeform.mjs",
     "preview": "vite preview",
     "lhci": "npm run build && lhci autorun"
   },

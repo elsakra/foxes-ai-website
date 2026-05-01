@@ -515,7 +515,7 @@ const Footer = () => (
       <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-6 gap-y-2 text-[14px] text-muted">
         <a href="/" className="hover:text-ink link-u">Home</a>
         <a href="/diy.html" className="hover:text-ink link-u">DIY setup guide</a>
-        <a href="#" className="hover:text-ink link-u">Privacy</a>
+        <a href="/privacy.html" className="hover:text-ink link-u">Privacy</a>
         <a href="#" className="hover:text-ink link-u">Terms</a>
       </div>
     </div>

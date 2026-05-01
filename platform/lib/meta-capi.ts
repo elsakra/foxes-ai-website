@@ -4,6 +4,8 @@ export async function sendMetaLeadEvent(payload: {
   email?: string;
   phone?: string;
   eventSourceUrl?: string;
+  eventName?: string;
+  eventId?: string;
 }): Promise<void> {
   const pixelId = process.env.META_PIXEL_ID;
   const token = process.env.META_CAPI_ACCESS_TOKEN;
@@ -17,9 +19,9 @@ export async function sendMetaLeadEvent(payload: {
     body: JSON.stringify({
       data: [
         {
-          event_name: "Lead",
+          event_name: payload.eventName || "Lead",
           event_time: Math.floor(Date.now() / 1000),
-          event_id: `lead_${payload.leadId}`,
+          event_id: payload.eventId || `lead_${payload.leadId}`,
           action_source: "website",
           event_source_url: payload.eventSourceUrl || "https://foxes.ai/lander.html",
           user_data: {

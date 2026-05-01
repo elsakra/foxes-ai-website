@@ -1,9 +1,18 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useTransition } from "react";
 import { useEmbedLivePortfolioPreviews } from "./hooks/useEmbedLivePortfolioPreviews.js";
 
 const LANDER_META_PIXEL_DEFAULT = "952579584035948";
 const META_PIXEL_ID =
   (import.meta.env.VITE_LANDER_META_PIXEL_ID?.trim() || LANDER_META_PIXEL_DEFAULT);
+const PREVIEW_TYPEFORM_DEFAULT = "nYkY57bL";
+const PREVIEW_TYPEFORM_ID = (
+  import.meta.env.VITE_PREVIEW_TYPEFORM_ID?.trim() ||
+  import.meta.env.VITE_TYPEFORM_FORM_ID?.trim() ||
+  PREVIEW_TYPEFORM_DEFAULT
+);
+const PREVIEW_TYPEFORM_URL = import.meta.env.VITE_PREVIEW_TYPEFORM_URL?.trim() || "";
+const PREVIEW_EMAIL_EVENT = "PreviewEmailLead";
+const DEFAULT_PRODUCTION_API_ORIGIN = "https://foxes-ai-platform.vercel.app";
 
 function getMetaPixelTestEventCode() {
   const env = import.meta.env.VITE_META_PIXEL_TEST_EVENT_CODE?.trim();
@@ -46,6 +55,7 @@ fbq('track', 'PageView');`;
 
 /** Dedupe in case Calendly emits more than once per session. */
 let landerScheduleTracked = false;
+let previewEmailTracked = false;
 
 function useLanderCalendlyScheduleMeta() {
   useEffect(() => {
@@ -61,6 +71,70 @@ function useLanderCalendlyScheduleMeta() {
     window.addEventListener("message", onMsg);
     return () => window.removeEventListener("message", onMsg);
   }, []);
+}
+
+function firePreviewEmailConversion(eventId) {
+  if (previewEmailTracked) return;
+  previewEmailTracked = true;
+  queueMicrotask(() => {
+    const payload = eventId ? { event_id: eventId } : undefined;
+    if (typeof window.fbq === "function") {
+      window.fbq("trackCustom", PREVIEW_EMAIL_EVENT, payload, eventId ? { eventID: eventId } : undefined);
+    }
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "preview_email_submit", {
+        event_category: "lead",
+        event_label: "email_capture",
+        ...(eventId ? { event_id: eventId } : {}),
+      });
+    }
+  });
+}
+
+function getPreviewApiOrigin() {
+  const direct =
+    import.meta.env.VITE_PREVIEW_API_ORIGIN?.trim().replace(/\/$/, "") ||
+    import.meta.env.VITE_ONBOARDING_API_ORIGIN?.trim().replace(/\/$/, "");
+  if (direct) return direct;
+  if (typeof window !== "undefined") {
+    const h = window.location.hostname;
+    if (h === "localhost" || h === "127.0.0.1") return "http://localhost:3000";
+  }
+  return DEFAULT_PRODUCTION_API_ORIGIN;
+}
+
+function buildPreviewAttribution() {
+  const hidden = {
+    source_page: "preview",
+  };
+  if (typeof window === "undefined") return hidden;
+  hidden.page_url = window.location.href;
+  hidden.page_path = window.location.pathname;
+  if (document.referrer) hidden.referrer = document.referrer;
+
+  const params = new URLSearchParams(window.location.search);
+  for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid"]) {
+    const value = params.get(key);
+    if (value) hidden[key] = value;
+  }
+  return hidden;
+}
+
+function buildTypeformRedirectUrl(hidden) {
+  if (!PREVIEW_TYPEFORM_ID && !PREVIEW_TYPEFORM_URL) return "";
+  const base = PREVIEW_TYPEFORM_URL || `https://form.typeform.com/to/${PREVIEW_TYPEFORM_ID}`;
+  const url = new URL(base);
+  const hash = new URLSearchParams();
+  for (const [key, value] of Object.entries(hidden)) {
+    if (value != null && String(value).trim()) hash.set(key, String(value));
+  }
+  url.hash = hash.toString();
+  return url.toString();
+}
+
+function makePreviewEventId() {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return `preview_email_${crypto.randomUUID()}`;
+  return `preview_email_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 }
 
 const PATRIZIO_PHOTO = "patrizio-20bio.avif";
@@ -188,7 +262,9 @@ const ScrollProgress = () => {
 // ————————————————————————————————————————————————————
 // Header
 // ————————————————————————————————————————————————————
-const Header = () => (
+const Header = ({ variant = "booking" }) => {
+  const isPreview = variant === "preview";
+  return (
   <header className="relative z-40 border-b border-rule bg-cream/80 backdrop-blur-sm sticky top-0">
     <div className="max-w-[1280px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between gap-3">
       <a href="/" className="flex items-center gap-2 group min-w-0">
@@ -199,19 +275,20 @@ const Header = () => (
         href="#book"
         className="sm:hidden shrink-0 inline-flex items-center gap-1 h-9 px-3.5 rounded-full bg-ink text-cream text-[12px] font-semibold hover:bg-amber transition-colors"
       >
-        Book free call
+        {isPreview ? "Get preview" : "Book free call"}
         <ArrowRight className="w-3 h-3" />
       </a>
       <div className="hidden sm:flex items-center gap-5">
         <a href="/" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">Home</a>
         <a href="#book" className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-cream text-[13px] font-semibold hover:bg-amber transition-colors">
-          Book free call
+          {isPreview ? "Get preview" : "Book free call"}
           <ArrowRight className="w-3.5 h-3.5" />
         </a>
       </div>
     </div>
   </header>
-);
+  );
+};
 
 // ————————————————————————————————————————————————————
 // Calendly embed — real, live
@@ -347,6 +424,120 @@ const CalendlyInlineEmbed = () => {
   );
 };
 
+const PreviewEmailCaptureForm = () => {
+  const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [error, setError] = useState("");
+  const [pending, startTransition] = useTransition();
+  const attribution = useMemo(() => buildPreviewAttribution(), []);
+  const hasTypeform = Boolean(PREVIEW_TYPEFORM_ID || PREVIEW_TYPEFORM_URL);
+
+  const submit = (e) => {
+    e.preventDefault();
+    setError("");
+    const trimmed = email.trim().toLowerCase();
+    if (!/\S+@\S+\.\S+/.test(trimmed)) {
+      setError("Enter the email where we should send the preview.");
+      return;
+    }
+    if (!hasTypeform) {
+      setError("Preview intake is almost ready. Add the Typeform ID before sending traffic here.");
+      return;
+    }
+
+    const eventId = makePreviewEventId();
+    startTransition(async () => {
+      try {
+        const res = await fetch(`${getPreviewApiOrigin()}/api/preview-interest`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: trimmed,
+            website: honeypot,
+            eventId,
+            pageUrl: attribution.page_url,
+            pagePath: attribution.page_path,
+            referrer: attribution.referrer,
+            utm_source: attribution.utm_source,
+            utm_medium: attribution.utm_medium,
+            utm_campaign: attribution.utm_campaign,
+            utm_content: attribution.utm_content,
+            utm_term: attribution.utm_term,
+            fbclid: attribution.fbclid,
+            gclid: attribution.gclid,
+          }),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          setError("That did not go through. Try once more.");
+          return;
+        }
+        const previewLeadId = json.previewLeadId || "";
+        const confirmedEventId = json.eventId || eventId;
+        firePreviewEmailConversion(confirmedEventId);
+        const target = buildTypeformRedirectUrl({
+          ...attribution,
+          email: trimmed,
+          preview_lead_id: previewLeadId,
+          event_id: confirmedEventId,
+        });
+        if (target) window.location.assign(target);
+      } catch {
+        setError("Connection hiccup. Try again in a second.");
+      }
+    });
+  };
+
+  return (
+    <form onSubmit={submit} className="rounded-xl border border-rule bg-white p-5 sm:p-6">
+      <label htmlFor="preview-email" className="block font-display font-semibold text-[26px] sm:text-[30px] leading-tight display-tight text-ink">
+        Where should we send your website preview?
+      </label>
+      <p className="mt-3 text-[15px] leading-relaxed text-ink/70">
+        Enter your email first. The next step asks a few business questions so we can build the preview instead of guessing.
+      </p>
+      <div className="mt-5 flex flex-col gap-3">
+        <input
+          id="preview-email"
+          name="email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@business.com"
+          className="h-14 rounded-full border border-rule bg-cream px-5 text-[16px] text-ink outline-none transition focus:border-amber focus:ring-4 focus:ring-amber/15"
+        />
+        <input
+          type="text"
+          name="website"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          className="hidden"
+          aria-hidden="true"
+        />
+        <button
+          type="submit"
+          disabled={pending}
+          className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-amber px-7 text-[16px] font-semibold text-white shadow-lg shadow-amber/20 transition-colors hover:bg-[#B4471A] disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {pending ? "Saving..." : "Continue to preview request"}
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px] font-medium text-muted">
+        <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-forest" /> No spam</span>
+        <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-forest" /> 60-second next step</span>
+        <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-forest" /> Preview target: 24h</span>
+      </div>
+      {error && <p className="mt-4 text-[13px] font-medium text-red-700">{error}</p>}
+    </form>
+  );
+};
+
 // ————————————————————————————————————————————————————
 // Booking card (now with Calendly, framed with trust elements)
 // ————————————————————————————————————————————————————
@@ -390,6 +581,46 @@ const BookingCard = () => (
         <div className="flex gap-0.5 text-amber">
           {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3" />)}
         </div>
+      </div>
+    </div>
+  </div>
+);
+
+const PreviewRequestCard = () => (
+  <div id="book" className="bg-white border border-rule rounded-2xl card-shadow-lg overflow-hidden">
+    <div className="px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5 lg:px-6 lg:pt-5 lg:pb-3 bg-cream border-b border-rule">
+      <div className="flex items-center justify-between">
+        <div className="inline-flex items-center gap-2 text-[11px] lg:text-[12px] font-semibold text-forest uppercase tracking-[0.14em]">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-forest opacity-60 animate-ping" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-forest" />
+          </span>
+          Preview queue open
+        </div>
+        <div className="text-[11px] lg:text-[12px] text-muted">
+          <span className="text-ink font-medium tnum">60 sec</span> form
+        </div>
+      </div>
+      <h3 className="mt-2 sm:mt-3 lg:mt-2 font-display font-semibold text-[22px] sm:text-[24px] lg:text-[22px] display-tight leading-snug">
+        Get your website preview within 24 hours.
+      </h3>
+      <ul className="mt-3 sm:mt-4 lg:mt-2.5 space-y-1 lg:space-y-0.5 text-[13px] sm:text-[14px] text-ink/75">
+        <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> Tell us your business and best contact</li>
+        <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> We send a real preview, not a pitch deck</li>
+        <li className="flex items-center gap-2"><Check className="w-4 h-4 text-forest shrink-0" /> If you like it, then we book the 20-minute call</li>
+      </ul>
+    </div>
+    <div className="p-3 sm:p-4 lg:p-3">
+      <PreviewEmailCaptureForm />
+    </div>
+    <div className="px-5 sm:px-7 lg:px-6 py-3 sm:py-4 lg:py-2.5 bg-cream border-t border-rule flex items-center justify-between gap-4 text-[11px] sm:text-[12px] text-muted">
+      <div className="inline-flex items-center gap-1.5 min-w-0">
+        <Shield className="w-4 h-4 text-forest shrink-0" />
+        <span className="truncate sm:whitespace-normal">No card — only book if the preview is worth it</span>
+      </div>
+      <div className="inline-flex items-center gap-1.5 shrink-0">
+        <Clock className="w-3.5 h-3.5 text-forest" />
+        <span className="font-medium text-ink">24h preview</span>
       </div>
     </div>
   </div>
@@ -444,7 +675,9 @@ const HeroBookingTrust = () => (
 // ————————————————————————————————————————————————————
 // Hero
 // ————————————————————————————————————————————————————
-const Hero = () => (
+const Hero = ({ variant = "booking" }) => {
+  const isPreview = variant === "preview";
+  return (
   <section id="top" className="relative grain">
     <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pt-6 sm:pt-12 lg:pt-12 pb-20 lg:pb-20">
       <div className="grid lg:grid-cols-[1.05fr_1fr] gap-6 sm:gap-10 lg:gap-10 xl:gap-14 items-start">
@@ -454,13 +687,26 @@ const Hero = () => (
           </div>
 
           <h1 className="font-display font-semibold text-[44px] sm:text-[56px] lg:text-[68px] xl:text-[76px] display-tight balance text-ink">
-            We'll design your new website <em className="italic font-normal text-amber">before</em> our first call.
+            {isPreview ? (
+              <>Get a preview of your new website <em className="italic font-normal text-amber">before</em> you book a call.</>
+            ) : (
+              <>We'll design your new website <em className="italic font-normal text-amber">before</em> our first call.</>
+            )}
           </h1>
 
           <p className="mt-6 sm:mt-7 text-[18px] sm:text-[20px] lg:text-[21px] leading-[1.55] text-ink/75 pretty max-w-[600px]">
-            Book a 20-minute Zoom. Your site is already built — you&apos;ll review it live on the call.{" "}
-            <span className="text-ink font-medium">You pay nothing to have it.</span> Walk away anytime; if you skip hosting, you still get the code and our{" "}
-            <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">DIY setup guide</a>.
+            {isPreview ? (
+              <>
+                Tell us your business in 60 seconds. We&apos;ll send a real website preview within 24 hours.{" "}
+                <span className="text-ink font-medium">If it feels like it could bring you more business, then we book the call.</span>
+              </>
+            ) : (
+              <>
+                Book a 20-minute Zoom. Your site is already built — you&apos;ll review it live on the call.{" "}
+                <span className="text-ink font-medium">You pay nothing to have it.</span> Walk away anytime; if you skip hosting, you still get the code and our{" "}
+                <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">DIY setup guide</a>.
+              </>
+            )}
           </p>
 
           <div className="mt-7 sm:mt-8 max-w-[600px] scroll-mt-28">
@@ -469,16 +715,16 @@ const Hero = () => (
               href="#book"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 min-h-[56px] px-8 rounded-full bg-amber text-white text-[16px] font-semibold hover:bg-[#B4471A] transition-colors shadow-lg shadow-amber/20"
             >
-              Book free call
+              {isPreview ? "Get my website preview" : "Book free call"}
               <ArrowRight className="w-4 h-4 shrink-0" />
             </a>
             <p className="mt-3 text-[12px] sm:text-[13px] font-medium text-muted text-center sm:text-left tracking-wide">
-              No credit card · 20 minutes · Site already built
+              {isPreview ? "No credit card · 60 seconds · Preview within 24 hours" : "No credit card · 20 minutes · Site already built"}
             </p>
             <p className="mt-5 text-[13px] sm:text-[14px] text-muted leading-snug">
               <span className="line-through decoration-amber decoration-2 text-ink/45">Agencies: often five figures before you see a real build</span>
               <span className="text-ink/55"> · </span>
-              <span className="text-ink/70">Have yours before you pay us anything.</span>
+              <span className="text-ink/70">{isPreview ? "See the direction before you commit to a call." : "Have yours before you pay us anything."}</span>
             </p>
           </div>
 
@@ -513,16 +759,20 @@ const Hero = () => (
 
           <ul className="mt-10 space-y-3.5 lg:space-y-3">
             {[
-              <>Your site is <em className="italic">designed, built, and live-previewed</em> before we talk</>,
-              <>Love it? <span className="font-semibold">Simple monthly hosting</span> — quoted on the call. Hosting, domain, branded email (up to 3 inboxes), booking, SEO, everything.</>,
-              <>
-                Don't love it? You still leave set up for success: we hand you the <span className="font-semibold text-ink">full code</span>{" "}
-                <span className="text-ink/80">and</span> a complete guide to hosting it yourself — DNS, deploy, go-live — not an empty &quot;good luck&quot; send-off. No cost, no contract, no weirdness.{" "}
-                <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u whitespace-nowrap">
-                  Read the DIY guide →
-                </a>
-              </>,
-              <>20 minutes on Zoom. No slide decks. No "discovery". Just your site.</>,
+              isPreview ? <>Your preview is <em className="italic">designed around your actual business</em>, not a generic template</> : <>Your site is <em className="italic">designed, built, and live-previewed</em> before we talk</>,
+              isPreview ? <>Comfortable moving forward? <span className="font-semibold">Then</span> we book a 20-minute call to review the preview and hosting fit.</> : <>Love it? <span className="font-semibold">Simple monthly hosting</span> — quoted on the call. Hosting, domain, branded email (up to 3 inboxes), booking, SEO, everything.</>,
+              isPreview ? (
+                <>Not ready after the preview? No pressure — you only book if seeing the direction makes the next step feel obvious.</>
+              ) : (
+                <>
+                  Don't love it? You still leave set up for success: we hand you the <span className="font-semibold text-ink">full code</span>{" "}
+                  <span className="text-ink/80">and</span> a complete guide to hosting it yourself — DNS, deploy, go-live — not an empty &quot;good luck&quot; send-off. No cost, no contract, no weirdness.{" "}
+                  <a href={DIY_GUIDE_URL} className="font-semibold text-forest link-u whitespace-nowrap">
+                    Read the DIY guide →
+                  </a>
+                </>
+              ),
+              isPreview ? <>Answer a few practical questions so the preview can speak to the customers you actually want.</> : <>20 minutes on Zoom. No slide decks. No "discovery". Just your site.</>,
             ].map((t, i) => (
               <li key={i} className="flex items-start gap-3 text-[17px] lg:text-[15px] text-ink/85 lg:text-ink/75">
                 <AmberCheck />
@@ -534,14 +784,20 @@ const Hero = () => (
           <div className="mt-10 flex items-start gap-4 p-5 lg:p-4 rounded-xl bg-forest/5 border border-forest/15">
             <Shield className="w-6 h-6 text-forest shrink-0 mt-0.5" />
             <div>
-              <div className="font-display font-semibold text-[18px] lg:text-[16px] text-ink">Our "Walk Away" guarantee</div>
+              <div className="font-display font-semibold text-[18px] lg:text-[16px] text-ink">{isPreview ? "Preview-first, no-pressure process" : "Our \"Walk Away\" guarantee"}</div>
               <div className="mt-1 text-[14px] lg:text-[13px] text-ink/70">
-                If you hate the design, walk — you still keep the code,{" "}
-                <span className="text-ink/80">plus</span> our full DIY hosting guide so you&apos;re not on your own.{" "}
-                <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">
-                  See the guide
-                </a>
-                . No clawback, no drama.
+                {isPreview ? (
+                  <>You can see whether the direction feels valuable before spending time on a call. The form helps us prioritize fit without making the page feel like a pricing quiz.</>
+                ) : (
+                  <>
+                    If you hate the design, walk — you still keep the code,{" "}
+                    <span className="text-ink/80">plus</span> our full DIY hosting guide so you&apos;re not on your own.{" "}
+                    <a href={DIY_GUIDE_URL} className="font-medium text-forest link-u">
+                      See the guide
+                    </a>
+                    . No clawback, no drama.
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -551,23 +807,28 @@ const Hero = () => (
           <div className="lg:hidden space-y-3 mb-1">
             <LiveActivity />
             <p className="font-display font-semibold text-[24px] sm:text-[30px] display-tight balance text-ink leading-[1.12]">
-              We&apos;ll design your new website <em className="italic font-normal text-amber">before</em> our first call.
+              {isPreview ? (
+                <>Get a preview of your new website <em className="italic font-normal text-amber">before</em> you book.</>
+              ) : (
+                <>We&apos;ll design your new website <em className="italic font-normal text-amber">before</em> our first call.</>
+              )}
             </p>
             <p className="text-[12px] sm:text-[13px] font-medium text-muted tracking-wide">
-              No credit card · 20 min · Site ready before you meet Patrizio
+              {isPreview ? "No card · 60 sec form · Preview within 24h" : "No credit card · 20 min · Site ready before you meet Patrizio"}
             </p>
           </div>
-          <BookingCard />
+          {isPreview ? <PreviewRequestCard /> : <BookingCard />}
           <div className="mt-3 lg:mt-2 flex items-center justify-center gap-2 text-[12px] text-muted text-center">
             <Clock className="w-3.5 h-3.5 shrink-0" />
-            <span>Live times below — <span className="text-ink font-medium">updates in real time</span></span>
+            <span>{isPreview ? <>Preview requests go straight to Patrizio — <span className="text-ink font-medium">24h target</span></> : <>Live times below — <span className="text-ink font-medium">updates in real time</span></>}</span>
           </div>
           <HeroBookingTrust />
         </div>
       </div>
     </div>
   </section>
-);
+  );
+};
 
 const Stat = ({ big, label }) => (
   <div className="px-4 sm:px-8 first:pl-0 last:pr-0 text-center first:text-left last:text-right">
@@ -1050,7 +1311,8 @@ const FAQ = () => {
 // ————————————————————————————————————————————————————
 // Final CTA — with embedded mini Calendly shortcut
 // ————————————————————————————————————————————————————
-const FinalCTA = () => {
+const FinalCTA = ({ variant = "booking" }) => {
+  const isPreview = variant === "preview";
   const scrollTop = () => document.getElementById("book")?.scrollIntoView({ behavior: "smooth", block: "start" });
   return (
     <section className="bg-forest text-cream relative overflow-hidden">
@@ -1059,10 +1321,12 @@ const FinalCTA = () => {
       <div className="relative max-w-[1000px] mx-auto px-6 lg:px-10 py-24 lg:py-32 text-center">
         <div className="eyebrow uppercase text-[13px] font-semibold text-amber tracking-[0.18em] mb-6">One last thing</div>
         <h2 className="font-display font-semibold text-[44px] sm:text-[56px] lg:text-[64px] display-tight balance max-w-[820px] mx-auto">
-          Your website is 20 minutes away.
+          {isPreview ? "Your preview is one short form away." : "Your website is 20 minutes away."}
         </h2>
         <p className="mt-6 text-[20px] sm:text-[22px] text-cream/75 max-w-[620px] mx-auto pretty">
-          Book now. By the time we meet, your site is already built. You decide what happens next.
+          {isPreview
+            ? "Tell us where to send it. If the preview feels like it could bring in serious business, we can book the call after."
+            : "Book now. By the time we meet, your site is already built. You decide what happens next."}
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -1070,7 +1334,7 @@ const FinalCTA = () => {
             onClick={scrollTop}
             className="group inline-flex items-center gap-2.5 h-16 px-10 rounded-full bg-amber text-white font-semibold text-[18px] hover:bg-[#B4471A] transition-colors"
           >
-            Get my free website
+            {isPreview ? "Get my preview" : "Get my free website"}
             <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
           </button>
           <a href="mailto:patrizio@foxes.ai" className="inline-flex items-center gap-2 h-16 px-8 rounded-full border border-cream/25 text-cream text-[16px] font-medium hover:bg-cream/5 transition-colors">
@@ -1080,8 +1344,8 @@ const FinalCTA = () => {
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-[13px] text-cream/55 eyebrow uppercase tracking-[0.14em]">
           <span className="inline-flex items-center gap-1.5"><Shield className="w-3.5 h-3.5" /> No credit card</span>
-          <span className="inline-flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> 20‑min call</span>
-          <span className="inline-flex items-center gap-1.5"><Check className="w-3.5 h-3.5" /> Walk with the code</span>
+          <span className="inline-flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> {isPreview ? "60-sec form" : "20‑min call"}</span>
+          <span className="inline-flex items-center gap-1.5"><Check className="w-3.5 h-3.5" /> {isPreview ? "24h preview target" : "Walk with the code"}</span>
         </div>
       </div>
     </section>
@@ -1101,7 +1365,7 @@ const Footer = () => (
       </div>
       <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-6 gap-y-2 text-[14px] text-muted">
         <a href={DIY_GUIDE_URL} className="hover:text-ink link-u">DIY setup guide</a>
-        <a href="#" className="hover:text-ink link-u">Privacy</a>
+        <a href="/privacy.html" className="hover:text-ink link-u">Privacy</a>
         <a href="#" className="hover:text-ink link-u">Terms</a>
       </div>
     </div>
@@ -1113,7 +1377,8 @@ const Footer = () => (
 // ————————————————————————————————————————————————————
 const MOBILE_MAX = "(max-width: 1023px)";
 
-const MobileCTA = () => {
+const MobileCTA = ({ variant = "booking" }) => {
+  const isPreview = variant === "preview";
   const [narrow, setNarrow] = useState(
     () => typeof window !== "undefined" && window.matchMedia(MOBILE_MAX).matches
   );
@@ -1174,7 +1439,7 @@ const MobileCTA = () => {
         onClick={scrollTo}
         className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-amber text-[16px] font-semibold text-white shadow-2xl"
       >
-        Book free call
+        {isPreview ? "Get my preview" : "Book free call"}
         <ArrowRight className="h-4 w-4" />
       </button>
     </div>
@@ -1184,24 +1449,24 @@ const MobileCTA = () => {
 // ————————————————————————————————————————————————————
 // App
 // ————————————————————————————————————————————————————
-const App = () => {
+const App = ({ variant = "booking" }) => {
   useLanderCalendlyScheduleMeta();
   return (
   <div className="min-h-screen bg-cream text-ink">
     <MetaPixelLoader />
     <ScrollProgress />
     <AnnouncementBar />
-    <Header />
-    <Hero />
+    <Header variant={variant} />
+    <Hero variant={variant} />
     <TrustBar />
     <Testimonials />
     <Portfolio />
     <Comparison />
     <Offer />
     <FAQ />
-    <FinalCTA />
+    <FinalCTA variant={variant} />
     <Footer />
-    <MobileCTA />
+    <MobileCTA variant={variant} />
   </div>
   );
 };

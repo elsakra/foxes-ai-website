@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>Foxes.ai — Get a website preview before you book a call.</title>
+  <meta name="description" content="Tell Foxes.ai about your business in 60 seconds. We'll send a website preview within 24 hours. If you like it, then book a call." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Foxes.ai — Get your website preview first." />
+  <meta property="og:description" content="No credit card and no call required upfront. Request a website preview, then book if it feels worth it." />
+  <meta property="og:type" content="website" />
+  <link rel="canonical" href="https://foxes.ai/preview.html" />
+
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <link rel="preconnect" href="https://form.typeform.com" />
+  <link rel="preconnect" href="https://connect.facebook.net" />
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    (function () {
+      function loadGA() {
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=G-7ZMY0PE5KP";
+        s.onload = function () {
+          gtag("js", new Date());
+          gtag("config", "G-7ZMY0PE5KP");
+        };
+        document.head.appendChild(s);
+      }
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(loadGA, { timeout: 4000 });
+      } else {
+        window.addEventListener("load", function () {
+          setTimeout(loadGA, 2000);
+        });
+      }
+    })();
+  </script>
+
+  <!-- Meta Pixel: pageview stays available even if the React bundle fails. -->
+  <script id="fb-pixel-lander-952579584035948">
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  (function () {
+    try {
+      var x = new URLSearchParams(window.location.search).get("test_event_code");
+      if (x && String(x).trim()) fbq("set", "test_event_code", String(x).trim());
+    } catch (e) {}
+  })();
+  fbq("init", "952579584035948");
+  fbq("track", "PageView");
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Foxes.ai",
+    "description": "Request a website preview for your business before booking a call.",
+    "url": "https://foxes.ai",
+    "founder": { "@type": "Person", "name": "Patrizio Murdocca" }
+  }
+  </script>
+</head>
+<body>
+  <noscript>
+    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=952579584035948&amp;ev=PageView&amp;noscript=1" alt="" />
+  </noscript>
+  <div id="root"></div>
+  <script type="module" src="/src/entry-preview.jsx"></script>
+</body>
+</html>
