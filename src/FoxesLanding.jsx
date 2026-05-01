@@ -204,9 +204,6 @@ const Header = () => (
       </a>
       <div className="hidden sm:flex items-center gap-5">
         <a href="/" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">Home</a>
-        <a href="mailto:patrizio@foxes.ai" className="text-[14px] font-medium text-muted hover:text-ink transition-colors link-u">
-          Email
-        </a>
         <a href="#book" className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-ink text-cream text-[13px] font-semibold hover:bg-amber transition-colors">
           Book free call
           <ArrowRight className="w-3.5 h-3.5" />
